@@ -128,7 +128,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 		try {
 			decoratedComponent.cancel(reason);
 		} catch (InvalidProcessStateException e) {
-			if (e.getCurrentState() == ProcessState.FAILED) {
+			if (e.getInvalidState() == ProcessState.FAILED) {
 				// async component rolled itself back already
 				return;
 			} else {

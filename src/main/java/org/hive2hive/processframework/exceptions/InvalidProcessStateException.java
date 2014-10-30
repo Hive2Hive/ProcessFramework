@@ -3,25 +3,38 @@ package org.hive2hive.processframework.exceptions;
 import org.hive2hive.processframework.ProcessState;
 
 /**
- * Represents an exception that occurs when a process component is in an invalid state to be called for a
- * specific operation (e.g., cannot be paused because it is not even running yet).
+ * Exception that occurs if a process component is called for a specific operation but has an invalid
+ * {@link ProcessState} to do so.</br>
+ * <b>Example:</b> A process component cannot be paused if it has not yet been started.
  * 
  * @author Christian Lüthold
- * 
+ *
  */
 public class InvalidProcessStateException extends Exception {
 
 	private static final long serialVersionUID = -570684360354374306L;
 
-	private final ProcessState current;
+	private final ProcessState invalidState;
 
-	public InvalidProcessStateException(ProcessState current) {
-		super(String.format("Operation cannot be called. Process is currently in an invalid state: %s.",
-				current));
-		this.current = current;
+	/**
+	 * Creates a new {@code InvalidProcessStateException} instance containing information about a process
+	 * components' current {@link ProcessState}.
+	 * 
+	 * @param invalidState The process components' current (invalid) {@link ProcessState}.
+	 */
+	public InvalidProcessStateException(ProcessState invalidState) {
+		super(String.format(
+				"Operation cannot be called. The process component currently has an invalid state: %s.",
+				invalidState));
+		this.invalidState = invalidState;
 	}
 
-	public ProcessState getCurrentState() {
-		return current;
+	/**
+	 * Gets the invalid state of the process component.
+	 * 
+	 * @return The invalid state of the process component.
+	 */
+	public ProcessState getInvalidState() {
+		return invalidState;
 	}
 }
