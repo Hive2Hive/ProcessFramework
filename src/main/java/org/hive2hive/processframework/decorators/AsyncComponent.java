@@ -10,10 +10,10 @@ import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessDecorator;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.RollbackReason;
-import org.hive2hive.processframework.SequentialProcess;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
+import org.hive2hive.processframework.processes.SequentialProcess;
 
 /**
  * A {@link ProcessDecorator} that executes, and if necessary rollbacks, the wrapped {@link IProcessComponent}

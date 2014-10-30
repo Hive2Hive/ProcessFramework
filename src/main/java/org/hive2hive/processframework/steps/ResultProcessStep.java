@@ -1,8 +1,9 @@
-package org.hive2hive.processframework;
+package org.hive2hive.processframework.steps;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hive2hive.processframework.ProcessStep;
 import org.hive2hive.processframework.interfaces.IProcessResultListener;
 import org.hive2hive.processframework.interfaces.IResultProcessComponent;
 

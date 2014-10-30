@@ -1,4 +1,4 @@
-package org.hive2hive.processframework;
+package org.hive2hive.processframework.processes;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +11,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.hive2hive.processframework.Process;
+import org.hive2hive.processframework.ProcessComponent;
+import org.hive2hive.processframework.ProcessState;
+import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
