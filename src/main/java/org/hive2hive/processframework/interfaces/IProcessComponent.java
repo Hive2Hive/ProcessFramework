@@ -73,18 +73,18 @@ public interface IProcessComponent {
 	void detachListener(IProcessComponentListener listener);
 
 	/**
-	 * Gets all {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
-	 * 
-	 * @return All {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
-	 */
-	List<IProcessComponentListener> getListener();
-
-	/**
 	 * Gets the ID of this {@code IProcessComponent}.
 	 * 
 	 * @return The ID of this {@code IProcessComponent}.
 	 */
 	String getID();
+
+	/**
+	 * Gets the {@link ProcessState} of this {@code IProcessComponent}.
+	 * 
+	 * @return The {@link ProcessState} of this {@code IProcessComponent}.
+	 */
+	ProcessState getState();
 
 	/**
 	 * Gets the progress of this {@code IProcessComponent}.
@@ -94,10 +94,10 @@ public interface IProcessComponent {
 	double getProgress();
 
 	/**
-	 * Gets the {@link ProcessState} of this {@code IProcessComponent}.
+	 * Gets all {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 * 
-	 * @return The {@link ProcessState} of this {@code IProcessComponent}.
+	 * @return All {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 */
-	ProcessState getState();
+	List<IProcessComponentListener> getListeners();
 
 }

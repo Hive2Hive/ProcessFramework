@@ -26,21 +26,19 @@ public abstract class ProcessComponent implements IProcessComponent {
 	// private static final Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
 
 	private final String id;
-	private double progress;
 	private ProcessState state;
-	private Process parent;
+	private double progress;
+	private final List<IProcessComponentListener> listener;
 
+	private Process parent;
 	private boolean isRollbacking;
 	private RollbackReason reason;
 
-	private final List<IProcessComponentListener> listener;
-
 	protected ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
-		this.progress = 0.0;
 		this.state = ProcessState.READY;
-
-		listener = new ArrayList<IProcessComponentListener>();
+		this.progress = 0.0;
+		this.listener = new ArrayList<IProcessComponentListener>();
 	}
 
 	@Override
@@ -109,42 +107,49 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	/**
-	 * Template method responsible for the {@link ProcessComponent} execution.</br>
+	 * Template method responsible for the execution.</br>
 	 * If a failure is detected, a {@link ProcessExecutionException} is thrown and the component and its
 	 * enclosing process component composite, if any, get cancelled and rolled back.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 * @throws ProcessExecutionException If a failure is detected during the execution.
 	 */
 	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
-	 * Template method responsible for the {@link ProcessComponent} pausing.
+	 * Template method responsible for the execution or rollback pausing.
+	 * 
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 */
 	protected abstract void doPause() throws InvalidProcessStateException;
 
 	/**
-	 * Template method responsible for the {@link ProcessComponent} execution resume.
+	 * Template method responsible for the execution resuming.
 	 * 
 	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
 	 */
 	protected abstract void doResumeExecution() throws InvalidProcessStateException;
 
 	/**
-	 * Template method responsible for the {@link ProcessComponent} rollback resume.
+	 * Template method responsible for the rollback resuming.
+	 * 
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 */
 	protected abstract void doResumeRollback() throws InvalidProcessStateException;
 
 	/**
-	 * Template method responsible for the {@link ProcessComponent} rollback.
+	 * Template method responsible for the rollback.
 	 * 
-	 * @param reason The reason of the cancellation or fail.
+	 * @param reason The reason for the cancellation or fail.
 	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
 	 */
 	protected abstract void doRollback(RollbackReason reason) throws InvalidProcessStateException;
 
 	/**
-	 * If in {@link ProcessState#RUNNING}, this {@link ProcessComponent} succeeds, changes its state to
+	 * If in {@link ProcessState#RUNNING}, this {@code ProcessComponent} succeeds, changes its state to
 	 * {@link ProcessState#SUCCEEDED} and notifies all interested listeners.
 	 */
 	protected void succeed() {
@@ -155,7 +160,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	/**
-	 * If in {@link ProcessState#ROLLBACKING}, this {@link ProcessComponent} succeeds, changes its state to
+	 * If in {@link ProcessState#ROLLBACKING}, this {@code ProcessComponent} succeeds, changes its state to
 	 * {@link ProcessState#FAILED} and notifies all interested listeners.
 	 */
 	protected void fail(RollbackReason reason) {
@@ -229,10 +234,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 		return state;
 	}
 
+	@Override
 	public synchronized void attachListener(IProcessComponentListener listener) {
 		this.listener.add(listener);
 
-		// TODO check if correct
 		// if process component completed already
 		if (state == ProcessState.SUCCEEDED) {
 			listener.onSucceeded();
@@ -242,12 +247,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 		}
 	}
 
+	@Override
 	public synchronized void detachListener(IProcessComponentListener listener) {
 		this.listener.remove(listener);
 	}
 
 	@Override
-	public List<IProcessComponentListener> getListener() {
+	public List<IProcessComponentListener> getListeners() {
 		return listener;
 	}
 
@@ -266,8 +272,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public int hashCode() {
-		int hash = 7;
-		return 31 * hash + id.hashCode();
+		return id.hashCode();
 	}
 
 	private void notifySucceeded() {

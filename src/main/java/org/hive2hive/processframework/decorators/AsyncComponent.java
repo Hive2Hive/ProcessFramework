@@ -154,18 +154,18 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	}
 
 	@Override
-	public void attachListener(IProcessComponentListener listener) {
+	public synchronized void attachListener(IProcessComponentListener listener) {
 		decoratedComponent.attachListener(listener);
 	}
 
 	@Override
-	public void detachListener(IProcessComponentListener listener) {
+	public synchronized void detachListener(IProcessComponentListener listener) {
 		decoratedComponent.attachListener(listener);
 	}
 
 	@Override
-	public List<IProcessComponentListener> getListener() {
-		return decoratedComponent.getListener();
+	public List<IProcessComponentListener> getListeners() {
+		return decoratedComponent.getListeners();
 	}
 
 	@Override
