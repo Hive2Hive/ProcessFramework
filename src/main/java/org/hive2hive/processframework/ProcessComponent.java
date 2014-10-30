@@ -258,6 +258,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("[");
+		sb.append("Process Component ID: ").append(id).append("]");
+		return sb.toString();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
