@@ -20,7 +20,7 @@ public interface IProcessComponent {
 	 * 
 	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
 	 */
-	IProcessComponent start() throws InvalidProcessStateException;
+	void start() throws InvalidProcessStateException;
 
 	/**
 	 * Pauses the execution or rollbacking of the component, depending on its current state.

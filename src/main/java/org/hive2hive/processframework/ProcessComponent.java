@@ -44,7 +44,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	@Override
-	public IProcessComponent start() throws InvalidProcessStateException {
+	public void start() throws InvalidProcessStateException {
 		// logger.debug("Executing '{}'.", this.getClass().getSimpleName());
 
 		if (state != ProcessState.READY) {
@@ -59,8 +59,6 @@ public abstract class ProcessComponent implements IProcessComponent {
 		} catch (ProcessExecutionException e) {
 			cancel(e.getRollbackReason());
 		}
-
-		return this;
 	}
 
 	@Override
