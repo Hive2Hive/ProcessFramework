@@ -17,7 +17,7 @@ public class InvalidProcessStateException extends Exception {
 	private final ProcessState invalidState;
 
 	/**
-	 * Creates a new {@code InvalidProcessStateException} instance containing information about a process
+	 * Creates a {@code InvalidProcessStateException} containing information about a process
 	 * components' current {@link ProcessState}.
 	 * 
 	 * @param invalidState The process components' current (invalid) {@link ProcessState}.
