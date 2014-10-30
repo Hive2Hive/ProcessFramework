@@ -15,8 +15,8 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 
 /**
- * Abstract base class for all process components. Keeps track of a components most essential properties and
- * functionalities, such as state, progess and listeners.
+ * Abstract base class for all process components. Keeps track of a process components' most essential
+ * properties and functionalities, such as its state, progess and listeners.
  * 
  * @author Christian Lüthold
  * 
@@ -99,7 +99,8 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 			// no parent, or called from parent
 			state = ProcessState.ROLLBACKING;
-			//logger.warn("Rolling back '{}'. Reason: '{}'.", this.getClass().getSimpleName(), reason.getHint());
+			// logger.warn("Rolling back '{}'. Reason: '{}'.", this.getClass().getSimpleName(),
+			// reason.getHint());
 
 			doRollback(reason);
 		}
@@ -112,7 +113,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * If a failure is detected, a {@link ProcessExecutionException} is thrown and the component and its
 	 * enclosing process component composite, if any, get cancelled and rolled back.
 	 * 
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
 	 * @throws ProcessExecutionException If a failure is detected during the execution.
 	 */
 	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException;
@@ -206,7 +207,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 				}
 			}
 		} catch (InterruptedException e) {
-			//logger.error("Interrupted while waiting for process.", e);
+			// logger.error("Interrupted while waiting for process.", e);
 			throw e;
 		} finally {
 			handle.cancel(true);

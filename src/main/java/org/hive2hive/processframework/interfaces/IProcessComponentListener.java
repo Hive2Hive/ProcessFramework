@@ -11,12 +11,12 @@ import org.hive2hive.processframework.RollbackReason;
 public interface IProcessComponentListener {
 
 	/**
-	 * Executed if the observed process component succeeded.
+	 * Fires if the observed process component has succeeded.
 	 */
 	void onSucceeded();
 
 	/**
-	 * Executed if the observed process component failed.
+	 * Fires if the observed process component has failed.
 	 */
 	void onFailed(RollbackReason reason);
 

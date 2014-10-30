@@ -10,7 +10,7 @@ package org.hive2hive.processframework.interfaces;
 public interface IProcessResultListener<T> {
 
 	/**
-	 * Executed if the observed process component is ready to provide its computed result.
+	 * Fires if the observed process component has computed the result.
 	 */
 	void onResultReady(T result);
 }
