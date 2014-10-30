@@ -14,6 +14,7 @@ Coming soon!
 ## Documentation
 
 For more exact details and documentation about this process library, please visit http://hive2hive.com/process-framework/.
+
 For more details and documentation about the Hive2Hive project, please visit http://www.hive2hive.com/.
 
 The source code itself is thoroughly documented using JavaDoc.
