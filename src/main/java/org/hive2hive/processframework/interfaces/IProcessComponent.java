@@ -7,8 +7,7 @@ import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 
 /**
- * Basic interface defining all common functionalities and providing the public API for all
- * process components of the framework.
+ * Basic interface for all process components. Defines all common functionalities.
  * 
  * @author Christian Lüthold
  * 
@@ -16,43 +15,43 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 public interface IProcessComponent {
 
 	/**
-	 * Starts the component and therefore triggers its execution.
+	 * Starts this {@code IProcessComponent} and therefore triggers its execution.
 	 * 
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
 	 */
 	void start() throws InvalidProcessStateException;
 
 	/**
-	 * Pauses the execution or rollbacking of the component, depending on its current state.
+	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.
 	 * 
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
 	 */
 	void pause() throws InvalidProcessStateException;
 
 	/**
-	 * Resumes the execution or rollbacking of the component, depending on its current state.
+	 * Resumes the execution or rollback of this {@code IProcessComponent}, depending on its current state.
 	 * 
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
 	 */
 	void resume() throws InvalidProcessStateException;
 
 	/**
-	 * Cancels the component and therefore triggers its rollback.
+	 * Cancels the execution of this {@code IProcessComponent} and therefore triggers its rollback.
 	 * 
 	 * @param reason The reason of the cancellation or fail.
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
 	 */
 	void cancel(RollbackReason reason) throws InvalidProcessStateException;
-	
+
 	/**
-	 * Wait for the process component to terminate. Blocks execution until then.
+	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination.
 	 * 
 	 * @throws InterruptedException
 	 */
 	void await() throws InterruptedException;
 
 	/**
-	 * Wait for the process component to terminate. Blocks execution until then.
+	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination.
 	 * 
 	 * @param timeout The maximal waiting time in milliseconds.
 	 * @throws InterruptedException
@@ -60,44 +59,44 @@ public interface IProcessComponent {
 	void await(long timeout) throws InterruptedException;
 
 	/**
-	 * Attaches an {@link IProcessComponentListener} to the process component.
+	 * Attaches an {@link IProcessComponentListener} to this {@code IProcessComponent}.
 	 * 
-	 * @param listener The listener to be attached.
+	 * @param listener The {@link IProcessComponentListener} to be attached.
 	 */
 	void attachListener(IProcessComponentListener listener);
 
 	/**
-	 * Detaches an {@link IProcessComponentListener} from the process component.
+	 * Detaches an {@link IProcessComponentListener} from this {@code IProcessComponent}.
 	 * 
-	 * @param listener The listener to be detached.
+	 * @param listener The {@link IProcessComponentListener} to be detached.
 	 */
 	void detachListener(IProcessComponentListener listener);
 
 	/**
-	 * Getter for the {@link IProcessComponent}'s {@link IProcessComponentListener}s.
+	 * Gets all {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 * 
-	 * @return The {@link IProcessComponentListener}s attached to this {@link IProcessComponent}.
+	 * @return All {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 */
 	List<IProcessComponentListener> getListener();
 
 	/**
-	 * Getter for the process component's ID.
+	 * Gets the ID of this {@code IProcessComponent}.
 	 * 
-	 * @return The ID of the process component.
+	 * @return The ID of this {@code IProcessComponent}.
 	 */
 	String getID();
 
 	/**
-	 * Getter for the process component's progress.
+	 * Gets the progress of this {@code IProcessComponent}.
 	 * 
-	 * @return The progress of the process component.
+	 * @return The progress of this {@code IProcessComponent}.
 	 */
 	double getProgress();
 
 	/**
-	 * Getter for the process component's parent.
+	 * Gets the {@link ProcessState} of this {@code IProcessComponent}.
 	 * 
-	 * @return The parent of the process component.
+	 * @return The {@link ProcessState} of this {@code IProcessComponent}.
 	 */
 	ProcessState getState();
 
