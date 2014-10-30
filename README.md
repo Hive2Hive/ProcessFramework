@@ -1,4 +1,4 @@
-# Hive2Hive - ProcessFramework
+# Hive2Hive - Process Framework
 
 This is a Java library for asynchronous and synchronous process composition. Its licensed under the MIT License and any contribution is welcome.
 
