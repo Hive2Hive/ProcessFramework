@@ -1,21 +1,24 @@
 package org.hive2hive.processframework;
 
-import org.hive2hive.processframework.interfaces.IProcessComponent;
-
 /**
- * Abstract base class for all process component decorators that provide additional behavior or state to
- * existing components.
+ * Abstract base class for all decorator {@link ProcessComponent}s.
+ * These decorators provide additional behavior or state to existing {@link ProcessComponent}s.
  * 
  * @author Christian Lüthold
  * 
  */
 public abstract class ProcessDecorator extends ProcessComponent {
 
-	protected final IProcessComponent decoratedComponent;
+	protected final ProcessComponent decoratedComponent;
 
-	public ProcessDecorator(IProcessComponent decoratedComponent) {
+	/**
+	 * Creates a {@code ProcessDecorator} that wraps/decorates the provided {@link ProcessComponent}.
+	 * 
+	 * @param decoratedComponent The {@link ProcessComponent} to be wrapped/decorated by this
+	 *            {@code ProcessDecorator}.
+	 */
+	public ProcessDecorator(ProcessComponent decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
-
 	}
 
 }

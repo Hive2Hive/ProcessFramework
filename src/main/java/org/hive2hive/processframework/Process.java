@@ -3,7 +3,8 @@ package org.hive2hive.processframework;
 import java.util.Collection;
 
 /**
- * Abstract base class for all composite (container) {@ProcessComponents}.
+ * Abstract base class for all composite {@link ProcessComponent}s (container).
+ * These composites contain other {@link ProcessComponent}s (children).
  * 
  * @author Christian Lüthold
  * 
