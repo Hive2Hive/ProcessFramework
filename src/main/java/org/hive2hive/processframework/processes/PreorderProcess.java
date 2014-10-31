@@ -58,14 +58,26 @@ public class PreorderProcess extends Process {
 		awaitAsync();
 	}
 
+	/**
+	 * Handles the rollback of this {@code PreorderProcess}.
+	 * If this {@code PreorderProcess} is part (child) of a higher level {@link Process}, the rollback order
+	 * of the (sibling) {@link ProcessComponent}s is delegated to this {@link Process}.
+	 */
 	@Override
 	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
 			ProcessRollbackException {
 
-		while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
-			ProcessComponent last = components.get(rollbackIndex);
-			last.cancel(reason);
-			rollbackIndex--;
+		// inform parent (if exists and not informed yet)
+		Process parent = getParent();
+		if (parent != null && parent.getState() != ProcessState.ROLLBACKING) {
+			getParent().cancel(reason);
+		} else {
+			// no parent, or called from parent
+			while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
+				ProcessComponent last = components.get(rollbackIndex);
+				last.cancel(reason);
+				rollbackIndex--;
+			}
 		}
 	}
 
@@ -73,7 +85,7 @@ public class PreorderProcess extends Process {
 	protected void doAdd(ProcessComponent component) {
 		components.add(component);
 	}
-	
+
 	@Override
 	protected void doAdd(int index, ProcessComponent component) {
 		components.add(index, component);
