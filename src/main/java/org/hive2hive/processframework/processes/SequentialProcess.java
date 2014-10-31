@@ -18,6 +18,7 @@ import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
  * A process component container that executes and rollbacks its process components in a sequential manner. In
@@ -40,7 +41,8 @@ public class SequentialProcess extends Process {
 	private int rollbackIndex = 0;
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException {
 
 		// execute all child components
 		while (!components.isEmpty() && executionIndex < components.size()
@@ -77,7 +79,8 @@ public class SequentialProcess extends Process {
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException {
+	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
+			ProcessRollbackException {
 
 		while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
 			ProcessComponent last = components.get(rollbackIndex);

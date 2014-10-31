@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 
@@ -22,8 +23,6 @@ import org.hive2hive.processframework.interfaces.IProcessComponentListener;
  * 
  */
 public abstract class ProcessComponent implements IProcessComponent {
-
-	// private static final Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
 
 	private String name;
 	private final String id;
@@ -43,10 +42,19 @@ public abstract class ProcessComponent implements IProcessComponent {
 		this.listener = new ArrayList<IProcessComponentListener>();
 	}
 
+	/**
+	 * Starts the execution of this {@code ProcessComponent} and therefore triggers its execution. Upon
+	 * successful execution,
+	 * all attached {@link ProcessComponentListener}s notify the success.
+	 * <ul>
+	 * <li>In case of a failure during the execution, this {@code ProcessComponent} automatically cancels and
+	 * starts its rollback.</li>
+	 * <li>In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.</li>
+	 * </ul>
+	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
+	 */
 	@Override
-	public void start() throws InvalidProcessStateException {
-		// logger.debug("Executing '{}'.", this.getClass().getSimpleName());
-
+	public void start() throws InvalidProcessStateException, ProcessRollbackException {
 		if (state != ProcessState.READY) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -56,8 +64,36 @@ public abstract class ProcessComponent implements IProcessComponent {
 		try {
 			doExecute();
 			succeed();
-		} catch (ProcessExecutionException e) {
-			cancel(e.getRollbackReason());
+		} catch (ProcessExecutionException ex1) {
+			try {
+				cancel(ex1.getRollbackReason());
+			} catch (ProcessRollbackException ex2) {
+				throw ex2;
+			}
+		} catch (ProcessRollbackException ex2) {
+			throw ex2;
+		}
+	}
+
+	/**
+	 * Cancels the execution of this {@code ProcessComponent} and therefore triggers its rollback.
+	 * In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.
+	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
+	 */
+	@Override
+	public void cancel(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException {
+		if (state != ProcessState.EXECUTING && state != ProcessState.PAUSED) {
+			throw new InvalidProcessStateException(state);
+		}
+		setState(ProcessState.ROLLBACKING);
+		isRollbacking = true;
+
+		try {
+			doRollback(reason);
+		} catch (ProcessRollbackException e) {
+			throw e;
+		} finally {
+			fail(reason);
 		}
 	}
 
@@ -75,8 +111,9 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
-		// TODO don't distinguish between running and rollback state, each component should be able to decide
-		// itself (decorators must implement both methods but cannot decide, they can just forward resume())
+		// TODO don't distinguish between executing and rollbacking state, each component should be able to
+		// decide itself (decorators must implement both methods but cannot decide, they can just forward
+		// resume())
 		if (!isRollbacking) {
 			setState(ProcessState.EXECUTING);
 			doResumeExecution();
@@ -86,38 +123,28 @@ public abstract class ProcessComponent implements IProcessComponent {
 		}
 	}
 
-	@Override
-	public void cancel(RollbackReason reason) throws InvalidProcessStateException {
-		if (state != ProcessState.EXECUTING && state != ProcessState.PAUSED) {
-			throw new InvalidProcessStateException(state);
-		}
-
-		// inform parent (if exists and not informed yet)
-		if (parent != null && parent.getState() != ProcessState.ROLLBACKING) {
-			getParent().cancel(reason);
-		} else {
-
-			// no parent, or called from parent
-			setState(ProcessState.ROLLBACKING);
-			// logger.warn("Rolling back '{}'. Reason: '{}'.", this.getClass().getSimpleName(),
-			// reason.getHint());
-
-			doRollback(reason);
-		}
-
-		fail(reason);
-	}
-
 	/**
-	 * Template method responsible for the execution.</br>
-	 * If a failure is detected, a {@link ProcessExecutionException} is thrown and the component and its
-	 * enclosing process component composite, if any, get cancelled and rolled back.
+	 * Template method responsible for the execution.
+	 * If a failure occurs during this process component's execution, a {@link ProcessExecutionException} is
+	 * thrown.
 	 * 
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
-	 * @throws ProcessExecutionException If a failure is detected during the execution.
+	 * @throws ProcessExecutionException If a failure occured during this process component's execution.
 	 */
-	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException;
+	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException, ProcessRollbackException;
+
+	/**
+	 * Template method responsible for the rollback.
+	 * If a failure occurs during this process component's rollback, a {@link ProcessRollbackException} is
+	 * thrown.
+	 * 
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
+	 * @throws ProcessRollbackException If a failure occured during this process component's rollback.
+	 */
+	protected abstract void doRollback(RollbackReason reason) throws InvalidProcessStateException,
+			ProcessRollbackException;
 
 	/**
 	 * Template method responsible for the execution or rollback pausing.
@@ -130,7 +157,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	/**
 	 * Template method responsible for the execution resuming.
 	 * 
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this component is in an invalid state for this operation.
 	 */
 	protected abstract void doResumeExecution() throws InvalidProcessStateException;
 
@@ -141,14 +168,6 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 *             operation.
 	 */
 	protected abstract void doResumeRollback() throws InvalidProcessStateException;
-
-	/**
-	 * Template method responsible for the rollback.
-	 * 
-	 * @param reason The reason for the cancellation or fail.
-	 * @throws InvalidProcessStateException If the component is in an invalid state for this operation.
-	 */
-	protected abstract void doRollback(RollbackReason reason) throws InvalidProcessStateException;
 
 	/**
 	 * If in {@link ProcessState#EXECUTING}, this {@code ProcessComponent} succeeds, changes its state to
@@ -179,10 +198,6 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	protected Process getParent() {
 		return parent;
-	}
-	
-	private void setState(ProcessState state) {
-		this.state = state;
 	}
 
 	@Override
@@ -224,12 +239,12 @@ public abstract class ProcessComponent implements IProcessComponent {
 			handle.cancel(true);
 		}
 	}
-	
+
 	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.name;
@@ -277,7 +292,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	public String toString() {
 		return name;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -294,6 +309,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 	@Override
 	public int hashCode() {
 		return id.hashCode();
+	}
+
+	private void setState(ProcessState state) {
+		this.state = state;
 	}
 
 	private void notifySucceeded() {

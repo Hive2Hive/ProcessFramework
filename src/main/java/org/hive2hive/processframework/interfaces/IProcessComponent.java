@@ -5,6 +5,7 @@ import java.util.List;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
  * Basic interface for all process components. Defines all common functionalities.
@@ -15,12 +16,23 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 public interface IProcessComponent {
 
 	/**
-	 * Starts this {@code IProcessComponent} and therefore triggers its execution.
+	 * Starts the execution of this {@code IProcessComponent} and therefore triggers its execution.
 	 * 
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
+	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
 	 */
-	void start() throws InvalidProcessStateException;
+	void start() throws InvalidProcessStateException, ProcessRollbackException;
+
+	/**
+	 * Cancels the execution of this {@code IProcessComponent} and therefore triggers its rollback.
+	 * 
+	 * @param reason The reason of the cancellation or fail.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
+	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
+	 */
+	void cancel(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.
@@ -37,15 +49,6 @@ public interface IProcessComponent {
 	 *             operation.
 	 */
 	void resume() throws InvalidProcessStateException;
-
-	/**
-	 * Cancels the execution of this {@code IProcessComponent} and therefore triggers its rollback.
-	 * 
-	 * @param reason The reason of the cancellation or fail.
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
-	 *             operation.
-	 */
-	void cancel(RollbackReason reason) throws InvalidProcessStateException;
 
 	/**
 	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination.

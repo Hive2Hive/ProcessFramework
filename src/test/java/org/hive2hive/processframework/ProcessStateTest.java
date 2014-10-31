@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,7 +35,7 @@ public class ProcessStateTest extends BaseTest {
 	}
 
 	@Test
-	public void testReadyStateTransition() {
+	public void testReadyStateTransition() throws ProcessRollbackException {
 
 		IProcessComponent comp = TestUtil.sampleComponent();
 
@@ -69,7 +70,7 @@ public class ProcessStateTest extends BaseTest {
 	}
 
 	@Test
-	public void testExecutingState() {
+	public void testExecutingState() throws ProcessRollbackException {
 
 		IProcessComponent comp = TestUtil.sampleComponent();
 
@@ -106,7 +107,7 @@ public class ProcessStateTest extends BaseTest {
 	}
 
 	@Test
-	public void testPausedState() {
+	public void testPausedState() throws ProcessRollbackException {
 
 		IProcessComponent comp = TestUtil.sampleComponent();
 
@@ -143,7 +144,7 @@ public class ProcessStateTest extends BaseTest {
 	}
 
 	@Test
-	public void testRollbackingState() {
+	public void testRollbackingState() throws ProcessRollbackException {
 
 		IProcessComponent comp = TestUtil.sampleComponent();
 
@@ -180,7 +181,7 @@ public class ProcessStateTest extends BaseTest {
 	}
 	
 	@Test
-	public void testSucceededState() {
+	public void testSucceededState() throws ProcessRollbackException {
 
 		IProcessComponent comp = TestUtil.sampleComponent();
 
@@ -216,7 +217,7 @@ public class ProcessStateTest extends BaseTest {
 	}
 	
 	@Test
-	public void testFailedState() {
+	public void testFailedState() throws ProcessRollbackException {
 
 		IProcessComponent comp = TestUtil.sampleComponent();
 

@@ -4,6 +4,7 @@ import org.hive2hive.processframework.ProcessDecorator;
 import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.ICompletionHandle;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
@@ -26,7 +27,8 @@ public class CompletionHandleComponent extends ProcessDecorator {
 	}
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException {
 		IProcessComponentListener listener = new IProcessComponentListener() {
 			public void onSucceeded() {
 				handle.onCompletionSuccess();
@@ -57,7 +59,8 @@ public class CompletionHandleComponent extends ProcessDecorator {
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException {
+	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
+			ProcessRollbackException {
 		decoratedComponent.cancel(reason);
 	}
 

@@ -11,6 +11,7 @@ import org.hive2hive.processframework.ProcessDecorator;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 import org.hive2hive.processframework.processes.SequentialProcess;
@@ -33,8 +34,6 @@ import org.hive2hive.processframework.processes.SequentialProcess;
  * 
  */
 public class AsyncComponent extends ProcessDecorator implements Callable<RollbackReason> {
-
-	// private static final Logger logger = LoggerFactory.getLogger(AsyncComponent.class);
 
 	private final ExecutorService asyncExecutor;
 	private Future<RollbackReason> handle;
@@ -87,16 +86,20 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 				componentFailed = true;
 				result = reason;
 
+				// TODO this is suspicious, see https://github.com/Hive2Hive/ProcessFramework/issues/8
 				if (getParent() == null) {
 					try {
 						cancel(reason);
-					} catch (InvalidProcessStateException e) {
+					} catch (InvalidProcessStateException ex) {
 						// logger.error("Asynchronous component could not be cancelled.", e);
+					} catch (ProcessRollbackException ex) {
+						// logger.error("Asynchronous component could not be rolled back.", e);
 					}
 				}
 			}
 		});
 
+		// TODO catch the exceptions and forward them!!
 		// sync execution
 		decoratedComponent.start();
 
@@ -122,7 +125,8 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException {
+	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
+			ProcessRollbackException {
 		// mind: async component might be in any state!
 
 		try {
