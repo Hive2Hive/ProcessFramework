@@ -15,7 +15,7 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
-import org.hive2hive.processframework.processes.SequentialProcess;
+import org.hive2hive.processframework.processes.PreorderProcess;
 
 /**
  * A {@link ProcessDecorator} that executes, and if necessary rollbacks, the wrapped {@link IProcessComponent}
@@ -24,7 +24,7 @@ import org.hive2hive.processframework.processes.SequentialProcess;
  * An asynchronous component is executed in an own thread and therefore independent of all other components in
  * a process composite.</br>
  * If existing, the parent container component of an {@link AsyncComponent} is responsible to await the result
- * of the asynchronous component. Therefore, the usage of {@link SequentialProcess} is highly recommended.
+ * of the asynchronous component. Therefore, the usage of {@link PreorderProcess} is highly recommended.
  * </br>
  * In case of a failure within the asynchronous component, it rollbacks itself in its own thread and returns
  * the resulting {@link RollbackReason}. In case the {@link AsyncComponent} needs to be cancelled due to a

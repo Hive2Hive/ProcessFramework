@@ -21,17 +21,12 @@ import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
- * A process component container that executes and rollbacks its process components in a sequential manner. In
- * presence
- * of asynchronous child components, this container waits for all asynchronous operations to complete before
- * continuing.
+ * A {@link Process} that traverses its components in preorder (i.e., left-to-right).
  * 
  * @author Christian Lüthold
- * 
+ *
  */
-public class SequentialProcess extends Process {
-
-	// private static final Logger logger = LoggerFactory.getLogger(SequentialProcess.class);
+public class PreorderProcess extends Process {
 
 	private List<ProcessComponent> components = new ArrayList<ProcessComponent>();
 	private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
@@ -64,21 +59,6 @@ public class SequentialProcess extends Process {
 	}
 
 	@Override
-	protected void doPause() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	protected void doResumeExecution() throws InvalidProcessStateException {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	protected void doResumeRollback() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
 			ProcessRollbackException {
 
@@ -94,10 +74,12 @@ public class SequentialProcess extends Process {
 		components.add(component);
 	}
 
-	/*@Override
-	protected void doInsert(int index, ProcessComponent component) {
-		components.add(index, component);
-	}*/
+	/*
+	 * @Override
+	 * protected void doInsert(int index, ProcessComponent component) {
+	 * components.add(index, component);
+	 * }
+	 */
 
 	@Override
 	protected void doRemove(ProcessComponent component) {
