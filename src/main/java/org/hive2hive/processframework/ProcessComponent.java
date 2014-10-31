@@ -86,7 +86,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public void cancel(RollbackReason reason) throws InvalidProcessStateException {
-		if (state != ProcessState.RUNNING && state != ProcessState.PAUSED && state != ProcessState.SUCCEEDED) {
+		if (state != ProcessState.RUNNING && state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
 
@@ -177,6 +177,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	protected Process getParent() {
 		return parent;
+	}
+	
+	private void setState(ProcessState state) {
+		this.state = state;
 	}
 
 	@Override
