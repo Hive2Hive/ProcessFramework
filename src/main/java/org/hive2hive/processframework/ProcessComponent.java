@@ -16,7 +16,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 
 /**
  * Abstract base class for all process components. Keeps track of a process components' most essential
- * properties and functionalities, such as its state, progess and listeners.
+ * properties and functionalities.
  * 
  * @author Christian Lüthold
  * 
@@ -48,7 +48,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.READY) {
 			throw new InvalidProcessStateException(state);
 		}
-		state = ProcessState.EXECUTING;
+		setState(ProcessState.EXECUTING);
 		isRollbacking = false;
 
 		try {
@@ -64,7 +64,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.EXECUTING && state != ProcessState.ROLLBACKING) {
 			throw new InvalidProcessStateException(state);
 		}
-		state = ProcessState.PAUSED;
+		setState(ProcessState.PAUSED);
 		doPause();
 	}
 
@@ -76,10 +76,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 		// TODO don't distinguish between running and rollback state, each component should be able to decide
 		// itself (decorators must implement both methods but cannot decide, they can just forward resume())
 		if (!isRollbacking) {
-			state = ProcessState.EXECUTING;
+			setState(ProcessState.EXECUTING);
 			doResumeExecution();
 		} else {
-			state = ProcessState.ROLLBACKING;
+			setState(ProcessState.ROLLBACKING);
 			doResumeRollback();
 		}
 	}
@@ -96,7 +96,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		} else {
 
 			// no parent, or called from parent
-			state = ProcessState.ROLLBACKING;
+			setState(ProcessState.ROLLBACKING);
 			// logger.warn("Rolling back '{}'. Reason: '{}'.", this.getClass().getSimpleName(),
 			// reason.getHint());
 
@@ -154,7 +154,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 */
 	protected void succeed() {
 		if (state == ProcessState.EXECUTING) {
-			state = ProcessState.SUCCEEDED;
+			setState(ProcessState.SUCCEEDED);
 			notifySucceeded();
 		}
 	}
@@ -165,7 +165,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 */
 	protected void fail(RollbackReason reason) {
 		if (state == ProcessState.ROLLBACKING) {
-			state = ProcessState.FAILED;
+			setState(ProcessState.FAILED);
 			this.reason = reason;
 			notifyFailed(reason);
 		}
