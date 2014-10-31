@@ -123,6 +123,46 @@ public abstract class ProcessComponent implements IProcessComponent {
 		}
 	}
 
+	@Override
+	public void await() throws InterruptedException {
+		await(-1);
+	}
+
+	@Override
+	public void await(long timeout) throws InterruptedException {
+	
+		if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
+			return;
+	
+		final CountDownLatch latch = new CountDownLatch(1);
+	
+		ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
+		ScheduledFuture<?> handle = executor.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
+					latch.countDown();
+			}
+		}, 0, 100, TimeUnit.MILLISECONDS);
+	
+		// blocking wait for completion or interruption
+		try {
+			if (timeout < 0) {
+				latch.await();
+			} else {
+				boolean success = latch.await(timeout, TimeUnit.MILLISECONDS);
+				if (!success) {
+					throw new InterruptedException("Waiting for process timed out.");
+				}
+			}
+		} catch (InterruptedException e) {
+			// logger.error("Interrupted while waiting for process.", e);
+			throw e;
+		} finally {
+			handle.cancel(true);
+		}
+	}
+
 	/**
 	 * Template method responsible for the execution.
 	 * If a failure occurs during this process component's execution, a {@link ProcessExecutionException} is
@@ -196,48 +236,9 @@ public abstract class ProcessComponent implements IProcessComponent {
 		this.parent = parent;
 	}
 
-	protected Process getParent() {
+	@Override
+	public Process getParent() {
 		return parent;
-	}
-
-	@Override
-	public void await() throws InterruptedException {
-		await(-1);
-	}
-
-	@Override
-	public void await(long timeout) throws InterruptedException {
-
-		if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
-			return;
-
-		final CountDownLatch latch = new CountDownLatch(1);
-
-		ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
-		ScheduledFuture<?> handle = executor.scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
-					latch.countDown();
-			}
-		}, 0, 100, TimeUnit.MILLISECONDS);
-
-		// blocking wait for completion or interruption
-		try {
-			if (timeout < 0) {
-				latch.await();
-			} else {
-				boolean success = latch.await(timeout, TimeUnit.MILLISECONDS);
-				if (!success) {
-					throw new InterruptedException("Waiting for process timed out.");
-				}
-			}
-		} catch (InterruptedException e) {
-			// logger.error("Interrupted while waiting for process.", e);
-			throw e;
-		} finally {
-			handle.cancel(true);
-		}
 	}
 
 	@Override

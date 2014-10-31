@@ -1,4 +1,4 @@
-package org.hive2hive.processframework.processes;
+package org.hive2hive.processframework;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,10 +11,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.hive2hive.processframework.Process;
-import org.hive2hive.processframework.ProcessComponent;
-import org.hive2hive.processframework.ProcessState;
-import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
@@ -73,13 +69,11 @@ public class PreorderProcess extends Process {
 	protected void doAdd(ProcessComponent component) {
 		components.add(component);
 	}
-
-	/*
-	 * @Override
-	 * protected void doInsert(int index, ProcessComponent component) {
-	 * components.add(index, component);
-	 * }
-	 */
+	
+	@Override
+	protected void doAdd(int index, ProcessComponent component) {
+		components.add(index, component);
+	}
 
 	@Override
 	protected void doRemove(ProcessComponent component) {

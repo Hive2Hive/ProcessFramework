@@ -2,6 +2,7 @@ package org.hive2hive.processframework.interfaces;
 
 import java.util.List;
 
+import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
@@ -58,7 +59,8 @@ public interface IProcessComponent {
 	void await() throws InterruptedException;
 
 	/**
-	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination.
+	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination or the
+	 * provided timeout is reached.
 	 * 
 	 * @param timeout The maximal waiting time in milliseconds.
 	 * @throws InterruptedException
@@ -120,5 +122,11 @@ public interface IProcessComponent {
 	 * @return All {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 */
 	List<IProcessComponentListener> getListeners();
+	
+	/**
+	 * Gets the parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
+	 * @return The parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
+	 */
+	Process getParent();
 
 }

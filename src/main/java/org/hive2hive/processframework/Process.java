@@ -26,6 +26,17 @@ public abstract class Process extends ProcessComponent {
 	};
 
 	/**
+	 * Adds a {@link ProcessComponent} to this composite {@code Process} at the provided index.
+	 * 
+	 * @param index The index where to add the {@link ProcessComponent}.
+	 * @param component The {@link ProcessComponent} to be added to this composite {@code Process}.
+	 */
+	public final void add(int index, ProcessComponent component) {
+		component.setParent(this);
+		doAdd(index, component);
+	}
+
+	/**
 	 * Removes a {@link ProcessComponent} from this composite {@code Process}.
 	 * 
 	 * @param component The {@link ProcessComponent} to be removed from this composite {@code Process}.
@@ -60,35 +71,45 @@ public abstract class Process extends ProcessComponent {
 	protected abstract void doAdd(ProcessComponent component);
 
 	/**
+	 * Template method responsible for the adding of a {@link ProcessComponent} to this composite
+	 * {@code Process} at the provided index.
+	 * 
+	 * @param index The index where to add the {@link ProcessComponent}.
+	 * @param component The {@link ProcessComponent} to be added to this composite {@code Process} a the
+	 *            provided index.
+	 */
+	protected abstract void doAdd(int index, ProcessComponent component);
+
+	/**
 	 * Template method responsible for the removing of a {@link ProcessComponent} from this composite
 	 * {@code Process}.
 	 * 
 	 * @param component The {@link ProcessComponent} to be removed from this composite {@code Process}.
 	 */
 	protected abstract void doRemove(ProcessComponent component);
-	
+
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
 			ProcessRollbackException {
 		// do nothing by default
 	}
-	
+
 	@Override
 	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
 			ProcessRollbackException {
 		// do nothing by default
 	}
-	
+
 	@Override
 	protected void doPause() throws InvalidProcessStateException {
 		// do nothing by default
 	}
-	
+
 	@Override
 	protected void doResumeExecution() throws InvalidProcessStateException {
 		// do nothing by default
 	}
-	
+
 	@Override
 	protected void doResumeRollback() throws InvalidProcessStateException {
 		// do nothing by default

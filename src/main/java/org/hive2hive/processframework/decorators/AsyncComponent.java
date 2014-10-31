@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.hive2hive.processframework.PreorderProcess;
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessDecorator;
@@ -15,7 +16,6 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
-import org.hive2hive.processframework.processes.PreorderProcess;
 
 /**
  * A {@link ProcessDecorator} that executes, and if necessary rollbacks, the wrapped {@link IProcessComponent}
