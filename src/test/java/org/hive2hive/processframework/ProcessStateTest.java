@@ -142,6 +142,43 @@ public class ProcessStateTest extends BaseTest {
 		}
 	}
 
+	@Test
+	public void testRollbackingState() {
+
+		IProcessComponent comp = TestUtil.sampleComponent();
+
+		// use reflection to set internal process state
+		setState(comp, ProcessState.ROLLBACKING);
+		assertTrue(comp.getState() == ProcessState.ROLLBACKING);
+
+		// test invalid operations
+		try {
+			comp.start();
+			fail("InvalidProcessStateException should have been thrown.");
+		} catch (InvalidProcessStateException ex) {
+			// should happen
+		}
+		try {
+			comp.resume();
+			fail("InvalidProcessStateException should have been thrown.");
+		} catch (InvalidProcessStateException ex) {
+			// should happen
+		}
+		try {
+			comp.cancel(TestUtil.sampleRollbackReason());
+			fail("InvalidProcessStateException should have been thrown.");
+		} catch (InvalidProcessStateException ex) {
+			// should happen
+		}
+
+		// test valid operations
+		try {
+			comp.pause();
+		} catch (InvalidProcessStateException ex) {
+			fail("This operation should have been allowed.");
+		}
+	}
+	
 	/**
 	 * Uses reflection to set the internal state of a process component.
 	 * 
