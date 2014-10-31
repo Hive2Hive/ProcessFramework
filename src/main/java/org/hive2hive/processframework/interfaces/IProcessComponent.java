@@ -17,21 +17,24 @@ public interface IProcessComponent {
 	/**
 	 * Starts this {@code IProcessComponent} and therefore triggers its execution.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 */
 	void start() throws InvalidProcessStateException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 */
 	void pause() throws InvalidProcessStateException;
 
 	/**
 	 * Resumes the execution or rollback of this {@code IProcessComponent}, depending on its current state.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 */
 	void resume() throws InvalidProcessStateException;
 
@@ -39,7 +42,8 @@ public interface IProcessComponent {
 	 * Cancels the execution of this {@code IProcessComponent} and therefore triggers its rollback.
 	 * 
 	 * @param reason The reason of the cancellation or fail.
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this operation.
+	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 *             operation.
 	 */
 	void cancel(RollbackReason reason) throws InvalidProcessStateException;
 
@@ -71,6 +75,20 @@ public interface IProcessComponent {
 	 * @param listener The {@link IProcessComponentListener} to be detached.
 	 */
 	void detachListener(IProcessComponentListener listener);
+
+	/**
+	 * Sets the name for this {@code IProcessComponent}.
+	 * 
+	 * @param name The name for this {@code IProcessComponent}.
+	 */
+	void setName(String name);
+
+	/**
+	 * Gets the name of this {@code IProcessComponent}.
+	 * 
+	 * @return The name of this {@code IProcessComponent}.
+	 */
+	String getName();
 
 	/**
 	 * Gets the ID of this {@code IProcessComponent}.

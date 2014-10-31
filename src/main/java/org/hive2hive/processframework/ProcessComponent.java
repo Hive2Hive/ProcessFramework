@@ -25,6 +25,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	// private static final Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
 
+	private String name;
 	private final String id;
 	private ProcessState state;
 	private double progress;
@@ -36,6 +37,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	protected ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
+		this.name = String.format("[Process Component ID: %s]", id);
 		this.state = ProcessState.READY;
 		this.progress = 0.0;
 		this.listener = new ArrayList<IProcessComponentListener>();
@@ -222,20 +224,30 @@ public abstract class ProcessComponent implements IProcessComponent {
 			handle.cancel(true);
 		}
 	}
+	
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
 	@Override
 	public String getID() {
-		return id;
+		return this.id;
 	}
 
 	@Override
 	public double getProgress() {
-		return progress;
+		return this.progress;
 	}
 
 	@Override
 	public ProcessState getState() {
-		return state;
+		return this.state;
 	}
 
 	@Override
@@ -263,9 +275,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("[");
-		sb.append("Process Component ID: ").append(id).append("]");
-		return sb.toString();
+		return name;
 	}
 	
 	@Override
