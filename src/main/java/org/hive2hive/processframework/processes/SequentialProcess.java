@@ -94,10 +94,10 @@ public class SequentialProcess extends Process {
 		components.add(component);
 	}
 
-	@Override
+	/*@Override
 	protected void doInsert(int index, ProcessComponent component) {
 		components.add(index, component);
-	}
+	}*/
 
 	@Override
 	protected void doRemove(ProcessComponent component) {
@@ -107,6 +107,12 @@ public class SequentialProcess extends Process {
 	@Override
 	public List<ProcessComponent> getComponents() {
 		return Collections.unmodifiableList(components);
+	}
+
+	@Override
+	public ProcessComponent getComponent(int index) {
+		// TODO implement
+		throw new UnsupportedOperationException("Operation not implemented.");
 	}
 
 	private void awaitAsync() throws ProcessExecutionException {
