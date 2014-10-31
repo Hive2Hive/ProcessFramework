@@ -1,6 +1,6 @@
 package org.hive2hive.processframework.decorators;
 
-import org.hive2hive.processframework.interfaces.IProcessComponent;
+import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessResultListener;
 import org.hive2hive.processframework.interfaces.IResultProcessComponent;
 
@@ -13,7 +13,7 @@ import org.hive2hive.processframework.interfaces.IResultProcessComponent;
  */
 public class AsyncResultComponent<T> extends AsyncComponent implements IResultProcessComponent<T> {
 
-	public AsyncResultComponent(IProcessComponent decoratedComponent) {
+	public AsyncResultComponent(ProcessComponent decoratedComponent) {
 		super(decoratedComponent);
 
 		// TODO Chris: find a cleaner way --> update whole framework hierarchy with IResultProcessComponent<T>

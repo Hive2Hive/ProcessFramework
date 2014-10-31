@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.hive2hive.processframework.Process;
+import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessDecorator;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.RollbackReason;
@@ -42,7 +43,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	private boolean componentFailed = false;
 	private RollbackReason result = null;
 
-	public AsyncComponent(IProcessComponent decoratedComponent) {
+	public AsyncComponent(ProcessComponent decoratedComponent) {
 		super(decoratedComponent);
 
 		asyncExecutor = Executors.newSingleThreadExecutor();
