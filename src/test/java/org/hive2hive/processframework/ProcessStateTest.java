@@ -91,13 +91,50 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 
-		// test valid operation
+		// test valid operations
 		try {
 			comp.pause();
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
 		setState(comp, ProcessState.RUNNING);
+		try {
+			comp.cancel(TestUtil.sampleRollbackReason());
+		} catch (InvalidProcessStateException ex) {
+			fail("This operation should have been allowed.");
+		}
+	}
+
+	@Test
+	public void testPausedState() {
+
+		IProcessComponent comp = TestUtil.sampleComponent();
+
+		// use reflection to set internal process state
+		setState(comp, ProcessState.PAUSED);
+		assertTrue(comp.getState() == ProcessState.PAUSED);
+
+		// test invalid operations
+		try {
+			comp.start();
+			fail("InvalidProcessStateException should have been thrown.");
+		} catch (InvalidProcessStateException ex) {
+			// should happen
+		}
+		try {
+			comp.pause();
+			fail("InvalidProcessStateException should have been thrown.");
+		} catch (InvalidProcessStateException ex) {
+			// should happen
+		}
+
+		// test valid operations
+		try {
+			comp.resume();
+		} catch (InvalidProcessStateException ex) {
+			fail("This operation should have been allowed.");
+		}
+		setState(comp, ProcessState.PAUSED);
 		try {
 			comp.cancel(TestUtil.sampleRollbackReason());
 		} catch (InvalidProcessStateException ex) {
@@ -115,7 +152,7 @@ public class ProcessStateTest extends BaseTest {
 		try {
 			Method method = ProcessComponent.class.getDeclaredMethod("setState", ProcessState.class);
 			method.setAccessible(true);
-			method.invoke(object, ProcessState.RUNNING);
+			method.invoke(object, state);
 		} catch (Exception ex) {
 			fail("Reflection failed.");
 		}
