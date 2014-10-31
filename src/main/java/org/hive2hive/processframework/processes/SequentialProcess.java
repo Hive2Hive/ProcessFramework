@@ -44,7 +44,7 @@ public class SequentialProcess extends Process {
 
 		// execute all child components
 		while (!components.isEmpty() && executionIndex < components.size()
-				&& getState() == ProcessState.RUNNING) {
+				&& getState() == ProcessState.EXECUTING) {
 
 			checkAsyncComponentsForFail(asyncHandles);
 			rollbackIndex = executionIndex;
@@ -111,7 +111,7 @@ public class SequentialProcess extends Process {
 		if (asyncHandles.isEmpty())
 			return;
 
-		if (getState() != ProcessState.RUNNING)
+		if (getState() != ProcessState.EXECUTING)
 			return;
 
 		// logger.debug("Awaiting async components for completion.");
@@ -123,7 +123,7 @@ public class SequentialProcess extends Process {
 			public void run() {
 
 				// assure still in running state
-				if (getState() != ProcessState.RUNNING) {
+				if (getState() != ProcessState.EXECUTING) {
 					latch.countDown();
 					return;
 				}

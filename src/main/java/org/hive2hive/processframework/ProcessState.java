@@ -1,7 +1,7 @@
 package org.hive2hive.processframework;
 
 /**
- * State of a {@link ProcessComponent}.
+ * Represents the internal state of a {@link ProcessComponent}.
  * 
  * @author Christian Lüthold
  * 
@@ -15,13 +15,13 @@ public enum ProcessState {
 	/**
 	 * Represents a {@link ProcessComponent} that is currently being executed.
 	 */
-	RUNNING,
+	EXECUTING,
 	/**
 	 * Represents a {@link ProcessComponent} that is currently being rolled back.
 	 */
 	ROLLBACKING,
 	/**
-	 * Represents a {@link ProcessComponent} that is currently paused, whether it is running or rollbacking.
+	 * Represents a {@link ProcessComponent} that is currently paused, whether it is executing or rolling back.
 	 */
 	PAUSED,
 	/**
@@ -29,7 +29,7 @@ public enum ProcessState {
 	 */
 	SUCCEEDED,
 	/**
-	 * Represents a {@link ProcessComponent} that has finished unsuccessfully and failed.
+	 * Represents a {@link ProcessComponent} that has finished unsuccessfully due to cancellation or fail.
 	 */
 	FAILED
 }

@@ -74,8 +74,8 @@ public class ProcessStateTest extends BaseTest {
 		IProcessComponent comp = TestUtil.sampleComponent();
 
 		// use reflection to set internal process state
-		setState(comp, ProcessState.RUNNING);
-		assertTrue(comp.getState() == ProcessState.RUNNING);
+		setState(comp, ProcessState.EXECUTING);
+		assertTrue(comp.getState() == ProcessState.EXECUTING);
 
 		// test invalid operations
 		try {
@@ -97,7 +97,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		setState(comp, ProcessState.RUNNING);
+		setState(comp, ProcessState.EXECUTING);
 		try {
 			comp.cancel(TestUtil.sampleRollbackReason());
 		} catch (InvalidProcessStateException ex) {

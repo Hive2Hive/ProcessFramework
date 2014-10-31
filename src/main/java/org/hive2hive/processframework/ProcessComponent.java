@@ -48,7 +48,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.READY) {
 			throw new InvalidProcessStateException(state);
 		}
-		state = ProcessState.RUNNING;
+		state = ProcessState.EXECUTING;
 		isRollbacking = false;
 
 		try {
@@ -61,7 +61,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public void pause() throws InvalidProcessStateException {
-		if (state != ProcessState.RUNNING && state != ProcessState.ROLLBACKING) {
+		if (state != ProcessState.EXECUTING && state != ProcessState.ROLLBACKING) {
 			throw new InvalidProcessStateException(state);
 		}
 		state = ProcessState.PAUSED;
@@ -76,7 +76,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		// TODO don't distinguish between running and rollback state, each component should be able to decide
 		// itself (decorators must implement both methods but cannot decide, they can just forward resume())
 		if (!isRollbacking) {
-			state = ProcessState.RUNNING;
+			state = ProcessState.EXECUTING;
 			doResumeExecution();
 		} else {
 			state = ProcessState.ROLLBACKING;
@@ -86,7 +86,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public void cancel(RollbackReason reason) throws InvalidProcessStateException {
-		if (state != ProcessState.RUNNING && state != ProcessState.PAUSED) {
+		if (state != ProcessState.EXECUTING && state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
 
@@ -149,11 +149,11 @@ public abstract class ProcessComponent implements IProcessComponent {
 	protected abstract void doRollback(RollbackReason reason) throws InvalidProcessStateException;
 
 	/**
-	 * If in {@link ProcessState#RUNNING}, this {@code ProcessComponent} succeeds, changes its state to
+	 * If in {@link ProcessState#EXECUTING}, this {@code ProcessComponent} succeeds, changes its state to
 	 * {@link ProcessState#SUCCEEDED} and notifies all interested listeners.
 	 */
 	protected void succeed() {
-		if (state == ProcessState.RUNNING) {
+		if (state == ProcessState.EXECUTING) {
 			state = ProcessState.SUCCEEDED;
 			notifySucceeded();
 		}
