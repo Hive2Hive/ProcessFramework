@@ -1,12 +1,10 @@
 package org.hive2hive.processframework.decorators;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessDecorator;
 import org.hive2hive.processframework.ProcessState;
@@ -108,6 +106,23 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	}
 
 	@Override
+	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
+			ProcessRollbackException {
+		// mind: async component might be in any state!
+	
+		try {
+			decoratedComponent.cancel(reason);
+		} catch (InvalidProcessStateException e) {
+			if (e.getInvalidState() == ProcessState.FAILED) {
+				// async component rolled itself back already
+				return;
+			} else {
+				throw e;
+			}
+		}
+	}
+
+	@Override
 	protected void doPause() throws InvalidProcessStateException {
 		// mind: async component might be in any state!
 		decoratedComponent.pause();
@@ -126,23 +141,6 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException {
-		// mind: async component might be in any state!
-
-		try {
-			decoratedComponent.cancel(reason);
-		} catch (InvalidProcessStateException e) {
-			if (e.getInvalidState() == ProcessState.FAILED) {
-				// async component rolled itself back already
-				return;
-			} else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
 	protected void succeed() {
 		// AsyncComponent does not succeed until component does
 		if (componentSucceeded) {
@@ -157,46 +155,11 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 			super.fail(reason);
 		}
 	}
-
-	@Override
-	public synchronized void attachListener(IProcessComponentListener listener) {
-		decoratedComponent.attachListener(listener);
-	}
-
-	@Override
-	public synchronized void detachListener(IProcessComponentListener listener) {
-		decoratedComponent.attachListener(listener);
-	}
-
-	@Override
-	public List<IProcessComponentListener> getListeners() {
-		return decoratedComponent.getListeners();
-	}
-
-	@Override
-	public String getID() {
-		return decoratedComponent.getID();
-	}
-
-	@Override
-	public double getProgress() {
-		return decoratedComponent.getProgress();
-	}
-
+	
 	@Override
 	public ProcessState getState() {
-		// return state of AsyncComponent, not of decorated component
+		// TODO to be discussed
 		return super.getState();
-	}
-
-	@Override
-	public void setParent(Process parent) {
-		super.setParent(parent);
-	}
-
-	@Override
-	public Process getParent() {
-		return super.getParent();
 	}
 
 	public Future<RollbackReason> getHandle() {

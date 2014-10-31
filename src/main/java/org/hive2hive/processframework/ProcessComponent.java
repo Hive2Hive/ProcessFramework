@@ -171,6 +171,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessExecutionException If a failure occured during this process component's execution.
+	 * @throws ProcessRollbackException  If a failure occured during this process component's rollback.
 	 */
 	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException, ProcessRollbackException;
 
