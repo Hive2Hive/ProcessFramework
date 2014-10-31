@@ -2,6 +2,10 @@ package org.hive2hive.processframework;
 
 import java.util.Collection;
 
+import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
+import org.hive2hive.processframework.exceptions.ProcessExecutionException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
+
 /**
  * Abstract base class for all composite {@link ProcessComponent}s (container).
  * These composites contain other {@link ProcessComponent}s (children).
@@ -62,5 +66,32 @@ public abstract class Process extends ProcessComponent {
 	 * @param component The {@link ProcessComponent} to be removed from this composite {@code Process}.
 	 */
 	protected abstract void doRemove(ProcessComponent component);
+	
+	@Override
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException {
+		// do nothing by default
+	}
+	
+	@Override
+	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
+			ProcessRollbackException {
+		// do nothing by default
+	}
+	
+	@Override
+	protected void doPause() throws InvalidProcessStateException {
+		// do nothing by default
+	}
+	
+	@Override
+	protected void doResumeExecution() throws InvalidProcessStateException {
+		// do nothing by default
+	}
+	
+	@Override
+	protected void doResumeRollback() throws InvalidProcessStateException {
+		// do nothing by default
+	}
 
 }
