@@ -77,7 +77,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 */
 	@Override
 	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
-		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED) {
+		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED && state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
 		setState(ProcessState.ROLLBACKING);
