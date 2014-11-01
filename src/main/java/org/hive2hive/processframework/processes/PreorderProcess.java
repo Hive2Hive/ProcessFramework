@@ -63,7 +63,7 @@ public class PreorderProcess extends Process {
 
 		while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
 			ProcessComponent last = components.get(rollbackIndex);
-			last.cancel(reason);
+			last.rollback(reason);
 			rollbackIndex--;
 		}
 	}

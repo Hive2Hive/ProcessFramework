@@ -60,7 +60,7 @@ public class CompletionHandleComponent extends ProcessDecorator {
 	@Override
 	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
 			ProcessRollbackException {
-		decoratedComponent.cancel(reason);
+		decoratedComponent.rollback(reason);
 	}
 
 }

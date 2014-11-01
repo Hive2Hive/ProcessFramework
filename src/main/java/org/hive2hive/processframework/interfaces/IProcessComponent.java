@@ -17,7 +17,7 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 public interface IProcessComponent {
 
 	/**
-	 * Starts the execution of this {@code IProcessComponent} and therefore triggers its execution.
+	 * Starts the execution of this {@code IProcessComponent}.
 	 * 
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
@@ -26,14 +26,14 @@ public interface IProcessComponent {
 	void start() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
-	 * Cancels the execution of this {@code IProcessComponent} and therefore triggers its rollback.
+	 * Starts the rollback of this {@code IProcessComponent}.
 	 * 
 	 * @param reason The reason of the cancellation or fail.
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
 	 */
-	void cancel(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException;
+	void rollback(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.

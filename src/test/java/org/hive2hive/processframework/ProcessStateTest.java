@@ -55,7 +55,7 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 		try {
-			comp.cancel(TestUtil.sampleRollbackReason());
+			comp.rollback(TestUtil.sampleRollbackReason());
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -100,7 +100,7 @@ public class ProcessStateTest extends BaseTest {
 		}
 		setState(comp, ProcessState.EXECUTING);
 		try {
-			comp.cancel(TestUtil.sampleRollbackReason());
+			comp.rollback(TestUtil.sampleRollbackReason());
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
@@ -137,7 +137,7 @@ public class ProcessStateTest extends BaseTest {
 		}
 		setState(comp, ProcessState.PAUSED);
 		try {
-			comp.cancel(TestUtil.sampleRollbackReason());
+			comp.rollback(TestUtil.sampleRollbackReason());
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
@@ -166,7 +166,7 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 		try {
-			comp.cancel(TestUtil.sampleRollbackReason());
+			comp.rollback(TestUtil.sampleRollbackReason());
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -209,7 +209,7 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 		try {
-			comp.cancel(TestUtil.sampleRollbackReason());
+			comp.rollback(TestUtil.sampleRollbackReason());
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -245,7 +245,7 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 		try {
-			comp.cancel(TestUtil.sampleRollbackReason());
+			comp.rollback(TestUtil.sampleRollbackReason());
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen

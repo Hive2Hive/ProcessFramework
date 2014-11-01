@@ -88,7 +88,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 				// TODO this is suspicious, see https://github.com/Hive2Hive/ProcessFramework/issues/8
 				if (getParent() == null) {
 					try {
-						cancel(reason);
+						rollback(reason);
 					} catch (InvalidProcessStateException ex) {
 						// logger.error("Asynchronous component could not be cancelled.", e);
 					} catch (ProcessRollbackException ex) {
@@ -111,7 +111,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 		// mind: async component might be in any state!
 	
 		try {
-			decoratedComponent.cancel(reason);
+			decoratedComponent.rollback(reason);
 		} catch (InvalidProcessStateException e) {
 			if (e.getInvalidState() == ProcessState.FAILED) {
 				// async component rolled itself back already

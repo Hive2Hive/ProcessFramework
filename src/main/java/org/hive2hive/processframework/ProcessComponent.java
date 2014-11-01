@@ -43,9 +43,8 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	/**
-	 * Starts the execution of this {@code ProcessComponent} and therefore triggers its execution. Upon
-	 * successful execution,
-	 * all attached {@link ProcessComponentListener}s notify the success.
+	 * Starts the execution of this {@code ProcessComponent}.
+	 * Upon successful execution, all attached {@link ProcessComponentListener}s notify the success.
 	 * <ul>
 	 * <li>In case of a failure during the execution, this {@code ProcessComponent} automatically cancels and
 	 * starts its rollback.</li>
@@ -66,7 +65,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 			succeed();
 		} catch (ProcessExecutionException ex1) {
 			try {
-				cancel(ex1.getRollbackReason());
+				rollback(ex1.getRollbackReason());
 			} catch (ProcessRollbackException ex2) {
 				throw ex2;
 			}
@@ -76,12 +75,12 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	/**
-	 * Cancels the execution of this {@code ProcessComponent} and therefore triggers its rollback.
+	 * Starts the execution of this {@code ProcessComponent}.
 	 * In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.
 	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public void cancel(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException {
+	public void rollback(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException {
 		if (state != ProcessState.EXECUTING && state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -130,12 +129,12 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public void await(long timeout) throws InterruptedException {
-	
+
 		if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
 			return;
-	
+
 		final CountDownLatch latch = new CountDownLatch(1);
-	
+
 		ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
 		ScheduledFuture<?> handle = executor.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -144,7 +143,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 					latch.countDown();
 			}
 		}, 0, 100, TimeUnit.MILLISECONDS);
-	
+
 		// blocking wait for completion or interruption
 		try {
 			if (timeout < 0) {
@@ -171,9 +170,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessExecutionException If a failure occured during this process component's execution.
-	 * @throws ProcessRollbackException  If a failure occured during this process component's rollback.
+	 * @throws ProcessRollbackException If a failure occured during this process component's rollback.
 	 */
-	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException, ProcessRollbackException;
+	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException;
 
 	/**
 	 * Template method responsible for the rollback.
