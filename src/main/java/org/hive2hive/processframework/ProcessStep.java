@@ -1,6 +1,8 @@
 package org.hive2hive.processframework;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
+import org.hive2hive.processframework.exceptions.ProcessExecutionException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
  * Abstract base class for all (leaf) process components that represent a specific operation and do not
@@ -12,25 +14,27 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 public abstract class ProcessStep extends ProcessComponent {
 
 	@Override
-	protected final void doPause() {
-		// TODO Auto-generated method stub
-
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+		// do nothing by default
 	}
 
 	@Override
-	protected final void doResumeExecution() throws InvalidProcessStateException {
-		// TODO Auto-generated method stub
-
+	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+		// do nothing by default
 	}
 
 	@Override
-	protected final void doResumeRollback() {
-		// TODO Auto-generated method stub
-
+	protected void doPause() throws InvalidProcessStateException {
+		// do nothing by default
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException {
+	protected void doResumeExecution() throws InvalidProcessStateException {
+		// do nothing by default
+	}
+
+	@Override
+	protected void doResumeRollback() throws InvalidProcessStateException {
 		// do nothing by default
 	}
 }

@@ -29,10 +29,9 @@ public abstract class ProcessComponent implements IProcessComponent {
 	private ProcessState state;
 	private double progress;
 	private final List<IProcessComponentListener> listener;
-
 	private Process parent;
+
 	private boolean isRollbacking;
-	private RollbackReason reason;
 
 	protected ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
@@ -53,7 +52,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public void execute() throws InvalidProcessStateException, ProcessRollbackException {
+	public void execute() throws InvalidProcessStateException, ProcessExecutionException {
 		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -62,15 +61,12 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 		try {
 			doExecute();
-			succeed();
-		} catch (ProcessExecutionException ex1) {
-			try {
-				rollback(ex1.getRollbackReason());
-			} catch (ProcessRollbackException ex2) {
-				throw ex2;
-			}
-		} catch (ProcessRollbackException ex2) {
-			throw ex2;
+			setState(ProcessState.EXECUTION_SUCCEEDED);
+			// TODO notify execution success
+		} catch (ProcessExecutionException ex) {
+			setState(ProcessState.EXECUTION_FAILED);
+			// TODO notify execution failure
+			throw ex;
 		}
 	}
 
@@ -80,7 +76,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public void rollback(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException {
+	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
 		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -88,11 +84,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 		isRollbacking = true;
 
 		try {
-			doRollback(reason);
-		} catch (ProcessRollbackException e) {
-			throw e;
-		} finally {
-			fail(reason);
+			doRollback();
+			setState(ProcessState.ROLLBACK_SUCCEEDED);
+			// TODO notify rollback success
+		} catch (ProcessRollbackException ex) {
+			setState(ProcessState.ROLLBACK_FAILED);
+			// TODO notify rollback failure
+			throw ex;
 		}
 	}
 
@@ -130,7 +128,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	@Override
 	public void await(long timeout) throws InterruptedException {
 
-		if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
+		if (hasFinished())
 			return;
 
 		final CountDownLatch latch = new CountDownLatch(1);
@@ -139,7 +137,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		ScheduledFuture<?> handle = executor.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				if (state == ProcessState.SUCCEEDED || state == ProcessState.FAILED)
+				if (hasFinished())
 					latch.countDown();
 			}
 		}, 0, 100, TimeUnit.MILLISECONDS);
@@ -162,6 +160,11 @@ public abstract class ProcessComponent implements IProcessComponent {
 		}
 	}
 
+	private boolean hasFinished() {
+		return state == ProcessState.EXECUTION_SUCCEEDED || state == ProcessState.EXECUTION_FAILED
+				|| state == ProcessState.ROLLBACK_SUCCEEDED || state == ProcessState.ROLLBACK_FAILED;
+	}
+
 	/**
 	 * Template method responsible for the execution.
 	 * If a failure occurs during this process component's execution, a {@link ProcessExecutionException} is
@@ -170,10 +173,8 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessExecutionException If a failure occured during this process component's execution.
-	 * @throws ProcessRollbackException If a failure occured during this process component's rollback.
 	 */
-	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
-			ProcessRollbackException;
+	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
 	 * Template method responsible for the rollback.
@@ -184,8 +185,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during this process component's rollback.
 	 */
-	protected abstract void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException;
+	protected abstract void doRollback() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Template method responsible for the execution or rollback pausing.
@@ -209,29 +209,6 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 *             operation.
 	 */
 	protected abstract void doResumeRollback() throws InvalidProcessStateException;
-
-	/**
-	 * If in {@link ProcessState#EXECUTING}, this {@code ProcessComponent} succeeds, changes its state to
-	 * {@link ProcessState#SUCCEEDED} and notifies all interested listeners.
-	 */
-	private void succeed() {
-		if (state == ProcessState.EXECUTING) {
-			setState(ProcessState.SUCCEEDED);
-			notifySucceeded();
-		}
-	}
-
-	/**
-	 * If in {@link ProcessState#ROLLBACKING}, this {@code ProcessComponent} succeeds, changes its state to
-	 * {@link ProcessState#FAILED} and notifies all interested listeners.
-	 */
-	private void fail(RollbackReason reason) {
-		if (state == ProcessState.ROLLBACKING) {
-			setState(ProcessState.FAILED);
-			this.reason = reason;
-			notifyFailed(reason);
-		}
-	}
 
 	protected void setParent(Process parent) {
 		this.parent = parent;
@@ -271,13 +248,16 @@ public abstract class ProcessComponent implements IProcessComponent {
 	public synchronized void attachListener(IProcessComponentListener listener) {
 		this.listener.add(listener);
 
-		// if process component completed already
-		if (state == ProcessState.SUCCEEDED) {
-			listener.onSucceeded();
-		}
-		if (state == ProcessState.FAILED) {
-			listener.onFailed(reason);
-		}
+		// TODO implement
+		/*
+		 * // if process component completed already
+		 * if (state == ProcessState.SUCCEEDED) {
+		 * listener.onSucceeded();
+		 * }
+		 * if (state == ProcessState.FAILED) {
+		 * listener.onFailed(reason);
+		 * }
+		 */
 	}
 
 	@Override

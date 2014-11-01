@@ -55,7 +55,7 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 		try {
-			comp.rollback(TestUtil.sampleRollbackReason());
+			comp.rollback();
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessState;
-import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
+import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
@@ -21,19 +21,18 @@ public interface IProcessComponent {
 	 * 
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
-	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
+	 * @throws ProcessExecutionException If a failure occured during a process component's execution.
 	 */
-	void execute() throws InvalidProcessStateException, ProcessRollbackException;
+	void execute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
 	 * Starts the rollback of this {@code IProcessComponent}.
 	 * 
-	 * @param reason The reason of the cancellation or fail.
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
 	 */
-	void rollback(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException;
+	void rollback() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.

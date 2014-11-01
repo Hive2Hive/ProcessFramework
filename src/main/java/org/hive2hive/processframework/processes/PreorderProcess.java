@@ -36,8 +36,7 @@ public class PreorderProcess extends Process {
 	private int rollbackIndex = 0;
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
-			ProcessRollbackException {
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 
 		while (!components.isEmpty() && executionIndex < components.size()
 				&& getState() == ProcessState.EXECUTING) {
@@ -58,12 +57,11 @@ public class PreorderProcess extends Process {
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException {
+	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
 		while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
 			ProcessComponent last = components.get(rollbackIndex);
-			last.rollback(reason);
+			last.rollback();
 			rollbackIndex--;
 		}
 	}

@@ -89,14 +89,12 @@ public abstract class Process extends ProcessComponent {
 	protected abstract void doRemove(ProcessComponent component);
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
-			ProcessRollbackException {
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 		// do nothing by default
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException {
+	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 		// do nothing by default
 	}
 

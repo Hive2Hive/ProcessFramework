@@ -34,7 +34,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
 	@Override
-	public void execute() throws InvalidProcessStateException, ProcessRollbackException {
+	public void execute() throws InvalidProcessStateException, ProcessExecutionException {
 		decoratedComponent.execute();
 	}
 
@@ -43,8 +43,8 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
 	@Override
-	public void rollback(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException {
-		decoratedComponent.rollback(reason);
+	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
+		decoratedComponent.rollback();
 	}
 
 	/**
@@ -88,8 +88,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
-			ProcessRollbackException {
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 		decoratedComponent.doExecute();
 	}
 
@@ -98,9 +97,8 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException {
-		decoratedComponent.doRollback(reason);
+	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+		decoratedComponent.doRollback();
 	}
 
 	/**
@@ -134,19 +132,23 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Default decorator implementation:
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
-	/*@Override
-	protected void succeed() {
-		decoratedComponent.succeed();
-	}*/
+	/*
+	 * @Override
+	 * protected void succeed() {
+	 * decoratedComponent.succeed();
+	 * }
+	 */
 
 	/**
 	 * Default decorator implementation:
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
-	/*@Override
-	protected void fail(RollbackReason reason) {
-		decoratedComponent.fail(reason);
-	}*/
+	/*
+	 * @Override
+	 * protected void fail(RollbackReason reason) {
+	 * decoratedComponent.fail(reason);
+	 * }
+	 */
 
 	/**
 	 * Default decorator implementation:

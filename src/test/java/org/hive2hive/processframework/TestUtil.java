@@ -2,6 +2,7 @@ package org.hive2hive.processframework;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
+import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 public class TestUtil {
@@ -14,14 +15,19 @@ public class TestUtil {
 	public static IProcessComponent sampleComponent() {
 
 		return new ProcessComponent() {
-
+			
 			@Override
-			protected void doRollback(RollbackReason reason) throws InvalidProcessStateException {
+			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				// do nothing
 			}
 
 			@Override
-			protected void doResumeRollback() throws InvalidProcessStateException {
+			protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+				// do nothing
+			}
+			
+			@Override
+			protected void doPause() throws InvalidProcessStateException {
 				// do nothing
 			}
 
@@ -31,12 +37,7 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doPause() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+			protected void doResumeRollback() throws InvalidProcessStateException {
 				// do nothing
 			}
 		};

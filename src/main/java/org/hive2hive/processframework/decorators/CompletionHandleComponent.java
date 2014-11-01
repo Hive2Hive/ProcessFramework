@@ -26,8 +26,7 @@ public class CompletionHandleComponent extends ProcessDecorator {
 	}
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
-			ProcessRollbackException {
+	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 		IProcessComponentListener listener = new IProcessComponentListener() {
 			public void onSucceeded() {
 				handle.onCompletionSuccess();
@@ -43,6 +42,11 @@ public class CompletionHandleComponent extends ProcessDecorator {
 	}
 
 	@Override
+	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+		decoratedComponent.rollback();
+	}
+
+	@Override
 	protected void doPause() throws InvalidProcessStateException {
 		decoratedComponent.pause();
 	}
@@ -55,12 +59,6 @@ public class CompletionHandleComponent extends ProcessDecorator {
 	@Override
 	protected void doResumeRollback() throws InvalidProcessStateException {
 		decoratedComponent.resume();
-	}
-
-	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException {
-		decoratedComponent.rollback(reason);
 	}
 
 }

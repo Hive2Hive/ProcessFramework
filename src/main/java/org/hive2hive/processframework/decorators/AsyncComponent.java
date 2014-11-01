@@ -76,7 +76,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 				componentFailed = false;
 				result = null;
 
-				//succeed();
+				// succeed();
 			}
 
 			@Override
@@ -88,7 +88,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 				// TODO this is suspicious, see https://github.com/Hive2Hive/ProcessFramework/issues/8
 				if (getParent() == null) {
 					try {
-						rollback(reason);
+						rollback();
 					} catch (InvalidProcessStateException ex) {
 						// logger.error("Asynchronous component could not be cancelled.", e);
 					} catch (ProcessRollbackException ex) {
@@ -106,14 +106,14 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	}
 
 	@Override
-	protected void doRollback(RollbackReason reason) throws InvalidProcessStateException,
-			ProcessRollbackException {
+	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 		// mind: async component might be in any state!
-	
+
 		try {
-			decoratedComponent.rollback(reason);
+			decoratedComponent.rollback();
 		} catch (InvalidProcessStateException e) {
-			if (e.getInvalidState() == ProcessState.FAILED) {
+			if (e.getInvalidState() == ProcessState.ROLLBACK_SUCCEEDED
+					|| e.getInvalidState() == ProcessState.ROLLBACK_FAILED) {
 				// async component rolled itself back already
 				return;
 			} else {
@@ -140,22 +140,24 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 		decoratedComponent.resume();
 	}
 
-	/*@Override
-	protected void succeed() {
-		// AsyncComponent does not succeed until component does
-		if (componentSucceeded) {
-			super.succeed();
-		}
-	}
+	/*
+	 * @Override
+	 * protected void succeed() {
+	 * // AsyncComponent does not succeed until component does
+	 * if (componentSucceeded) {
+	 * super.succeed();
+	 * }
+	 * }
+	 * 
+	 * @Override
+	 * protected void fail(RollbackReason reason) {
+	 * // AsyncComponent does not fail until component does
+	 * if (componentFailed) {
+	 * super.fail(reason);
+	 * }
+	 * }
+	 */
 
-	@Override
-	protected void fail(RollbackReason reason) {
-		// AsyncComponent does not fail until component does
-		if (componentFailed) {
-			super.fail(reason);
-		}
-	}*/
-	
 	@Override
 	public ProcessState getState() {
 		// TODO to be discussed
