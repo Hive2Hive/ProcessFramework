@@ -76,7 +76,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 				componentFailed = false;
 				result = null;
 
-				succeed();
+				//succeed();
 			}
 
 			@Override
@@ -140,7 +140,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 		decoratedComponent.resume();
 	}
 
-	@Override
+	/*@Override
 	protected void succeed() {
 		// AsyncComponent does not succeed until component does
 		if (componentSucceeded) {
@@ -154,7 +154,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 		if (componentFailed) {
 			super.fail(reason);
 		}
-	}
+	}*/
 	
 	@Override
 	public ProcessState getState() {

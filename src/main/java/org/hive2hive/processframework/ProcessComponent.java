@@ -214,7 +214,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * If in {@link ProcessState#EXECUTING}, this {@code ProcessComponent} succeeds, changes its state to
 	 * {@link ProcessState#SUCCEEDED} and notifies all interested listeners.
 	 */
-	protected void succeed() {
+	private void succeed() {
 		if (state == ProcessState.EXECUTING) {
 			setState(ProcessState.SUCCEEDED);
 			notifySucceeded();
@@ -225,7 +225,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * If in {@link ProcessState#ROLLBACKING}, this {@code ProcessComponent} succeeds, changes its state to
 	 * {@link ProcessState#FAILED} and notifies all interested listeners.
 	 */
-	protected void fail(RollbackReason reason) {
+	private void fail(RollbackReason reason) {
 		if (state == ProcessState.ROLLBACKING) {
 			setState(ProcessState.FAILED);
 			this.reason = reason;

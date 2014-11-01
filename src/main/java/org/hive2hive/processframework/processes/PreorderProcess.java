@@ -39,7 +39,6 @@ public class PreorderProcess extends Process {
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException,
 			ProcessRollbackException {
 
-		// execute all child components
 		while (!components.isEmpty() && executionIndex < components.size()
 				&& getState() == ProcessState.EXECUTING) {
 

@@ -134,19 +134,19 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Default decorator implementation:
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
-	@Override
+	/*@Override
 	protected void succeed() {
 		decoratedComponent.succeed();
-	}
+	}*/
 
 	/**
 	 * Default decorator implementation:
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
-	@Override
+	/*@Override
 	protected void fail(RollbackReason reason) {
 		decoratedComponent.fail(reason);
-	}
+	}*/
 
 	/**
 	 * Default decorator implementation:
