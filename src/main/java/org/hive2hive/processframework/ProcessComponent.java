@@ -53,8 +53,8 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public void start() throws InvalidProcessStateException, ProcessRollbackException {
-		if (state != ProcessState.READY) {
+	public void execute() throws InvalidProcessStateException, ProcessRollbackException {
+		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
 		setState(ProcessState.EXECUTING);
@@ -81,7 +81,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 */
 	@Override
 	public void rollback(RollbackReason reason) throws InvalidProcessStateException, ProcessRollbackException {
-		if (state != ProcessState.EXECUTING && state != ProcessState.PAUSED) {
+		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
 		setState(ProcessState.ROLLBACKING);

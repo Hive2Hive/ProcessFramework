@@ -39,7 +39,7 @@ public class CompletionHandleComponent extends ProcessDecorator {
 		};
 
 		decoratedComponent.attachListener(listener);
-		decoratedComponent.start();
+		decoratedComponent.execute();
 	}
 
 	@Override

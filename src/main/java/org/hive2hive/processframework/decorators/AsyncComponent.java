@@ -100,7 +100,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 
 		// TODO catch the exceptions and forward them!!
 		// sync execution
-		decoratedComponent.start();
+		decoratedComponent.execute();
 
 		return result;
 	}

@@ -34,8 +34,8 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
 	 */
 	@Override
-	public void start() throws InvalidProcessStateException, ProcessRollbackException {
-		decoratedComponent.start();
+	public void execute() throws InvalidProcessStateException, ProcessRollbackException {
+		decoratedComponent.execute();
 	}
 
 	/**

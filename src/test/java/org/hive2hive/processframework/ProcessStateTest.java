@@ -63,7 +63,7 @@ public class ProcessStateTest extends BaseTest {
 
 		// test valid operation
 		try {
-			comp.start();
+			comp.execute();
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
@@ -80,7 +80,7 @@ public class ProcessStateTest extends BaseTest {
 
 		// test invalid operations
 		try {
-			comp.start();
+			comp.execute();
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -117,7 +117,7 @@ public class ProcessStateTest extends BaseTest {
 
 		// test invalid operations
 		try {
-			comp.start();
+			comp.execute();
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -154,7 +154,7 @@ public class ProcessStateTest extends BaseTest {
 
 		// test invalid operations
 		try {
-			comp.start();
+			comp.execute();
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -191,7 +191,7 @@ public class ProcessStateTest extends BaseTest {
 
 		// test invalid operations
 		try {
-			comp.start();
+			comp.execute();
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen
@@ -227,7 +227,7 @@ public class ProcessStateTest extends BaseTest {
 
 		// test invalid operations
 		try {
-			comp.start();
+			comp.execute();
 			fail("InvalidProcessStateException should have been thrown.");
 		} catch (InvalidProcessStateException ex) {
 			// should happen

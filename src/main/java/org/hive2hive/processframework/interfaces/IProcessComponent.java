@@ -23,7 +23,7 @@ public interface IProcessComponent {
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
 	 */
-	void start() throws InvalidProcessStateException, ProcessRollbackException;
+	void execute() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Starts the rollback of this {@code IProcessComponent}.

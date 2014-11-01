@@ -45,7 +45,7 @@ public class PreorderProcess extends Process {
 			checkAsyncComponentsForFail(asyncHandles);
 			rollbackIndex = executionIndex;
 			ProcessComponent next = components.get(executionIndex);
-			next.start();
+			next.execute();
 			executionIndex++;
 
 			if (next instanceof AsyncComponent) {
