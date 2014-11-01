@@ -62,10 +62,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 		try {
 			doExecute();
 			setState(ProcessState.EXECUTION_SUCCEEDED);
-			// TODO notify execution success
+			notifyListeners(ProcessState.EXECUTION_SUCCEEDED);
 		} catch (ProcessExecutionException ex) {
 			setState(ProcessState.EXECUTION_FAILED);
-			// TODO notify execution failure
+			notifyListeners(ProcessState.EXECUTION_FAILED);
 			throw ex;
 		}
 	}
@@ -86,10 +86,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 		try {
 			doRollback();
 			setState(ProcessState.ROLLBACK_SUCCEEDED);
-			// TODO notify rollback success
+			notifyListeners(ProcessState.ROLLBACK_SUCCEEDED);
 		} catch (ProcessRollbackException ex) {
 			setState(ProcessState.ROLLBACK_FAILED);
-			// TODO notify rollback failure
+			notifyListeners(ProcessState.ROLLBACK_FAILED);
 			throw ex;
 		}
 	}
@@ -248,16 +248,19 @@ public abstract class ProcessComponent implements IProcessComponent {
 	public synchronized void attachListener(IProcessComponentListener listener) {
 		this.listener.add(listener);
 
-		// TODO implement
-		/*
-		 * // if process component completed already
-		 * if (state == ProcessState.SUCCEEDED) {
-		 * listener.onSucceeded();
-		 * }
-		 * if (state == ProcessState.FAILED) {
-		 * listener.onFailed(reason);
-		 * }
-		 */
+		// fire event if it already occurred
+		if (state == ProcessState.EXECUTION_SUCCEEDED) {
+			listener.onExecutionSucceeded();
+		}
+		else if (state == ProcessState.EXECUTION_FAILED) {
+			listener.onExecutionFailed();
+		}
+		else if (state == ProcessState.ROLLBACK_SUCCEEDED) {
+			listener.onRollbackSucceeded();
+		}
+		else if (state == ProcessState.ROLLBACK_FAILED) {
+			listener.onRollbackFailed();
+		}
 	}
 
 	@Override
@@ -295,6 +298,27 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	private void setState(ProcessState state) {
 		this.state = state;
+	}
+
+	private void notifyListeners(ProcessState event) {
+		for (IProcessComponentListener listener : this.listener) {
+			switch (event) {
+				case EXECUTION_SUCCEEDED:
+					listener.onExecutionSucceeded();
+					break;
+				case EXECUTION_FAILED:
+					listener.onExecutionFailed();
+					break;
+				case ROLLBACK_SUCCEEDED:
+					listener.onRollbackSucceeded();
+					break;
+				case ROLLBACK_FAILED:
+					listener.onRollbackFailed();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 }
