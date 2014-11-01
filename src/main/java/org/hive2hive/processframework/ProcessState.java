@@ -17,19 +17,27 @@ public enum ProcessState {
 	 */
 	EXECUTING,
 	/**
+	 * Represents a {@link ProcessComponent} that has executed successfully.
+	 */
+	EXECUTION_SUCCEEDED,
+	/**
+	 * Represents a {@link ProcessComponent} that has executed unsuccessfully due to cancellation or a failure.
+	 */
+	EXECUTION_FAILED,
+	/**
 	 * Represents a {@link ProcessComponent} that is currently being rolled back.
 	 */
 	ROLLBACKING,
 	/**
+	 * Represents a {@link ProcessComponent} that has rolled back successfully.
+	 */
+	ROLLBACK_SUCCEEDED,
+	/**
+	 * Represents a {@link ProcessComponent} that has rolled back unsuccessfully due to a failure.
+	 */
+	ROLLBACK_FAILED,
+	/**
 	 * Represents a {@link ProcessComponent} that is currently paused, whether it is executing or rolling back.
 	 */
-	PAUSED,
-	/**
-	 * Represents a {@link ProcessComponent} that has finished successfully.
-	 */
-	SUCCEEDED,
-	/**
-	 * Represents a {@link ProcessComponent} that has finished unsuccessfully due to cancellation or fail.
-	 */
-	FAILED
+	PAUSED
 }
