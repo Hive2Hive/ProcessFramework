@@ -1,9 +1,9 @@
 package org.hive2hive.processframework.interfaces;
 
-import org.hive2hive.processframework.RollbackReason;
+import org.hive2hive.processframework.ProcessComponent;
 
 /**
- * Basic process component listener interface.
+ * Basic {@link ProcessComponen} listener interface.
  * 
  * @author Christian Lüthold
  * 
@@ -11,13 +11,23 @@ import org.hive2hive.processframework.RollbackReason;
 public interface IProcessComponentListener {
 
 	/**
-	 * Fires if the observed process component has succeeded.
+	 * Fires if the observed {@link ProcessComponent}'s execution succeeded.
 	 */
-	void onSucceeded();
-
+	void onExecutionSucceeded();
+	
 	/**
-	 * Fires if the observed process component has failed.
+	 * Fires if the observed {@link ProcessComponent}'s execution failed.
 	 */
-	void onFailed(RollbackReason reason);
-
+	void onExecutionFailed();
+	
+	/**
+	 * Fires if the observed {@link ProcessComponent}'s rollback succeeded.
+	 */
+	void onRollbackSucceeded();
+	
+	/**
+	 * Fires if the observed {@link ProcessComponent}'s rollback failed.
+	 */
+	void onRollbackFailed();
+	
 }

@@ -68,7 +68,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 		// starts and rolls back itself if needed (component knows nothing about the composite of which the
 		// AsyncComponent is part of)
 
-		decoratedComponent.attachListener(new IProcessComponentListener() {
+		/*decoratedComponent.attachListener(new IProcessComponentListener() {
 
 			@Override
 			public void onSucceeded() {
@@ -96,7 +96,7 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 					}
 				}
 			}
-		});
+		});*/
 
 		// TODO catch the exceptions and forward them!!
 		// sync execution

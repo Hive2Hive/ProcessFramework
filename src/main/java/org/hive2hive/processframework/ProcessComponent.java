@@ -43,13 +43,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	/**
 	 * Starts the execution of this {@code ProcessComponent}.
-	 * Upon successful execution, all attached {@link ProcessComponentListener}s notify the success.
+	 * Upon successful execution, all attached {@link TestProcessComponentListener}s notify the success.
 	 * <ul>
 	 * <li>In case of a failure during the execution, this {@code ProcessComponent} automatically cancels and
 	 * starts its rollback.</li>
 	 * <li>In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.</li>
 	 * </ul>
-	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
+	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
 	 */
 	@Override
 	public void execute() throws InvalidProcessStateException, ProcessExecutionException {
@@ -73,7 +73,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	/**
 	 * Starts the execution of this {@code ProcessComponent}.
 	 * In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.
-	 * In both cases, all attached {@link ProcessComponentListener}s notify the failure.
+	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
 	 */
 	@Override
 	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
@@ -295,18 +295,6 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	private void setState(ProcessState state) {
 		this.state = state;
-	}
-
-	private void notifySucceeded() {
-		for (IProcessComponentListener listener : this.listener) {
-			listener.onSucceeded();
-		}
-	}
-
-	private void notifyFailed(RollbackReason reason) {
-		for (IProcessComponentListener listener : this.listener) {
-			listener.onFailed(reason);
-		}
 	}
 
 }

@@ -27,7 +27,9 @@ public class CompletionHandleComponent extends ProcessDecorator {
 
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		IProcessComponentListener listener = new IProcessComponentListener() {
+		
+		// TODO implement
+		/*IProcessComponentListener listener = new IProcessComponentListener() {
 			public void onSucceeded() {
 				handle.onCompletionSuccess();
 			}
@@ -38,7 +40,7 @@ public class CompletionHandleComponent extends ProcessDecorator {
 		};
 
 		decoratedComponent.attachListener(listener);
-		decoratedComponent.execute();
+		decoratedComponent.execute();*/
 	}
 
 	@Override
