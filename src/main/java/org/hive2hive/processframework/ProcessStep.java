@@ -5,8 +5,8 @@ import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
- * Abstract base class for all (leaf) process components that represent a specific operation and do not
- * contain further components.
+ * Abstract base class for all normal {@link ProcessComponent}s (leaf).
+ * These normal components represent a specific operation and do not contain other {@link ProcessComponent}s.
  * 
  * @author Christian Lüthold
  * 
