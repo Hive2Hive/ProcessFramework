@@ -3,22 +3,14 @@ package org.hive2hive.processframework.processes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
-import org.hive2hive.processframework.RollbackReason;
-import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
+import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
  * A {@link Process} that traverses its components in preorder (i.e., left-to-right).
@@ -29,36 +21,39 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 public class PreorderProcess extends Process {
 
 	private List<ProcessComponent> components = new ArrayList<ProcessComponent>();
-	private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
-	private ProcessExecutionException exception = null;
-
 	private int executionIndex = 0;
 	private int rollbackIndex = 0;
+	
+	//private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
+	//private ProcessExecutionException exception = null;
 
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 
-		while (!components.isEmpty() && executionIndex < components.size()
-				&& getState() == ProcessState.EXECUTING) {
+		// don't use iterator, as component list might be modified during execution
+		
+		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
 
-			checkAsyncComponentsForFail(asyncHandles);
+			//checkAsyncComponentsForFail(asyncHandles);
 			rollbackIndex = executionIndex;
-			ProcessComponent next = components.get(executionIndex);
+			IProcessComponent next = components.get(executionIndex);
 			next.execute();
 			executionIndex++;
 
-			if (next instanceof AsyncComponent) {
+			/*if (next instanceof AsyncComponent) {
 				asyncHandles.add(((AsyncComponent) next).getHandle());
-			}
+			}*/
 		}
 
 		// wait for async child components
-		awaitAsync();
+		//awaitAsync();
 	}
 
 	@Override
 	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
+		// don't use iterator, as component list might be modified during rollback
+		
 		while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
 			ProcessComponent last = components.get(rollbackIndex);
 			last.rollback();
@@ -88,11 +83,10 @@ public class PreorderProcess extends Process {
 
 	@Override
 	public ProcessComponent getComponent(int index) {
-		// TODO implement
-		throw new UnsupportedOperationException("Operation not implemented.");
+		return components.get(index);
 	}
 
-	private void awaitAsync() throws ProcessExecutionException {
+	/*private void awaitAsync() throws ProcessExecutionException {
 
 		if (asyncHandles.isEmpty())
 			return;
@@ -170,6 +164,6 @@ public class PreorderProcess extends Process {
 				throw new ProcessExecutionException(result);
 			}
 		}
-	}
+	}*/
 
 }
