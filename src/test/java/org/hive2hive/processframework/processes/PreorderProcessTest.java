@@ -192,6 +192,85 @@ public class PreorderProcessTest extends BaseTest {
 	public void testRollbackOrder() throws InvalidProcessStateException, ProcessExecutionException,
 			ProcessRollbackException {
 
+		// define names
+		String nameParent = "P";
+		String nameChild1 = "C1";
+		String nameChild2 = "C2";
+		String nameChild3 = "C3";
+		String nameChild4 = "C4";
+		String nameChild5 = "C5";
 
+		// define order of rollback
+		List<String> order = new ArrayList<String>();
+		order.add(nameParent);
+		order.add(nameChild5);
+		order.add(nameChild4);
+		order.add(nameChild3);
+		order.add(nameChild2);
+		order.add(nameChild1);
+
+		PreorderProcess p = new PreorderProcess();
+		ProcessComponent c1 = TestUtil.executionSuccessComponent();
+		ProcessComponent c2 = TestUtil.executionSuccessComponent();
+		ProcessComponent c3 = TestUtil.executionSuccessComponent();
+		ProcessComponent c4 = TestUtil.executionSuccessComponent();
+		ProcessComponent c5 = TestUtil.executionSuccessComponent();
+		p.add(c1);
+		p.add(c2);
+		p.add(c3);
+		p.add(c4);
+		p.add(c5);
+
+		p.setName(nameParent);
+		c1.setName(nameChild1);
+		c2.setName(nameChild2);
+		c3.setName(nameChild3);
+		c4.setName(nameChild4);
+		c5.setName(nameChild5);
+
+		final Iterator<String> iterator = order.iterator();
+		IProcessComponentListener listener = new IProcessComponentListener() {
+
+			@Override
+			public void onExecuting(IProcessEventArgs args) {
+			}
+
+			@Override
+			public void onRollbacking(IProcessEventArgs args) {
+				String next = iterator.next();
+				String sourceName = args.getOriginalSource().getName();
+				
+				assertTrue(next == sourceName);
+			}
+
+			@Override
+			public void onPaused(IProcessEventArgs args) {
+			}
+
+			@Override
+			public void onExecutionSucceeded(IProcessEventArgs args) {
+			}
+
+			@Override
+			public void onExecutionFailed(IProcessEventArgs args) {
+			}
+
+			@Override
+			public void onRollbackSucceeded(IProcessEventArgs args) {
+			}
+
+			@Override
+			public void onRollbackFailed(IProcessEventArgs args) {
+			}
+		};
+		p.attachListener(listener);
+		c1.attachListener(listener);
+		c2.attachListener(listener);
+		c3.attachListener(listener);
+		c4.attachListener(listener);
+		c5.attachListener(listener);
+
+		p.execute();
+		p.rollback();
 	}
 }
