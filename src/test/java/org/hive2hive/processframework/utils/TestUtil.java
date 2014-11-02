@@ -3,7 +3,9 @@ package org.hive2hive.processframework.utils;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
+import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.RollbackReason;
@@ -11,15 +13,79 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
+import org.hive2hive.processframework.processes.PreorderProcess;
 
 public class TestUtil {
 
+	private static Random r = new Random();
+
+	/**
+	 * Creates a {@link PreorderProcess} that succeeds execution for testing purposes.
+	 * 
+	 * @return A {@link PreorderProcess} that succeeds execution for testing purposes.
+	 */
+	public static PreorderProcess executionSuccessPreorderProcess() {
+
+		PreorderProcess pp = new PreorderProcess();
+		pp.add(executionSuccessComponent());
+		pp.add(executionSuccessComponent());
+		pp.add(executionSuccessComponent());
+
+		return pp;
+	}
+	
+	/**
+	 * Creates a {@link PreorderProcess} that fails execution for testing purposes.
+	 * 
+	 * @return A {@link PreorderProcess} that fails execution for testing purposes.
+	 */
+	public static PreorderProcess executionFailPreorderProcess() {
+
+		PreorderProcess pp = new PreorderProcess();
+		pp.add(executionSuccessComponent());
+		pp.add(executionSuccessComponent());
+		pp.add(executionFailComponent());
+
+		return pp;
+	}
+	
+	/**
+	 * Creates a {@link PreorderProcess} that succeeds rollback for testing purposes.
+	 * 
+	 * @return A {@link PreorderProcess} that succeeds rollback for testing purposes.
+	 */
+	public static PreorderProcess rollbackSuccessPreorderProcess() {
+
+		PreorderProcess pp = new PreorderProcess();
+		pp.add(rollbackSuccessComponent());
+		pp.add(rollbackSuccessComponent());
+		pp.add(rollbackSuccessComponent());
+
+		return pp;
+	}
+	
+	/**
+	 * Creates a {@link PreorderProcess} that fails rollback for testing purposes.
+	 * 
+	 * @return A {@link PreorderProcess} that fails rollback for testing purposes.
+	 */
+	public static PreorderProcess rollbackFailPreorderProcess() {
+
+		PreorderProcess pp = new PreorderProcess();
+		// inverse
+		pp.add(rollbackFailComponent());
+		pp.add(rollbackSuccessComponent());
+		pp.add(rollbackSuccessComponent());
+
+		return pp;
+	}
+	
 	/**
 	 * Creates an anonymous sample {@link ProcessComponent} that succeeds execution for testing purposes.
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static IProcessComponent executionSuccessComponent() {
+	public static ProcessComponent executionSuccessComponent() {
 
 		return new ProcessComponent() {
 
@@ -49,13 +115,13 @@ public class TestUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates an anonymous sample {@link ProcessComponent} that fails execution for testing purposes.
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static IProcessComponent executionFailComponent() {
+	public static ProcessComponent executionFailComponent() {
 
 		return new ProcessComponent() {
 
@@ -85,13 +151,13 @@ public class TestUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates an anonymous sample {@link ProcessComponent} that succeeds rollback for testing purposes.
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static IProcessComponent rollbackSuccessComponent() {
+	public static ProcessComponent rollbackSuccessComponent() {
 
 		return new ProcessComponent() {
 
@@ -121,13 +187,13 @@ public class TestUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates an anonymous sample {@link ProcessComponent} that succeeds execution for testing purposes.
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static IProcessComponent rollbackFailComponent() {
+	public static ProcessComponent rollbackFailComponent() {
 
 		return new ProcessComponent() {
 
@@ -157,7 +223,7 @@ public class TestUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates a sample {@link RollbackReason} for testing purposes.
 	 * 
@@ -167,7 +233,28 @@ public class TestUtil {
 
 		return new RollbackReason("This is a sample rollback reason for testing purposes.");
 	}
-	
+
+	/**
+	 * Creates a random {@link Process} composite with the provided parameters for testing purposes.
+	 * 
+	 * @param maxDepth The maximal depth of the composite.
+	 * @param maxBranchingFactor The maximal branching factor per level.
+	 * @return A random {@link Process} for testing purposes.
+	 */
+	public static Process randomProcess(int maxDepth, int maxBranchingFactor) {
+
+		Process p = new PreorderProcess();
+
+		if (maxDepth > 0) {
+			int d = r.nextInt(maxDepth + 1);
+			int bf = r.nextInt(maxBranchingFactor + 1);
+			while (bf-- > 0) {
+				p.add(randomProcess(--d, maxBranchingFactor));
+			}
+		}
+		return p;
+	}
+
 	/**
 	 * Uses reflection to set the internal state of a process component.
 	 * 
