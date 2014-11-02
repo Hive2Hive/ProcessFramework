@@ -90,7 +90,8 @@ public abstract class Process extends ProcessComponent {
 
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		// do nothing by default
+		// composites must always require rollback
+		setRequiresRollback(true);
 	}
 
 	@Override

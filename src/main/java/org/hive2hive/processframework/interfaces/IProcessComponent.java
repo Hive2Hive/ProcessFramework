@@ -121,11 +121,18 @@ public interface IProcessComponent {
 	 * @return All {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 */
 	List<IProcessComponentListener> getListeners();
-	
+
 	/**
 	 * Gets the parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
+	 * 
 	 * @return The parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
 	 */
 	Process getParent();
 
+	/**
+	 * Indicates whether this {@code IProcessComponent} requires a rollback.
+	 * 
+	 * @return True, if this {@code IProcessComponent} requires a rollback, false otherwise.
+	 */
+	boolean getRollbackRequired();
 }

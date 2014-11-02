@@ -33,17 +33,18 @@ public abstract class ProcessComponent implements IProcessComponent {
 	private final String id;
 	private ProcessState state;
 	private double progress;
-	private final List<IProcessComponentListener> listener;
+	private final List<IProcessComponentListener> listeners;
 	private Process parent;
 
 	private boolean isRollbacking;
+	private boolean requiresRollback;
 
 	protected ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
 		this.name = String.format("[Process Component ID: %s]", id);
 		this.state = ProcessState.READY;
 		this.progress = 0.0;
-		this.listener = new ArrayList<IProcessComponentListener>();
+		this.listeners = new ArrayList<IProcessComponentListener>();
 	}
 
 	/**
@@ -88,6 +89,11 @@ public abstract class ProcessComponent implements IProcessComponent {
 				&& state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
+		// only rollback if component was marked
+		if (!requiresRollback) {
+			return;
+		}
+
 		logger.debug("Rollbacking '{}'.", this);
 		setState(ProcessState.ROLLBACKING);
 		notifyListeners(ProcessState.ROLLBACKING);
@@ -228,10 +234,9 @@ public abstract class ProcessComponent implements IProcessComponent {
 	protected void setParent(Process parent) {
 		this.parent = parent;
 	}
-
-	@Override
-	public Process getParent() {
-		return parent;
+	
+	protected void setRequiresRollback(boolean requiresRollback) {
+		this.requiresRollback = requiresRollback;
 	}
 
 	@Override
@@ -261,7 +266,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public synchronized void attachListener(IProcessComponentListener listener) {
-		this.listener.add(listener);
+		this.listeners.add(listener);
 
 		// fire event if it already occurred
 		if (state == ProcessState.EXECUTING) {
@@ -283,17 +288,27 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 	@Override
 	public synchronized void detachListener(IProcessComponentListener listener) {
-		this.listener.remove(listener);
+		this.listeners.remove(listener);
 	}
 
 	@Override
 	public List<IProcessComponentListener> getListeners() {
-		return listener;
+		return this.listeners;
+	}
+
+	@Override
+	public Process getParent() {
+		return this.parent;
+	}
+	
+	@Override
+	public boolean getRollbackRequired() {
+		return this.requiresRollback;
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return this.name;
 	}
 
 	@Override
@@ -319,7 +334,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	private void notifyListeners(ProcessState event) {
-		for (IProcessComponentListener listener : this.listener) {
+		for (IProcessComponentListener listener : this.listeners) {
 			switch (event) {
 				case EXECUTING:
 					listener.onExecuting(new ProcessEventArgs(this));

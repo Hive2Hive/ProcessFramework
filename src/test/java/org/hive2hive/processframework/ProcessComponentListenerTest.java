@@ -118,14 +118,15 @@ public class ProcessComponentListenerTest extends BaseTest {
 	}
 
 	@Test
-	public void testOnRollbackSuceeded() throws InvalidProcessStateException, ProcessRollbackException {
+	public void testOnRollbackSuceeded() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
 		IProcessComponent comp = TestUtil.rollbackSuccessComponent();
-		TestUtil.setState(comp, ProcessState.EXECUTION_FAILED);
 		comp.attachListener(listener);
 
+		comp.execute();
 		comp.rollback();
 
 		assertTrue(listener.hasRollbackSucceeded());
@@ -133,14 +134,14 @@ public class ProcessComponentListenerTest extends BaseTest {
 	}
 
 	@Test
-	public void testOnRollbackFailed() throws InvalidProcessStateException {
+	public void testOnRollbackFailed() throws InvalidProcessStateException, ProcessExecutionException {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
 		IProcessComponent comp = TestUtil.rollbackFailComponent();
-		TestUtil.setState(comp, ProcessState.EXECUTION_FAILED);
 		comp.attachListener(listener);
 
+		comp.execute();
 		try {
 			comp.rollback();
 		} catch (ProcessRollbackException ex) {

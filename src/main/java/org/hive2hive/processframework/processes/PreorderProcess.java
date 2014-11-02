@@ -29,7 +29,8 @@ public class PreorderProcess extends Process {
 
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-
+		super.doExecute();
+		
 		// don't use iterator, as component list might be modified during execution
 		
 		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {

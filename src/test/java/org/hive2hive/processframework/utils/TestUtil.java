@@ -91,7 +91,7 @@ public class TestUtil {
 
 			@Override
 			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-				// do nothing
+				setRequiresRollback(true);
 			}
 
 			@Override
@@ -127,6 +127,7 @@ public class TestUtil {
 
 			@Override
 			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+				setRequiresRollback(true);
 				throw new ProcessExecutionException("Failing execution for testing purposes.");
 			}
 
@@ -163,7 +164,7 @@ public class TestUtil {
 
 			@Override
 			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-				// do nothing
+				setRequiresRollback(true);
 			}
 
 			@Override
@@ -199,7 +200,7 @@ public class TestUtil {
 
 			@Override
 			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-				// do nothing
+				setRequiresRollback(true);
 			}
 
 			@Override
