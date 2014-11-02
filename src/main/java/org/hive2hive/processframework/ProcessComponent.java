@@ -15,6 +15,8 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 import org.hive2hive.processframework.utils.TestProcessComponentListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for all process components. Keeps track of a process components' most essential
@@ -24,6 +26,8 @@ import org.hive2hive.processframework.utils.TestProcessComponentListener;
  * 
  */
 public abstract class ProcessComponent implements IProcessComponent {
+
+	private static Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
 
 	private String name;
 	private final String id;
@@ -60,6 +64,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		setState(ProcessState.EXECUTING);
 		isRollbacking = false;
 
+		logger.debug("Executing '{}'.", this);
 		try {
 			doExecute();
 			setState(ProcessState.EXECUTION_SUCCEEDED);
@@ -78,12 +83,14 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 */
 	@Override
 	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
-		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED && state != ProcessState.PAUSED) {
+		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED
+				&& state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
 		setState(ProcessState.ROLLBACKING);
 		isRollbacking = true;
 
+		logger.debug("Rollbacking '{}'.", this);
 		try {
 			doRollback();
 			setState(ProcessState.ROLLBACK_SUCCEEDED);
@@ -101,6 +108,8 @@ public abstract class ProcessComponent implements IProcessComponent {
 			throw new InvalidProcessStateException(state);
 		}
 		setState(ProcessState.PAUSED);
+		
+		logger.debug("Pausing '{}'.", this);
 		doPause();
 	}
 
@@ -112,6 +121,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		// TODO don't distinguish between executing and rollbacking state, each component should be able to
 		// decide itself (decorators must implement both methods but cannot decide, they can just forward
 		// resume())
+		logger.debug("Resuming '{}'.", this);
 		if (!isRollbacking) {
 			setState(ProcessState.EXECUTING);
 			doResumeExecution();
@@ -251,16 +261,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 
 		// fire event if it already occurred
 		if (state == ProcessState.EXECUTION_SUCCEEDED) {
-			listener.onExecutionSucceeded();
-		}
-		else if (state == ProcessState.EXECUTION_FAILED) {
-			listener.onExecutionFailed();
-		}
-		else if (state == ProcessState.ROLLBACK_SUCCEEDED) {
-			listener.onRollbackSucceeded();
-		}
-		else if (state == ProcessState.ROLLBACK_FAILED) {
-			listener.onRollbackFailed();
+			listener.onExecutionSucceeded(new ProcessEventArgs(this));
+		} else if (state == ProcessState.EXECUTION_FAILED) {
+			listener.onExecutionFailed(new ProcessEventArgs(this));
+		} else if (state == ProcessState.ROLLBACK_SUCCEEDED) {
+			listener.onRollbackSucceeded(new ProcessEventArgs(this));
+		} else if (state == ProcessState.ROLLBACK_FAILED) {
+			listener.onRollbackFailed(new ProcessEventArgs(this));
 		}
 	}
 
@@ -305,16 +312,16 @@ public abstract class ProcessComponent implements IProcessComponent {
 		for (IProcessComponentListener listener : this.listener) {
 			switch (event) {
 				case EXECUTION_SUCCEEDED:
-					listener.onExecutionSucceeded();
+					listener.onExecutionSucceeded(new ProcessEventArgs(this));
 					break;
 				case EXECUTION_FAILED:
-					listener.onExecutionFailed();
+					listener.onExecutionFailed(new ProcessEventArgs(this));
 					break;
 				case ROLLBACK_SUCCEEDED:
-					listener.onRollbackSucceeded();
+					listener.onRollbackSucceeded(new ProcessEventArgs(this));
 					break;
 				case ROLLBACK_FAILED:
-					listener.onRollbackFailed();
+					listener.onRollbackFailed(new ProcessEventArgs(this));
 					break;
 				default:
 					break;

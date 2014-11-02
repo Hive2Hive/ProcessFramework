@@ -12,22 +12,30 @@ public interface IProcessComponentListener {
 
 	/**
 	 * Fires if the observed {@link ProcessComponent}'s execution succeeded.
+	 * 
+	 * @param The {@link IProcessEventArgs} associated with this event.
 	 */
-	void onExecutionSucceeded();
-	
+	void onExecutionSucceeded(IProcessEventArgs args);
+
 	/**
 	 * Fires if the observed {@link ProcessComponent}'s execution failed.
+	 * 
+	 * @param The {@link IProcessEventArgs} associated with this event.
 	 */
-	void onExecutionFailed();
-	
+	void onExecutionFailed(IProcessEventArgs args);
+
 	/**
 	 * Fires if the observed {@link ProcessComponent}'s rollback succeeded.
+	 * 
+	 * @param The {@link IProcessEventArgs} associated with this event.
 	 */
-	void onRollbackSucceeded();
-	
+	void onRollbackSucceeded(IProcessEventArgs args);
+
 	/**
 	 * Fires if the observed {@link ProcessComponent}'s rollback failed.
+	 * 
+	 * @param The {@link IProcessEventArgs} associated with this event.
 	 */
-	void onRollbackFailed();
-	
+	void onRollbackFailed(IProcessEventArgs args);
+
 }
