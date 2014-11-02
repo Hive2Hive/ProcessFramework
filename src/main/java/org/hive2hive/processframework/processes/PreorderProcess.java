@@ -10,7 +10,6 @@ import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
-import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
  * A {@link Process} that traverses its components in preorder (i.e., left-to-right).
@@ -21,8 +20,8 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 public class PreorderProcess extends Process {
 
 	private List<ProcessComponent> components = new ArrayList<ProcessComponent>();
-	private int executionIndex = 0;
-	private int rollbackIndex = 0;
+	//private int executionIndex = 0;
+	//private int rollbackIndex = 0;
 	
 	//private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
 	//private ProcessExecutionException exception = null;
@@ -32,12 +31,11 @@ public class PreorderProcess extends Process {
 		super.doExecute();
 		
 		// don't use iterator, as component list might be modified during execution
-		
+		int executionIndex = 0;
 		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
 
 			//checkAsyncComponentsForFail(asyncHandles);
-			rollbackIndex = executionIndex;
-			IProcessComponent next = components.get(executionIndex);
+			ProcessComponent next = components.get(executionIndex);
 			next.execute();
 			executionIndex++;
 
@@ -54,8 +52,9 @@ public class PreorderProcess extends Process {
 	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
 		// don't use iterator, as component list might be modified during rollback
+		int rollbackIndex = components.size() - 1;
 		
-		while (!components.isEmpty() && rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
+		while (rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
 			ProcessComponent last = components.get(rollbackIndex);
 			last.rollback();
 			rollbackIndex--;
