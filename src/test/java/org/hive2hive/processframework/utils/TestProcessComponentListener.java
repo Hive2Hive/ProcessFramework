@@ -1,4 +1,4 @@
-package org.hive2hive.processframework;
+package org.hive2hive.processframework.utils;
 
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 
@@ -27,6 +27,22 @@ public class TestProcessComponentListener implements IProcessComponentListener {
 	@Override
 	public void onRollbackFailed() {
 		hasRollbackFailed = true;
+	}
+	
+	public boolean hasExecutionSucceeded() {
+		return hasExecutionSucceeded;
+	}
+	
+	public boolean hasExecutionFailed() {
+		return hasExecutionFailed;
+	}
+	
+	public boolean hasRollbackSucceeded() {
+		return hasRollbackSucceeded;
+	}
+	
+	public boolean hasRollbackFailed() {
+		return hasRollbackFailed;
 	}
 
 }

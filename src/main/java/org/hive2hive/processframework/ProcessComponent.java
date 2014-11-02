@@ -14,6 +14,7 @@ import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
+import org.hive2hive.processframework.utils.TestProcessComponentListener;
 
 /**
  * Abstract base class for all process components. Keeps track of a process components' most essential

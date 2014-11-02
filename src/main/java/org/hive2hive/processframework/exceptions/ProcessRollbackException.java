@@ -1,5 +1,6 @@
 package org.hive2hive.processframework.exceptions;
 
+
 /**
  * Exception that occurs due to a failure during a process component's rollback.
  * 
@@ -12,4 +13,8 @@ public class ProcessRollbackException extends Exception {
 
 	// TODO make this exception class similar to the ProcessExecutionException, see
 	// https://github.com/Hive2Hive/ProcessFramework/issues/9
+	
+	public ProcessRollbackException(String hint) {
+		super(hint);
+	}
 }
