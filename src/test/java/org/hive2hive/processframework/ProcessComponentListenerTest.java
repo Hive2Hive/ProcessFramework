@@ -37,6 +37,55 @@ public class ProcessComponentListenerTest extends BaseTest {
 	}
 
 	@Test
+	public void testOnExecuting() throws InvalidProcessStateException, ProcessExecutionException {
+
+		TestProcessComponentListener listener = new TestProcessComponentListener();
+
+		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		comp.attachListener(listener);
+
+		comp.execute();
+
+		assertTrue(listener.isExecuting());
+		assertFalse(listener.isRollbacking());
+		assertFalse(listener.isPaused());
+	}
+
+	@Test
+	public void testOnRollbacking() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException {
+
+		TestProcessComponentListener listener = new TestProcessComponentListener();
+
+		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		comp.attachListener(listener);
+
+		comp.execute();
+		comp.rollback();
+
+		assertFalse(listener.isExecuting());
+		assertTrue(listener.isRollbacking());
+		assertFalse(listener.isPaused());
+	}
+
+	@Test
+	public void testOnPaused() throws InvalidProcessStateException, ProcessExecutionException {
+
+		TestProcessComponentListener listener = new TestProcessComponentListener();
+
+		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		comp.attachListener(listener);
+
+		// simulate executing process
+		TestUtil.setState(comp, ProcessState.EXECUTING);
+		comp.pause();
+
+		assertFalse(listener.isExecuting());
+		assertFalse(listener.isRollbacking());
+		assertTrue(listener.isPaused());
+	}
+
+	@Test
 	public void testOnExecutionSuceeded() throws InvalidProcessStateException, ProcessExecutionException {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();

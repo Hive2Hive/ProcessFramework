@@ -61,10 +61,11 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
+		logger.debug("Executing '{}'.", this);
 		setState(ProcessState.EXECUTING);
+		notifyListeners(ProcessState.EXECUTING);
 		isRollbacking = false;
 
-		logger.debug("Executing '{}'.", this);
 		try {
 			doExecute();
 			setState(ProcessState.EXECUTION_SUCCEEDED);
@@ -87,10 +88,11 @@ public abstract class ProcessComponent implements IProcessComponent {
 				&& state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
+		logger.debug("Rollbacking '{}'.", this);
 		setState(ProcessState.ROLLBACKING);
+		notifyListeners(ProcessState.ROLLBACKING);
 		isRollbacking = true;
 
-		logger.debug("Rollbacking '{}'.", this);
 		try {
 			doRollback();
 			setState(ProcessState.ROLLBACK_SUCCEEDED);
@@ -107,9 +109,10 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.EXECUTING && state != ProcessState.ROLLBACKING) {
 			throw new InvalidProcessStateException(state);
 		}
-		setState(ProcessState.PAUSED);
-		
 		logger.debug("Pausing '{}'.", this);
+		setState(ProcessState.PAUSED);
+		notifyListeners(ProcessState.PAUSED);
+		
 		doPause();
 	}
 
@@ -118,10 +121,11 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
+		logger.debug("Resuming '{}'.", this);
+		
 		// TODO don't distinguish between executing and rollbacking state, each component should be able to
 		// decide itself (decorators must implement both methods but cannot decide, they can just forward
 		// resume())
-		logger.debug("Resuming '{}'.", this);
 		if (!isRollbacking) {
 			setState(ProcessState.EXECUTING);
 			doResumeExecution();
@@ -260,7 +264,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 		this.listener.add(listener);
 
 		// fire event if it already occurred
-		if (state == ProcessState.EXECUTION_SUCCEEDED) {
+		if (state == ProcessState.EXECUTING) {
+			listener.onExecuting(new ProcessEventArgs(this));
+		} else if (state == ProcessState.ROLLBACKING) {
+			listener.onRollbacking(new ProcessEventArgs(this));
+		} else if (state == ProcessState.PAUSED) {
+			listener.onPaused(new ProcessEventArgs(this));
+		} else if (state == ProcessState.EXECUTION_SUCCEEDED) {
 			listener.onExecutionSucceeded(new ProcessEventArgs(this));
 		} else if (state == ProcessState.EXECUTION_FAILED) {
 			listener.onExecutionFailed(new ProcessEventArgs(this));
@@ -311,6 +321,15 @@ public abstract class ProcessComponent implements IProcessComponent {
 	private void notifyListeners(ProcessState event) {
 		for (IProcessComponentListener listener : this.listener) {
 			switch (event) {
+				case EXECUTING:
+					listener.onExecuting(new ProcessEventArgs(this));
+					break;
+				case ROLLBACKING:
+					listener.onRollbacking(new ProcessEventArgs(this));
+					break;
+				case PAUSED:
+					listener.onPaused(new ProcessEventArgs(this));
+					break;
 				case EXECUTION_SUCCEEDED:
 					listener.onExecutionSucceeded(new ProcessEventArgs(this));
 					break;
