@@ -17,9 +17,6 @@ public class ProcessEventArgs implements IProcessEventArgs {
 		this.source = source;
 	}
 
-	/**
-	 * Gets the {@link IProcessComponent} that triggered the event.
-	 */
 	@Override
 	public IProcessComponent<?> getSource() {
 		return source;
