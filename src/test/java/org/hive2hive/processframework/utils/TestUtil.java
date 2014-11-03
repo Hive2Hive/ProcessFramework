@@ -5,10 +5,10 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 import java.util.Random;
 
+import org.hive2hive.processframework.FailureReason;
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
-import org.hive2hive.processframework.RollbackReason;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
@@ -33,7 +33,7 @@ public class TestUtil {
 
 		return pp;
 	}
-	
+
 	/**
 	 * Creates a {@link PreorderProcess} that fails execution for testing purposes.
 	 * 
@@ -48,7 +48,7 @@ public class TestUtil {
 
 		return pp;
 	}
-	
+
 	/**
 	 * Creates a {@link PreorderProcess} that succeeds rollback for testing purposes.
 	 * 
@@ -63,7 +63,7 @@ public class TestUtil {
 
 		return pp;
 	}
-	
+
 	/**
 	 * Creates a {@link PreorderProcess} that fails rollback for testing purposes.
 	 * 
@@ -79,7 +79,7 @@ public class TestUtil {
 
 		return pp;
 	}
-	
+
 	/**
 	 * Creates an anonymous sample {@link ProcessComponent} that succeeds execution for testing purposes.
 	 * 
@@ -129,7 +129,8 @@ public class TestUtil {
 			@Override
 			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				setRequiresRollback(true);
-				throw new ProcessExecutionException("Failing execution for testing purposes.");
+				throw new ProcessExecutionException(sampleFailureReason(this,
+						"Failing execution for testing purposes."));
 			}
 
 			@Override
@@ -208,7 +209,8 @@ public class TestUtil {
 
 			@Override
 			protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
-				throw new ProcessRollbackException("Failing rollback for testing purposes.");
+				throw new ProcessRollbackException(sampleFailureReason(this,
+						"Failing rollback for testing purposes."));
 			}
 
 			@Override
@@ -229,13 +231,13 @@ public class TestUtil {
 	}
 
 	/**
-	 * Creates a sample {@link RollbackReason} for testing purposes.
+	 * Creates a {@link FailureReason} for testing purposes.
 	 * 
-	 * @return A sample {@link RollbackReason} for testing purposes.
+	 * @return A {@link FailureReason} for testing purposes.
 	 */
-	public static RollbackReason sampleRollbackReason() {
+	public static FailureReason sampleFailureReason(IProcessComponent<?> source, String hint) {
 
-		return new RollbackReason("This is a sample rollback reason for testing purposes.");
+		return new FailureReason(source, hint);
 	}
 
 	/**
