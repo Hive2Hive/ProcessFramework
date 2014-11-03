@@ -69,7 +69,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		isRollbacking = false;
 
 		try {
-			doExecute();
+			result = doExecute();
 			setState(ProcessState.EXECUTION_SUCCEEDED);
 			notifyListeners(ProcessState.EXECUTION_SUCCEEDED);
 		} catch (ProcessExecutionException ex) {
@@ -197,7 +197,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 *             operation.
 	 * @throws ProcessExecutionException If a failure occured during this process component's execution.
 	 */
-	protected abstract void doExecute() throws InvalidProcessStateException, ProcessExecutionException;
+	protected abstract T doExecute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
 	 * Template method responsible for the rollback.

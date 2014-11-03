@@ -25,8 +25,7 @@ public class PreorderProcess extends Process<Void> {
 	//private ProcessExecutionException exception = null;
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		super.doExecute();
+	protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 		
 		// don't use iterator, as component list might be modified during execution
 		int executionIndex = 0;
@@ -44,6 +43,7 @@ public class PreorderProcess extends Process<Void> {
 
 		// wait for async child components
 		//awaitAsync();
+		return null;
 	}
 
 	@Override

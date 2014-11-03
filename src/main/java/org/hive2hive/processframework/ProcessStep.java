@@ -1,7 +1,6 @@
 package org.hive2hive.processframework;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
-import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
@@ -12,11 +11,6 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * 
  */
 public abstract class ProcessStep<T> extends ProcessComponent<T> {
-
-	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		// do nothing by default
-	}
 
 	@Override
 	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {

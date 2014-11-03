@@ -85,13 +85,14 @@ public class TestUtil {
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static ProcessComponent executionSuccessComponent() {
+	public static ProcessComponent<Void> executionSuccessComponent() {
 
-		return new ProcessComponent() {
+		return new ProcessComponent<Void>() {
 
 			@Override
-			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				setRequiresRollback(true);
+				return null;
 			}
 
 			@Override
@@ -121,12 +122,12 @@ public class TestUtil {
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static ProcessComponent executionFailComponent() {
+	public static ProcessComponent<Void> executionFailComponent() {
 
-		return new ProcessComponent() {
+		return new ProcessComponent<Void>() {
 
 			@Override
-			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				setRequiresRollback(true);
 				throw new ProcessExecutionException("Failing execution for testing purposes.");
 			}
@@ -158,13 +159,14 @@ public class TestUtil {
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static ProcessComponent rollbackSuccessComponent() {
+	public static ProcessComponent<Void> rollbackSuccessComponent() {
 
-		return new ProcessComponent() {
+		return new ProcessComponent<Void>() {
 
 			@Override
-			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				setRequiresRollback(true);
+				return null;
 			}
 
 			@Override
@@ -194,13 +196,14 @@ public class TestUtil {
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static ProcessComponent rollbackFailComponent() {
+	public static ProcessComponent<Void> rollbackFailComponent() {
 
-		return new ProcessComponent() {
+		return new ProcessComponent<Void>() {
 
 			@Override
-			protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
+			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				setRequiresRollback(true);
+				return null;
 			}
 
 			@Override
@@ -242,9 +245,9 @@ public class TestUtil {
 	 * @param maxBranchingFactor The maximal branching factor per level.
 	 * @return A random {@link Process} for testing purposes.
 	 */
-	public static Process randomProcess(int maxDepth, int maxBranchingFactor) {
+	public static Process<Void> randomProcess(int maxDepth, int maxBranchingFactor) {
 
-		Process p = new PreorderProcess();
+		Process<Void> p = new PreorderProcess();
 
 		if (maxDepth > 0) {
 			int d = r.nextInt(maxDepth + 1);
@@ -262,7 +265,7 @@ public class TestUtil {
 	 * @param object The object the state should be set on.
 	 * @param state The state to be set.
 	 */
-	public static void setState(IProcessComponent object, ProcessState state) {
+	public static void setState(IProcessComponent<?> object, ProcessState state) {
 		try {
 			Method method = ProcessComponent.class.getDeclaredMethod("setState", ProcessState.class);
 			method.setAccessible(true);

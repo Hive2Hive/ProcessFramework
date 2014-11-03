@@ -32,7 +32,7 @@ import org.hive2hive.processframework.processes.PreorderProcess;
  * @author Christian Lüthold
  * 
  */
-public class AsyncComponent extends ProcessDecorator implements Callable<RollbackReason> {
+public class AsyncComponent<T> extends ProcessDecorator<T> implements Callable<RollbackReason> {
 
 	private final ExecutorService asyncExecutor;
 	private Future<RollbackReason> handle;
@@ -41,17 +41,20 @@ public class AsyncComponent extends ProcessDecorator implements Callable<Rollbac
 	private boolean componentFailed = false;
 	private RollbackReason result = null;
 
-	public AsyncComponent(ProcessComponent decoratedComponent) {
+	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
 
 		asyncExecutor = Executors.newSingleThreadExecutor();
 	}
 
 	@Override
-	protected void doExecute() throws InvalidProcessStateException {
+	protected T doExecute() throws InvalidProcessStateException {
 
 		handle = asyncExecutor.submit(this);
 		// immediate return, since execution is async
+		
+		// TODO correct return statement
+		return null;
 	}
 
 	@Override

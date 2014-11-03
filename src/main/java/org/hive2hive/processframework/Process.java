@@ -3,7 +3,6 @@ package org.hive2hive.processframework;
 import java.util.Collection;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
-import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
@@ -14,6 +13,11 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * 
  */
 public abstract class Process<T> extends ProcessComponent<T> {
+
+	public Process() {
+		// composites should always require rollback
+		setRequiresRollback(true);
+	}
 
 	/**
 	 * Adds a {@link ProcessComponent} to this composite {@code Process}.
@@ -87,12 +91,6 @@ public abstract class Process<T> extends ProcessComponent<T> {
 	 * @param component The {@link ProcessComponent} to be removed from this composite {@code Process}.
 	 */
 	protected abstract void doRemove(ProcessComponent<?> component);
-
-	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		// composites must always require rollback
-		setRequiresRollback(true);
-	}
 
 	@Override
 	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
