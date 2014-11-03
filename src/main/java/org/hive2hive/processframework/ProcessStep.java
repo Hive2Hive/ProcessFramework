@@ -8,7 +8,8 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * These normal components represent a specific operation and do not contain other {@link ProcessComponent}s.
  * 
  * @author Christian Lüthold
- * 
+ *
+ * @param <T> The type of the result computed by this {@code ProcessStep}.
  */
 public abstract class ProcessStep<T> extends ProcessComponent<T> {
 

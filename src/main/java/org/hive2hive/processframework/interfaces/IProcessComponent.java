@@ -12,15 +12,18 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * Basic interface for all process components. Defines all common functionalities.
  * 
  * @author Christian Lüthold
- * 
+ *
+ * @param <T> The type of the result computed by this {@code IProcessComponent}.
  */
 public interface IProcessComponent<T> {
 
 	/**
-	 * Starts the execution of this {@code IProcessComponent}.
+	 * Starts the execution of this {@code IProcessComponent}. Upon successful execution, returns the computed
+	 * result of type {@code T}.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
-	 *             operation.
+	 * @return The computed result of type {@code T}.
+	 * @throws InvalidProcessStateException InvalidProcessStateException If this process component is in an
+	 *             invalid state for this operation.
 	 * @throws ProcessExecutionException If a failure occured during a process component's execution.
 	 */
 	T execute() throws InvalidProcessStateException, ProcessExecutionException;
@@ -122,8 +125,13 @@ public interface IProcessComponent<T> {
 	 */
 	List<IProcessComponentListener> getListeners();
 
+	/**
+	 * Sets the name for this {@code IProcessComponent}.
+	 * 
+	 * @param parent The parent for this {@code IProcessComponent}.
+	 */
 	void setParent(Process<?> parent);
-	
+
 	/**
 	 * Gets the parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
 	 * 

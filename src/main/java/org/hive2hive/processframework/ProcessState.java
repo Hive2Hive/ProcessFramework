@@ -1,7 +1,7 @@
 package org.hive2hive.processframework;
 
 /**
- * Represents the internal state of a {@link ProcessComponent}.
+ * Represents the internal state of an {@link IProcessComponent}.
  * 
  * @author Christian Lüthold
  * 

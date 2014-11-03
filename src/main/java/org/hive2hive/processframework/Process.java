@@ -11,7 +11,8 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  * These composites contain other {@link ProcessComponent}s (children).
  * 
  * @author Christian Lüthold
- * 
+ *
+ * @param <T> The type of the result computed by this {@code Process}.
  */
 public abstract class Process<T> extends ProcessComponent<T> {
 

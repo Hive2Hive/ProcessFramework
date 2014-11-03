@@ -23,7 +23,8 @@ import org.slf4j.LoggerFactory;
  * properties and functionalities.
  * 
  * @author Christian Lüthold
- * 
+ *
+ * @param <T> The type of the result computed by this {@code ProcessComponent}.
  */
 public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
@@ -50,15 +51,17 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	/**
 	 * Starts the execution of this {@code ProcessComponent}.
-	 * Upon successful execution, all attached {@link TestProcessComponentListener}s notify the success.
+	 * Upon successful execution, returns the result of type {@code T} and all attached
+	 * {@link TestProcessComponentListener}s notify the success.
 	 * <ul>
 	 * <li>In case of a failure during the execution, this {@code ProcessComponent} automatically cancels and
 	 * starts its rollback.</li>
 	 * <li>In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.</li>
 	 * </ul>
-	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
+	 * In both cases, all attached {@link IProcessComponentListener}s notify the failure.
+	 * 
+	 * @return The computed result of type {@code T}.
 	 */
-	@Override
 	public final T execute() throws InvalidProcessStateException, ProcessExecutionException {
 		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
@@ -83,7 +86,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	/**
 	 * Starts the execution of this {@code ProcessComponent}.
 	 * In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.
-	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
+	 * In both cases, all attached {@link IProcessComponentListener}s notify the failure.
 	 */
 	@Override
 	public final void rollback() throws InvalidProcessStateException, ProcessRollbackException {
@@ -120,7 +123,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		logger.debug("Pausing '{}'.", this);
 		setState(ProcessState.PAUSED);
 		notifyListeners(ProcessState.PAUSED);
-		
+
 		doPause();
 	}
 
@@ -130,7 +133,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 			throw new InvalidProcessStateException(state);
 		}
 		logger.debug("Resuming '{}'.", this);
-		
+
 		// TODO don't distinguish between executing and rollbacking state, each component should be able to
 		// decide itself (decorators must implement both methods but cannot decide, they can just forward
 		// resume())
@@ -237,7 +240,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	public void setParent(Process<?> parent) {
 		this.parent = parent;
 	}
-	
+
 	protected void setRequiresRollback(boolean requiresRollback) {
 		this.requiresRollback = requiresRollback;
 	}
@@ -303,7 +306,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	public Process<?> getParent() {
 		return this.parent;
 	}
-	
+
 	@Override
 	public boolean getRollbackRequired() {
 		return this.requiresRollback;
