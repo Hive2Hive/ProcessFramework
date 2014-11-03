@@ -41,7 +41,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 		comp.attachListener(listener);
 
 		comp.execute();
@@ -57,7 +57,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 		comp.attachListener(listener);
 
 		comp.execute();
@@ -73,7 +73,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 		comp.attachListener(listener);
 
 		// simulate executing process
@@ -90,7 +90,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 		comp.attachListener(listener);
 
 		comp.execute();
@@ -104,7 +104,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.executionFailComponent();
+		IProcessComponent<?> comp = TestUtil.executionFailComponent();
 		comp.attachListener(listener);
 
 		try {
@@ -123,7 +123,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.rollbackSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.rollbackSuccessComponent();
 		comp.attachListener(listener);
 
 		comp.execute();
@@ -138,7 +138,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 		TestProcessComponentListener listener = new TestProcessComponentListener();
 
-		IProcessComponent comp = TestUtil.rollbackFailComponent();
+		IProcessComponent<?> comp = TestUtil.rollbackFailComponent();
 		comp.attachListener(listener);
 
 		comp.execute();

@@ -37,7 +37,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testReadyStateTransition() throws ProcessExecutionException, ProcessRollbackException {
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		assertTrue(comp.getState() == ProcessState.READY);
 
@@ -76,7 +76,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testExecutingState() throws ProcessExecutionException, ProcessRollbackException {
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.EXECUTING);
@@ -117,7 +117,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testPausedState() throws ProcessExecutionException, ProcessRollbackException {
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.PAUSED);
@@ -157,7 +157,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testRollbackingState() throws ProcessExecutionException, ProcessRollbackException {
 
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.ROLLBACKING);
@@ -198,7 +198,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testExecutionSucceededState() throws ProcessExecutionException, ProcessRollbackException {
 		
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.EXECUTION_SUCCEEDED);
@@ -239,7 +239,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testExecutionFailedState() throws ProcessExecutionException, ProcessRollbackException {
 		
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.EXECUTION_FAILED);
@@ -280,7 +280,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testRollbackSucceededState() throws ProcessExecutionException, ProcessRollbackException {
 		
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.ROLLBACK_SUCCEEDED);
@@ -321,7 +321,7 @@ public class ProcessStateTest extends BaseTest {
 	@Test
 	public void testRollbackFailedState() throws ProcessExecutionException, ProcessRollbackException {
 		
-		IProcessComponent comp = TestUtil.executionSuccessComponent();
+		IProcessComponent<?> comp = TestUtil.executionSuccessComponent();
 
 		// use reflection to set internal process state
 		TestUtil.setState(comp, ProcessState.ROLLBACK_FAILED);

@@ -125,11 +125,11 @@ public class PreorderProcessTest extends BaseTest {
 		order.add(nameChild5);
 
 		PreorderProcess p = new PreorderProcess();
-		ProcessComponent c1 = TestUtil.executionSuccessComponent();
-		ProcessComponent c2 = TestUtil.executionSuccessComponent();
-		ProcessComponent c3 = TestUtil.executionSuccessComponent();
-		ProcessComponent c4 = TestUtil.executionSuccessComponent();
-		ProcessComponent c5 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c1 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c2 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c3 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c4 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c5 = TestUtil.executionSuccessComponent();
 		p.add(c1);
 		p.add(c2);
 		p.add(c3);
@@ -210,11 +210,11 @@ public class PreorderProcessTest extends BaseTest {
 		order.add(nameChild1);
 
 		PreorderProcess p = new PreorderProcess();
-		ProcessComponent c1 = TestUtil.executionSuccessComponent();
-		ProcessComponent c2 = TestUtil.executionSuccessComponent();
-		ProcessComponent c3 = TestUtil.executionSuccessComponent();
-		ProcessComponent c4 = TestUtil.executionSuccessComponent();
-		ProcessComponent c5 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c1 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c2 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c3 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c4 = TestUtil.executionSuccessComponent();
+		ProcessComponent<?> c5 = TestUtil.executionSuccessComponent();
 		p.add(c1);
 		p.add(c2);
 		p.add(c3);
