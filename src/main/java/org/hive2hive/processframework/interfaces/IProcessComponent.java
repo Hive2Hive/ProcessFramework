@@ -14,7 +14,7 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * @author Christian Lüthold
  * 
  */
-public interface IProcessComponent {
+public interface IProcessComponent<T> {
 
 	/**
 	 * Starts the execution of this {@code IProcessComponent}.
@@ -23,7 +23,7 @@ public interface IProcessComponent {
 	 *             operation.
 	 * @throws ProcessExecutionException If a failure occured during a process component's execution.
 	 */
-	void execute() throws InvalidProcessStateException, ProcessExecutionException;
+	T execute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
 	 * Starts the rollback of this {@code IProcessComponent}.
@@ -127,7 +127,7 @@ public interface IProcessComponent {
 	 * 
 	 * @return The parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
 	 */
-	Process getParent();
+	Process<?> getParent();
 
 	/**
 	 * Indicates whether this {@code IProcessComponent} requires a rollback.

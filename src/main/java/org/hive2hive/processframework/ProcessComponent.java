@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author Christian Lüthold
  * 
  */
-public abstract class ProcessComponent implements IProcessComponent {
+public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
 
@@ -34,12 +34,13 @@ public abstract class ProcessComponent implements IProcessComponent {
 	private ProcessState state;
 	private double progress;
 	private final List<IProcessComponentListener> listeners;
-	private Process parent;
+	private Process<?> parent;
+	private T result;
 
 	private boolean isRollbacking;
 	private boolean requiresRollback;
 
-	protected ProcessComponent() {
+	public ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
 		this.name = String.format("[Process Component ID: %s]", id);
 		this.state = ProcessState.READY;
@@ -58,7 +59,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public void execute() throws InvalidProcessStateException, ProcessExecutionException {
+	public T execute() throws InvalidProcessStateException, ProcessExecutionException {
 		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -76,6 +77,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 			notifyListeners(ProcessState.EXECUTION_FAILED);
 			throw ex;
 		}
+		return result;
 	}
 
 	/**
@@ -231,7 +233,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	 */
 	protected abstract void doResumeRollback() throws InvalidProcessStateException;
 
-	protected void setParent(Process parent) {
+	protected void setParent(Process<?> parent) {
 		this.parent = parent;
 	}
 	
@@ -297,7 +299,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 	}
 
 	@Override
-	public Process getParent() {
+	public Process<?> getParent() {
 		return this.parent;
 	}
 	
@@ -320,7 +322,7 @@ public abstract class ProcessComponent implements IProcessComponent {
 		if (!(obj instanceof ProcessComponent))
 			return false;
 
-		ProcessComponent other = (ProcessComponent) obj;
+		ProcessComponent<?> other = (ProcessComponent<?>) obj;
 		return id.equals(other.getID());
 	}
 

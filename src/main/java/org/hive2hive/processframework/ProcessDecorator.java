@@ -18,9 +18,9 @@ import org.hive2hive.processframework.interfaces.IProcessComponentListener;
  * @author Christian Lüthold
  * 
  */
-public abstract class ProcessDecorator extends ProcessComponent {
+public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 
-	protected final IProcessComponent decoratedComponent;
+	protected final IProcessComponent<T> decoratedComponent;
 
 	/**
 	 * Creates a {@code ProcessDecorator} that wraps/decorates the provided {@link IProcessComponent}
@@ -29,7 +29,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * @param decoratedComponent The {@link IProcessComponent} implementation to be wrapped/decorated by this
 	 *            {@code ProcessDecorator}.
 	 */
-	public ProcessDecorator(IProcessComponent decoratedComponent) {
+	public ProcessDecorator(IProcessComponent<T> decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
 	}
 
@@ -38,8 +38,8 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
-	public void execute() throws InvalidProcessStateException, ProcessExecutionException {
-		decoratedComponent.execute();
+	public T execute() throws InvalidProcessStateException, ProcessExecutionException {
+		return decoratedComponent.execute();
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
-	public Process getParent() {
+	public Process<?> getParent() {
 		return decoratedComponent.getParent();
 	}
 

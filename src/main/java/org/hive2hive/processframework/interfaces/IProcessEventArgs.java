@@ -15,5 +15,5 @@ public interface IProcessEventArgs {
 	 * 
 	 * @return The original {@link ProcessComponent} that fired the event.
 	 */
-	IProcessComponent getOriginalSource();
+	IProcessComponent<?> getOriginalSource();
 }

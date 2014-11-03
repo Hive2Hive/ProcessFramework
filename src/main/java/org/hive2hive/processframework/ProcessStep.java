@@ -11,7 +11,7 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * @author Christian Lüthold
  * 
  */
-public abstract class ProcessStep extends ProcessComponent {
+public abstract class ProcessStep<T> extends ProcessComponent<T> {
 
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {

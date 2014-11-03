@@ -17,9 +17,9 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  * @author Christian Lüthold
  *
  */
-public class PreorderProcess extends Process {
+public class PreorderProcess extends Process<Void> {
 
-	private List<ProcessComponent> components = new ArrayList<ProcessComponent>();
+	private List<ProcessComponent<?>> components = new ArrayList<ProcessComponent<?>>();
 	
 	//private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
 	//private ProcessExecutionException exception = null;
@@ -33,7 +33,7 @@ public class PreorderProcess extends Process {
 		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
 
 			//checkAsyncComponentsForFail(asyncHandles);
-			ProcessComponent next = components.get(executionIndex);
+			ProcessComponent<?> next = components.get(executionIndex);
 			next.execute();
 			executionIndex++;
 
@@ -53,34 +53,34 @@ public class PreorderProcess extends Process {
 		int rollbackIndex = components.size() - 1;
 		
 		while (rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
-			ProcessComponent last = components.get(rollbackIndex);
+			ProcessComponent<?> last = components.get(rollbackIndex);
 			last.rollback();
 			rollbackIndex--;
 		}
 	}
 
 	@Override
-	protected void doAdd(ProcessComponent component) {
+	protected void doAdd(ProcessComponent<?> component) {
 		components.add(component);
 	}
 
 	@Override
-	protected void doAdd(int index, ProcessComponent component) {
+	protected void doAdd(int index, ProcessComponent<?> component) {
 		components.add(index, component);
 	}
 
 	@Override
-	protected void doRemove(ProcessComponent component) {
+	protected void doRemove(ProcessComponent<?> component) {
 		components.remove(component);
 	}
 
 	@Override
-	public List<ProcessComponent> getComponents() {
+	public List<ProcessComponent<?>> getComponents() {
 		return Collections.unmodifiableList(components);
 	}
 
 	@Override
-	public ProcessComponent getComponent(int index) {
+	public ProcessComponent<?> getComponent(int index) {
 		return components.get(index);
 	}
 
