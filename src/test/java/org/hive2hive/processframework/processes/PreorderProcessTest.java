@@ -149,7 +149,7 @@ public class PreorderProcessTest extends BaseTest {
 			@Override
 			public void onExecuting(IProcessEventArgs args) {
 				String next = iterator.next();
-				String sourceName = args.getOriginalSource().getName();
+				String sourceName = args.getSource().getName();
 
 				assertTrue(next == sourceName);
 			}
@@ -238,7 +238,7 @@ public class PreorderProcessTest extends BaseTest {
 			@Override
 			public void onRollbacking(IProcessEventArgs args) {
 				String next = iterator.next();
-				String sourceName = args.getOriginalSource().getName();
+				String sourceName = args.getSource().getName();
 				
 				assertTrue(next == sourceName);
 			}

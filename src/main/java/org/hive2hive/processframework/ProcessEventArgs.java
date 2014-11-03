@@ -11,18 +11,18 @@ import org.hive2hive.processframework.interfaces.IProcessEventArgs;
  */
 public class ProcessEventArgs implements IProcessEventArgs {
 
-	private IProcessComponent<?> originalSource;
+	private IProcessComponent<?> source;
 
-	public ProcessEventArgs(IProcessComponent<?> originalSource) {
-		this.originalSource = originalSource;
+	public ProcessEventArgs(IProcessComponent<?> source) {
+		this.source = source;
 	}
 
 	/**
-	 * Gets the {@link IProcessComponent} that triggered the event originally.
+	 * Gets the {@link IProcessComponent} that triggered the event.
 	 */
 	@Override
-	public IProcessComponent<?> getOriginalSource() {
-		return originalSource;
+	public IProcessComponent<?> getSource() {
+		return source;
 	}
 
 }
