@@ -122,6 +122,8 @@ public interface IProcessComponent<T> {
 	 */
 	List<IProcessComponentListener> getListeners();
 
+	void setParent(Process<?> parent);
+	
 	/**
 	 * Gets the parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
 	 * 

@@ -59,7 +59,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public T execute() throws InvalidProcessStateException, ProcessExecutionException {
+	public final T execute() throws InvalidProcessStateException, ProcessExecutionException {
 		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -86,7 +86,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * In both cases, all attached {@link TestProcessComponentListener}s notify the failure.
 	 */
 	@Override
-	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
+	public final void rollback() throws InvalidProcessStateException, ProcessRollbackException {
 		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED
 				&& state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
@@ -113,7 +113,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	@Override
-	public void pause() throws InvalidProcessStateException {
+	public final void pause() throws InvalidProcessStateException {
 		if (state != ProcessState.EXECUTING && state != ProcessState.ROLLBACKING) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -125,7 +125,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	@Override
-	public void resume() throws InvalidProcessStateException {
+	public final void resume() throws InvalidProcessStateException {
 		if (state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
@@ -233,7 +233,8 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 */
 	protected abstract void doResumeRollback() throws InvalidProcessStateException;
 
-	protected void setParent(Process<?> parent) {
+	@Override
+	public void setParent(Process<?> parent) {
 		this.parent = parent;
 	}
 	

@@ -2,9 +2,6 @@ package org.hive2hive.processframework;
 
 import java.util.List;
 
-import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
-import org.hive2hive.processframework.exceptions.ProcessExecutionException;
-import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 
@@ -31,42 +28,6 @@ public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 	 */
 	public ProcessDecorator(IProcessComponent<T> decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
-	 */
-	@Override
-	public T execute() throws InvalidProcessStateException, ProcessExecutionException {
-		return decoratedComponent.execute();
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
-	 */
-	@Override
-	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
-		decoratedComponent.rollback();
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
-	 */
-	@Override
-	public void pause() throws InvalidProcessStateException {
-		decoratedComponent.pause();
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
-	 */
-	@Override
-	public void resume() throws InvalidProcessStateException {
-		decoratedComponent.resume();
 	}
 
 	/**

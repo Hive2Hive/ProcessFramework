@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hive2hive.processframework.Process;
-import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
+import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
  * A {@link Process} that traverses its components in preorder (i.e., left-to-right).
@@ -19,7 +19,7 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
  */
 public class PreorderProcess extends Process<Void> {
 
-	private List<ProcessComponent<?>> components = new ArrayList<ProcessComponent<?>>();
+	private List<IProcessComponent<?>> components = new ArrayList<IProcessComponent<?>>();
 	
 	//private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
 	//private ProcessExecutionException exception = null;
@@ -32,7 +32,7 @@ public class PreorderProcess extends Process<Void> {
 		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
 
 			//checkAsyncComponentsForFail(asyncHandles);
-			ProcessComponent<?> next = components.get(executionIndex);
+			IProcessComponent<?> next = components.get(executionIndex);
 			next.execute();
 			executionIndex++;
 
@@ -53,34 +53,34 @@ public class PreorderProcess extends Process<Void> {
 		int rollbackIndex = components.size() - 1;
 		
 		while (rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
-			ProcessComponent<?> last = components.get(rollbackIndex);
+			IProcessComponent<?> last = components.get(rollbackIndex);
 			last.rollback();
 			rollbackIndex--;
 		}
 	}
 
 	@Override
-	protected void doAdd(ProcessComponent<?> component) {
+	protected void doAdd(IProcessComponent<?> component) {
 		components.add(component);
 	}
 
 	@Override
-	protected void doAdd(int index, ProcessComponent<?> component) {
+	protected void doAdd(int index, IProcessComponent<?> component) {
 		components.add(index, component);
 	}
 
 	@Override
-	protected void doRemove(ProcessComponent<?> component) {
+	protected void doRemove(IProcessComponent<?> component) {
 		components.remove(component);
 	}
 
 	@Override
-	public List<ProcessComponent<?>> getComponents() {
+	public List<IProcessComponent<?>> getComponents() {
 		return Collections.unmodifiableList(components);
 	}
 
 	@Override
-	public ProcessComponent<?> getComponent(int index) {
+	public IProcessComponent<?> getComponent(int index) {
 		return components.get(index);
 	}
 
