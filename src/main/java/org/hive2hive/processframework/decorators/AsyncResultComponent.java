@@ -1,7 +1,7 @@
 package org.hive2hive.processframework.decorators;
 
 import org.hive2hive.processframework.ProcessComponent;
-import org.hive2hive.processframework.interfaces.IProcessResultListener;
+import org.hive2hive.processframework.interfaces.IResultProcessComponentListener;
 import org.hive2hive.processframework.interfaces.IResultProcessComponent;
 
 /**
@@ -24,23 +24,24 @@ public class AsyncResultComponent<T> extends AsyncComponent implements IResultPr
 	}
 
 	@Override
-	public void attachListener(IProcessResultListener<T> listener) {
+	public void attachListener(IResultProcessComponentListener<T> listener) {
 
 		((IResultProcessComponent<T>) decoratedComponent).attachListener(listener);
 	}
 
 	@Override
-	public void detachListener(IProcessResultListener<T> listener) {
+	public void detachListener(IResultProcessComponentListener<T> listener) {
 		((IResultProcessComponent<T>) decoratedComponent).detachListener(listener);
-	}
-
-	@Override
-	public void notifyResultComputed(T result) {
-		((IResultProcessComponent<T>) decoratedComponent).notifyResultComputed(result);
 	}
 
 	@Override
 	public T getResult() {
 		return ((IResultProcessComponent<T>) decoratedComponent).getResult();
+	}
+
+	@Override
+	public void computeResult() {
+		// TODO Auto-generated method stub
+		
 	}
 }

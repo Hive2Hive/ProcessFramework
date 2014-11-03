@@ -20,8 +20,6 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 public class PreorderProcess extends Process {
 
 	private List<ProcessComponent> components = new ArrayList<ProcessComponent>();
-	//private int executionIndex = 0;
-	//private int rollbackIndex = 0;
 	
 	//private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
 	//private ProcessExecutionException exception = null;

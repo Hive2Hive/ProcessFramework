@@ -1,5 +1,6 @@
 package org.hive2hive.processframework;
 
+import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessEventArgs;
 
 /**
@@ -10,14 +11,14 @@ import org.hive2hive.processframework.interfaces.IProcessEventArgs;
  */
 public class ProcessEventArgs implements IProcessEventArgs {
 
-	private ProcessComponent originalSource;
+	private IProcessComponent originalSource;
 
-	public ProcessEventArgs(ProcessComponent originalSource) {
+	public ProcessEventArgs(IProcessComponent originalSource) {
 		this.originalSource = originalSource;
 	}
 
 	@Override
-	public ProcessComponent getOriginalSource() {
+	public IProcessComponent getOriginalSource() {
 		return originalSource;
 	}
 

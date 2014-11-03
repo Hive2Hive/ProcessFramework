@@ -3,7 +3,7 @@ package org.hive2hive.processframework.interfaces;
 import org.hive2hive.processframework.ProcessComponent;
 
 /**
- * Basic {@link ProcessComponen} listener interface.
+ * Basic {@link ProcessComponent} listener interface.
  * 
  * @author Christian Lüthold
  * 

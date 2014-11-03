@@ -5,33 +5,37 @@ import java.util.List;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
+import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
 
 /**
- * Abstract base class for all decorator {@link ProcessComponent}s.
- * These decorators provide additional behavior or state to existing {@link ProcessComponent}s.
- * This abstract base class just delegates all calls to the wrapped/decorated {@link ProcessComponent}.
+ * Abstract base class for all decorators that decorate {@link IProcessComponent}s.
+ * These decorators provide additional behavior or state to existing implementations of
+ * {@link IProcessComponent}s.
+ * This abstract base class just delegates all calls to the wrapped/decorated {@link IProcessComponent}
+ * implementation.
  * 
  * @author Christian Lüthold
  * 
  */
 public abstract class ProcessDecorator extends ProcessComponent {
 
-	protected final ProcessComponent decoratedComponent;
+	protected final IProcessComponent decoratedComponent;
 
 	/**
-	 * Creates a {@code ProcessDecorator} that wraps/decorates the provided {@link ProcessComponent}.
+	 * Creates a {@code ProcessDecorator} that wraps/decorates the provided {@link IProcessComponent}
+	 * implementation.
 	 * 
-	 * @param decoratedComponent The {@link ProcessComponent} to be wrapped/decorated by this
+	 * @param decoratedComponent The {@link IProcessComponent} implementation to be wrapped/decorated by this
 	 *            {@code ProcessDecorator}.
 	 */
-	public ProcessDecorator(ProcessComponent decoratedComponent) {
+	public ProcessDecorator(IProcessComponent decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
 	}
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void execute() throws InvalidProcessStateException, ProcessExecutionException {
@@ -40,7 +44,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void rollback() throws InvalidProcessStateException, ProcessRollbackException {
@@ -49,7 +53,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void pause() throws InvalidProcessStateException {
@@ -58,7 +62,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void resume() throws InvalidProcessStateException {
@@ -67,7 +71,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void await() throws InterruptedException {
@@ -76,7 +80,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void await(long timeout) throws InterruptedException {
@@ -84,84 +88,8 @@ public abstract class ProcessDecorator extends ProcessComponent {
 	}
 
 	/**
-	 * Default decorator implementation responsible for the execution.
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	@Override
-	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		decoratedComponent.doExecute();
-	}
-
-	/**
-	 * Default decorator implementation responsible for the rollback.
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	@Override
-	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
-		decoratedComponent.doRollback();
-	}
-
-	/**
-	 * Default decorator implementation responsible for the execution or rollback pausing.
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	@Override
-	protected void doPause() throws InvalidProcessStateException {
-		decoratedComponent.doPause();
-	}
-
-	/**
-	 * Default decorator implementation responsible for the execution resuming.
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	@Override
-	protected void doResumeExecution() throws InvalidProcessStateException {
-		decoratedComponent.doResumeExecution();
-	}
-
-	/**
-	 * Default decorator implementation responsible for the rollback resuming.
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	@Override
-	protected void doResumeRollback() throws InvalidProcessStateException {
-		decoratedComponent.doResumeRollback();
-	}
-
-	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	/*
-	 * @Override
-	 * protected void succeed() {
-	 * decoratedComponent.succeed();
-	 * }
-	 */
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	/*
-	 * @Override
-	 * protected void fail(RollbackReason reason) {
-	 * decoratedComponent.fail(reason);
-	 * }
-	 */
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
-	 */
-	@Override
-	protected void setParent(Process parent) {
-		decoratedComponent.setParent(parent);
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public Process getParent() {
@@ -170,7 +98,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public void setName(String name) {
@@ -179,7 +107,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public String getName() {
@@ -188,7 +116,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public String getID() {
@@ -197,7 +125,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public double getProgress() {
@@ -206,7 +134,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public ProcessState getState() {
@@ -215,7 +143,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public synchronized void attachListener(IProcessComponentListener listener) {
@@ -224,7 +152,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public synchronized void detachListener(IProcessComponentListener listener) {
@@ -233,7 +161,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public List<IProcessComponentListener> getListeners() {
@@ -242,7 +170,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public String toString() {
@@ -251,7 +179,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -260,7 +188,7 @@ public abstract class ProcessDecorator extends ProcessComponent {
 
 	/**
 	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link ProcessComponent}.
+	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
 	public int hashCode() {
