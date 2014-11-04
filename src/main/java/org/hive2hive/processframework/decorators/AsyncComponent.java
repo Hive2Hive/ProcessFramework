@@ -1,6 +1,7 @@
 package org.hive2hive.processframework.decorators;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -67,6 +68,8 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessRollbackException(new FailureReason(this, ex));
 		}
+		
+		// TODO rollback exceptions are not catched and forwarded
 		
 		// immediate return, since rollback is async
 		return;
@@ -153,7 +156,15 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 					// -> await execution termination, then start 2nd try
 					
 					// await execution termination
-					handle.get();
+					try {
+						handle.get();
+					} catch (ExecutionException ex2) {
+						if (ex2.getCause() instanceof ProcessExecutionException) {
+							// component execution failed, rollback already triggered, thus rollback
+						} else {
+							throw ex2;
+						}
+					}
 					
 					// 2nd try
 					try {

@@ -3,9 +3,13 @@ package org.hive2hive.processframework.processes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import org.hive2hive.processframework.FailureReason;
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessState;
+import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
@@ -20,9 +24,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 public class PreorderProcess extends Process<Void> {
 
 	private List<IProcessComponent<?>> components = new ArrayList<IProcessComponent<?>>();
-	
-	//private List<Future<RollbackReason>> asyncHandles = new ArrayList<Future<RollbackReason>>();
-	//private ProcessExecutionException exception = null;
+	private List<Future<?>> asyncs = new ArrayList<Future<?>>();
 
 	@Override
 	protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
@@ -31,18 +33,23 @@ public class PreorderProcess extends Process<Void> {
 		int executionIndex = 0;
 		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
 
-			//checkAsyncComponentsForFail(asyncHandles);
+			checkAsyncExecutionFailed();
+			
 			IProcessComponent<?> next = components.get(executionIndex);
-			next.execute();
+			if (next instanceof AsyncComponent<?>) {
+				Future<?> async = ((AsyncComponent<?>)next).execute();
+				asyncs.add(async);
+			} else {
+				next.execute();
+			}
 			executionIndex++;
-
-			/*if (next instanceof AsyncComponent) {
-				asyncHandles.add(((AsyncComponent) next).getHandle());
-			}*/
 		}
 
 		// wait for async child components
-		//awaitAsync();
+		for (Future<?> async : asyncs) {
+			awaitAsyncExecution(async);
+		}
+		
 		return null;
 	}
 
@@ -83,85 +90,27 @@ public class PreorderProcess extends Process<Void> {
 	public IProcessComponent<?> getComponent(int index) {
 		return components.get(index);
 	}
-
-	/*private void awaitAsync() throws ProcessExecutionException {
-
-		if (asyncHandles.isEmpty())
-			return;
-
-		if (getState() != ProcessState.EXECUTING)
-			return;
-
-		// logger.debug("Awaiting async components for completion.");
-
-		final CountDownLatch latch = new CountDownLatch(1);
-		ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
-		ScheduledFuture<?> handle = executor.scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-
-				// assure still in running state
-				if (getState() != ProcessState.EXECUTING) {
-					latch.countDown();
-					return;
-				}
-
-				// check for potential fails
-				try {
-					checkAsyncComponentsForFail(asyncHandles);
-				} catch (ProcessExecutionException e) {
-					exception = e;
-					latch.countDown();
-					return;
-				}
-
-				// check for completion
-				for (Future<RollbackReason> handle : asyncHandles) {
-					if (!handle.isDone())
-						return;
-				}
-				latch.countDown();
-			}
-		}, 1, 1, TimeUnit.SECONDS);
-
-		// blocking wait for completion or potential fail
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			// logger.error("Exception while waiting for async components.", e);
-		}
-		handle.cancel(true);
-
-		if (exception != null) {
-			throw exception;
+	
+	private void checkAsyncExecutionFailed() throws ProcessExecutionException {
+		
+		for (Future<?> async : asyncs) {
+			if (!async.isDone())
+				continue;
+			
+			awaitAsyncExecution(async);
 		}
 	}
-
-	private static void checkAsyncComponentsForFail(List<Future<RollbackReason>> handles)
-			throws ProcessExecutionException {
-
-		if (handles.isEmpty())
-			return;
-
-		for (Future<RollbackReason> handle : handles) {
-
-			if (!handle.isDone())
-				continue;
-
-			RollbackReason result = null;
-			try {
-				result = handle.get();
-			} catch (InterruptedException e) {
-				// logger.error("Error while checking async component.", e);
-			} catch (ExecutionException e) {
-				throw new ProcessExecutionException("AsyncComponent threw an exception.", e.getCause());
+	
+	private void awaitAsyncExecution(Future<?> async) throws ProcessExecutionException {
+		
+		try {
+			async.get();
+		} catch (ExecutionException ex) {
+			if (ex.getCause() instanceof ProcessExecutionException) {
+				throw (ProcessExecutionException) ex.getCause();
 			}
-
-			// initiate rollback if necessary
-			if (result != null) {
-				throw new ProcessExecutionException(result);
-			}
+		} catch (InterruptedException ex) {
+			throw new ProcessExecutionException(new FailureReason(this, ex));
 		}
-	}*/
-
+	}
 }
