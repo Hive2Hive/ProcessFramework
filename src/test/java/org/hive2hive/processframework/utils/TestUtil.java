@@ -96,8 +96,9 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+			protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 				// do nothing
+				return null;
 			}
 
 			@Override
@@ -134,8 +135,9 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+			protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 				// do nothing
+				return null;
 			}
 
 			@Override
@@ -171,8 +173,9 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+			protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 				// do nothing
+				return null;
 			}
 
 			@Override
@@ -208,7 +211,7 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+			protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 				throw new ProcessRollbackException(sampleFailureReason(this,
 						"Failing rollback for testing purposes."));
 			}

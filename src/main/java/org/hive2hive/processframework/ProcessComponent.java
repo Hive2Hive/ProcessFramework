@@ -14,7 +14,6 @@ import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 import org.hive2hive.processframework.interfaces.IProcessComponentListener;
-import org.hive2hive.processframework.utils.TestProcessComponentListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,6 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	private double progress;
 	private final List<IProcessComponentListener> listeners;
 	private Process<?> parent;
-	private T result;
 
 	private boolean isRollbacking;
 	private boolean requiresRollback;
@@ -52,13 +50,8 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	/**
 	 * Starts the execution of this {@code ProcessComponent}.
 	 * Upon successful execution, returns the result of type {@code T} and all attached
-	 * {@link TestProcessComponentListener}s notify the success.
-	 * <ul>
-	 * <li>In case of a failure during the execution, this {@code ProcessComponent} automatically cancels and
-	 * starts its rollback.</li>
-	 * <li>In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.</li>
-	 * </ul>
-	 * In both cases, all attached {@link IProcessComponentListener}s notify the failure.
+	 * {@link IProcessComponentListener}s notify the success. Otherwise, a {@link ProcessExecutionException}
+	 * is thrown and all attached {@link IProcessComponentListener}s notify the failure.
 	 * 
 	 * @return The computed result of type {@code T}.
 	 */
@@ -71,6 +64,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		notifyListeners(ProcessState.EXECUTING);
 		isRollbacking = false;
 
+		T result;
 		try {
 			result = doExecute();
 			setState(ProcessState.EXECUTION_SUCCEEDED);
@@ -84,19 +78,22 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	/**
-	 * Starts the execution of this {@code ProcessComponent}.
-	 * In case of a failure during the rollback, this method throws a {@link ProcessRollbackException}.
-	 * In both cases, all attached {@link IProcessComponentListener}s notify the failure.
+	 * Starts the rollback of this {@code ProcessComponent}.
+	 * Upon successful rollback, returns the result of type {@code T} and all attached
+	 * {@link IProcessComponentListener}s notify the success. Otherwise, a {@link ProcessRollbackException}
+	 * is thrown and all attached {@link IProcessComponentListener}s notify the failure.
+	 * 
+	 * @return The computed result of type {@code T}.
 	 */
 	@Override
-	public final void rollback() throws InvalidProcessStateException, ProcessRollbackException {
+	public final T rollback() throws InvalidProcessStateException, ProcessRollbackException {
 		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED
 				&& state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(state);
 		}
 		// only rollback if component was marked
 		if (!requiresRollback) {
-			return;
+			return null;
 		}
 
 		logger.debug("Rollbacking '{}'.", this);
@@ -104,8 +101,9 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		notifyListeners(ProcessState.ROLLBACKING);
 		isRollbacking = true;
 
+		T result;
 		try {
-			doRollback();
+			result = doRollback();
 			setState(ProcessState.ROLLBACK_SUCCEEDED);
 			notifyListeners(ProcessState.ROLLBACK_SUCCEEDED);
 		} catch (ProcessRollbackException ex) {
@@ -113,6 +111,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 			notifyListeners(ProcessState.ROLLBACK_FAILED);
 			throw ex;
 		}
+		return result;
 	}
 
 	@Override
@@ -211,7 +210,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during this process component's rollback.
 	 */
-	protected abstract void doRollback() throws InvalidProcessStateException, ProcessRollbackException;
+	protected abstract T doRollback() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Template method responsible for the execution or rollback pausing.

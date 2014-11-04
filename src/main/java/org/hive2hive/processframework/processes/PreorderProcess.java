@@ -54,7 +54,7 @@ public class PreorderProcess extends Process<Void> {
 	}
 
 	@Override
-	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+	protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
 		// don't use iterator, as component list might be modified during rollback
 		int rollbackIndex = components.size() - 1;
@@ -64,6 +64,8 @@ public class PreorderProcess extends Process<Void> {
 			last.rollback();
 			rollbackIndex--;
 		}
+		
+		return null;
 	}
 
 	@Override

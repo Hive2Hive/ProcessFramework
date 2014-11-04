@@ -29,13 +29,15 @@ public interface IProcessComponent<T> {
 	T execute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
-	 * Starts the rollback of this {@code IProcessComponent}.
+	 * Starts the rollback of this {@code IProcessComponent}. Upon successful rollback, returns the computed
+	 * result of type {@code T}.
 	 * 
+	 * @return The computed result of type {@code T}.
 	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
 	 */
-	void rollback() throws InvalidProcessStateException, ProcessRollbackException;
+	T rollback() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.

@@ -95,8 +95,9 @@ public abstract class Process<T> extends ProcessComponent<T> {
 	protected abstract void doRemove(IProcessComponent<?> component);
 
 	@Override
-	protected void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
+	protected T doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 		// do nothing by default
+		return null;
 	}
 
 	@Override
