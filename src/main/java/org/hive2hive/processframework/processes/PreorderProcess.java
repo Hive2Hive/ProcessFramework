@@ -24,32 +24,35 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 public class PreorderProcess extends Process<Void> {
 
 	private List<IProcessComponent<?>> components = new ArrayList<IProcessComponent<?>>();
-	private List<Future<?>> asyncs = new ArrayList<Future<?>>();
+
+	private List<Future<?>> asyncExecutions = new ArrayList<Future<?>>();
+	private List<Future<?>> asyncRollbacks = new ArrayList<Future<?>>();
 
 	@Override
 	protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		
+
 		// don't use iterator, as component list might be modified during execution
 		int executionIndex = 0;
 		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
 
-			checkAsyncExecutionFailed();
-			
+			checkForAsyncExecutionFailure(asyncExecutions);
+
 			IProcessComponent<?> next = components.get(executionIndex);
 			if (next instanceof AsyncComponent<?>) {
-				Future<?> async = ((AsyncComponent<?>)next).execute();
-				asyncs.add(async);
+				Future<?> async = ((AsyncComponent<?>) next).execute();
+				asyncExecutions.add(async);
 			} else {
 				next.execute();
 			}
 			executionIndex++;
 		}
 
-		// wait for async child components
-		for (Future<?> async : asyncs) {
+		// await async execution components
+		for (Future<?> async : asyncExecutions) {
 			awaitAsyncExecution(async);
 		}
-		
+		asyncExecutions.clear();
+
 		return null;
 	}
 
@@ -58,13 +61,27 @@ public class PreorderProcess extends Process<Void> {
 
 		// don't use iterator, as component list might be modified during rollback
 		int rollbackIndex = components.size() - 1;
-		
+
 		while (rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
+
+			checkForAsyncRollbackFailure(asyncRollbacks);
+
 			IProcessComponent<?> last = components.get(rollbackIndex);
-			last.rollback();
+			if (last instanceof AsyncComponent<?>) {
+				Future<?> async = ((AsyncComponent<?>) last).rollback();
+				asyncRollbacks.add(async);
+			} else {
+				last.rollback();
+			}
 			rollbackIndex--;
 		}
-		
+
+		// await async rollback components
+		for (Future<?> async : asyncRollbacks) {
+			awaitAsyncRollback(async);
+		}
+		asyncRollbacks.clear();
+
 		return null;
 	}
 
@@ -92,9 +109,9 @@ public class PreorderProcess extends Process<Void> {
 	public IProcessComponent<?> getComponent(int index) {
 		return components.get(index);
 	}
-	
-	private void checkAsyncExecutionFailed() throws ProcessExecutionException {
-		
+
+	private void checkForAsyncExecutionFailure(List<Future<?>> asyncs) throws ProcessExecutionException {
+
 		for (Future<?> async : asyncs) {
 			if (!async.isDone())
 				continue;
@@ -102,17 +119,42 @@ public class PreorderProcess extends Process<Void> {
 			awaitAsyncExecution(async);
 		}
 	}
-	
+
+	private void checkForAsyncRollbackFailure(List<Future<?>> asyncs) throws ProcessRollbackException {
+
+		for (Future<?> async : asyncs) {
+			if (!async.isDone())
+				continue;
+
+			awaitAsyncRollback(async);
+		}
+	}
+
 	private void awaitAsyncExecution(Future<?> async) throws ProcessExecutionException {
-		
+
 		try {
 			async.get();
 		} catch (ExecutionException ex) {
+			// thread returned an exception
 			if (ex.getCause() instanceof ProcessExecutionException) {
 				throw (ProcessExecutionException) ex.getCause();
 			}
-		} catch (InterruptedException ex) {
+		} catch (Exception ex) {
 			throw new ProcessExecutionException(new FailureReason(this, ex));
+		}
+	}
+
+	private void awaitAsyncRollback(Future<?> async) throws ProcessRollbackException {
+
+		try {
+			async.get();
+		} catch (ExecutionException ex) {
+			// thread returned an exception
+			if (ex.getCause() instanceof ProcessRollbackException) {
+				throw (ProcessRollbackException) ex.getCause();
+			}
+		} catch (Exception ex) {
+			throw new ProcessRollbackException(new FailureReason(this, ex));
 		}
 	}
 }
