@@ -13,25 +13,33 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-// TODO document
+/**
+ * A {@link ProcessDecorator} that executes the wrapped/decorated {@link IProcessComponent} on a separate
+ * thread and thus immediately returns the control.
+ * Both, execution and rollback run on a separate thread and return a {@code Future<T>} as the result of the
+ * asynchronous computation.</br>
+ * <b>Note:</b>
+ * The {@link IProcessComponent} wrapped/decorated by this {@code AsyncComponent} should be <i>independent</i>
+ * of any other components in the process composite because it runs asynchronously.
+ * 
+ * @author Christian Lüthold
+ *
+ * @param <T> The type of the result computed by the wrapped/decorated {@code IProcessComponent}.
+ */
 public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Callable<T> {
 
-	private static final Logger logger = LoggerFactory.getLogger(AsyncComponent.class);
-	
 	private final ExecutorService executor;
-	
+
 	private Future<T> executionHandle;
 	private Future<T> rollbackHandle;
 
 	private volatile boolean isExecuting = false;
 	private volatile boolean isRollbacking = false;
-	
+
 	// store a reference to the IProcessComponent<T>, such that we know its type argument T
 	private IProcessComponent<T> decoratedComponent;
-	
+
 	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
 
@@ -40,63 +48,64 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 
 	@Override
 	protected Future<T> doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-		
+
 		isExecuting = true;
 		isRollbacking = !isExecuting;
-		
+
 		try {
 			executionHandle = executor.submit(this);
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessExecutionException(new FailureReason(this, ex));
 		}
-		
+
 		// immediate return, since execution is async
 		return executionHandle;
 	}
-	
+
 	@Override
 	protected Future<T> doRollback() throws InvalidProcessStateException, ProcessRollbackException {
-		
+
 		isRollbacking = true;
 		isExecuting = !isRollbacking;
-		
+
 		try {
 			rollbackHandle = executor.submit(this);
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessRollbackException(new FailureReason(this, ex));
 		}
-		
+
 		// immediate return, since rollback is async
 		return rollbackHandle;
 	}
 
 	@Override
 	public T call() throws Exception {
-		
+
 		if (isExecuting && !isRollbacking) {
-			
+
 			// execution
 			nameThread(true);
 			try {
 				return decoratedComponent.execute();
-				
-			} catch(InvalidProcessStateException | ProcessExecutionException ex) {
+
+			} catch (InvalidProcessStateException | ProcessExecutionException ex) {
 				throw ex;
 			}
-		} else if(isRollbacking && !isExecuting) {
-			
+		} else if (isRollbacking && !isExecuting) {
+
 			// rollback
 			nameThread(false);
 			// mind: async component might be in any state
 			// 1st try
 			try {
 				return decoratedComponent.rollback();
-			} catch(InvalidProcessStateException ex) {
-				// ProcessComponent.rollback() was allowed, thus AsyncComponent is EXECUTION_SUCCESSED/FAILED or PAUSED
+			} catch (InvalidProcessStateException ex) {
+				// ProcessComponent.rollback() was allowed, thus AsyncComponent is EXECUTION_SUCCESSED/FAILED
+				// or PAUSED
 				// -> wrapped component is either EXECUTING, EXECUTION_SUCCESSED/FAILED or PAUSED
 				// -> only invalid state for component rollback is EXECUTING
 				// -> await execution termination, then start 2nd try
-				
+
 				// await execution termination
 				try {
 					executionHandle.get();
@@ -107,14 +116,14 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 						throw ex2;
 					}
 				}
-				
+
 				// 2nd try
 				try {
 					return decoratedComponent.rollback();
 				} catch (ProcessRollbackException ex2) {
 					throw ex;
 				}
-			} catch(ProcessRollbackException ex) {
+			} catch (ProcessRollbackException ex) {
 				throw ex;
 			}
 		} else {
@@ -145,7 +154,6 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			Thread.currentThread().checkAccess();
 			Thread.currentThread().setName(String.format("async %s", isExecution ? "execution" : "rollback"));
 		} catch (SecurityException ex) {
-			logger.warn("The created thread cannot be accessed or renamed.", ex);
-		};
+		}
 	}
 }
