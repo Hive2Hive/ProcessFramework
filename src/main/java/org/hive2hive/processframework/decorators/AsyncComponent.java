@@ -118,7 +118,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 				throw ex;
 			}
 		} else {
-			throw new ProcessExecutionException(new FailureReason(this, "Invalid state."));
+			throw new Exception("Invalid state.");
 		}
 	}
 
