@@ -17,8 +17,8 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 /**
  * A {@link ProcessDecorator} that executes the wrapped/decorated {@link IProcessComponent} on a separate
  * thread and thus immediately returns the control.
- * Both, execution and rollback run on a separate thread and return a {@code Future<T>} as the result of the
- * asynchronous computation.</br>
+ * Both, execution and rollback run on a separate thread and return a {@link Future} object as the result of
+ * the asynchronous computation. Possible exceptions can be retrieved through this {@link Future} object.</br>
  * <b>Note:</b>
  * The {@link IProcessComponent} wrapped/decorated by this {@code AsyncComponent} should be <i>independent</i>
  * of any other components in the process composite because it runs asynchronously.
