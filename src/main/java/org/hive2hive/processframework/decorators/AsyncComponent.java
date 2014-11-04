@@ -12,28 +12,10 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
-import org.hive2hive.processframework.processes.PreorderProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A {@link ProcessDecorator} that executes, and if necessary rollbacks, the wrapped {@link IProcessComponent}
- * in an asynchronous manner.</br>
- * <b>Note:</b></br>
- * An asynchronous component is executed in an own thread and therefore independent of all other components in
- * a process composite.</br>
- * If existing, the parent container component of an {@link AsyncComponent} is responsible to await the result
- * of the asynchronous component. Therefore, the usage of {@link PreorderProcess} is highly recommended.
- * </br>
- * In case of a failure within the asynchronous component, it rollbacks itself in its own thread and returns
- * the resulting {@link RollbackReason}. In case the {@link AsyncComponent} needs to be cancelled due to a
- * failure in another place in the whole composite, the wrapped component (if necessary) is rolled back in the
- * detecting thread.
- * 
- * @author Christian Lüthold
- * @param <T>
- * 
- */
+// TODO document
 public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AsyncComponent.class);
