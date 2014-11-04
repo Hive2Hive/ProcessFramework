@@ -13,12 +13,13 @@ import org.hive2hive.processframework.interfaces.IProcessComponentListener;
  * implementation.
  * 
  * @author Christian Lüthold
+ * @param <T>
  *
  * @param <T> The type of the result computed by the wrapped/decorated {@code IProcessComponent}.
  */
 public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 
-	protected final IProcessComponent<T> decoratedComponent;
+	protected final IProcessComponent<?> decoratedComponent;
 
 	/**
 	 * Creates a {@code ProcessDecorator} that wraps/decorates the provided {@link IProcessComponent}
@@ -27,7 +28,7 @@ public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 	 * @param decoratedComponent The {@link IProcessComponent} implementation to be wrapped/decorated by this
 	 *            {@code ProcessDecorator}.
 	 */
-	public ProcessDecorator(IProcessComponent<T> decoratedComponent) {
+	public ProcessDecorator(IProcessComponent<?> decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
 	}
 
