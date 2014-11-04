@@ -15,12 +15,17 @@ public abstract class ProcessException extends Exception {
 
 	private final FailureReason reason;
 
+	public ProcessException(String message) {
+		this(new FailureReason(null, message)); // TODO give reference to source
+	}
+	
 	/**
 	 * Creates a {@code ProcessException} with the provided {@link FailureReason}.
 	 * 
 	 * @param reason The {@link FailureReason} that shall be associated with this {@code ProcessException}.
 	 */
 	public ProcessException(FailureReason reason) {
+		super(reason.getHint());
 		this.reason = reason;
 	}
 

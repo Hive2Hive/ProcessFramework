@@ -10,7 +10,7 @@ import org.hive2hive.processframework.ProcessState;
  * @author Christian Lüthold
  *
  */
-public class InvalidProcessStateException extends Exception {
+public class InvalidProcessStateException extends ProcessException {
 
 	private static final long serialVersionUID = -570684360354374306L;
 
