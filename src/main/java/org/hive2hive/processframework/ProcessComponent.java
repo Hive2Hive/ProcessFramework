@@ -28,11 +28,10 @@ import org.slf4j.LoggerFactory;
 public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
-
+	
 	private String name;
 	private final String id;
 	private ProcessState state;
-	private double progress;
 	private final List<IProcessComponentListener> listeners;
 	private ProcessComposite<?> parent;
 
@@ -43,7 +42,6 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		this.id = UUID.randomUUID().toString();
 		this.name = String.format("[Process Component ID: %s]", id);
 		this.state = ProcessState.READY;
-		this.progress = 0.0;
 		this.listeners = new ArrayList<IProcessComponentListener>();
 	}
 
@@ -257,11 +255,6 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	@Override
 	public String getID() {
 		return this.id;
-	}
-
-	@Override
-	public double getProgress() {
-		return this.progress;
 	}
 
 	@Override

@@ -110,6 +110,19 @@ public final class SyncProcess extends ProcessComposite<Void> {
 		return components.get(index);
 	}
 
+	@Override
+	public double getProgress() {
+		
+		double progress = 0.0;
+		double weigth = 1 / components.size();
+		
+		for (IProcessComponent<?> comp : components) {
+			progress += weigth * comp.getProgress();
+		}
+		
+		return progress;
+	}
+
 	private void checkForAsyncExecutionFailure(List<Future<?>> asyncs) throws ProcessExecutionException {
 
 		for (Future<?> async : asyncs) {

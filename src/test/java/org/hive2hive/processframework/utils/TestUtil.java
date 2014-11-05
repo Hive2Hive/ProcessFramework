@@ -114,6 +114,11 @@ public class TestUtil {
 			protected void doResumeRollback() throws InvalidProcessStateException {
 				// do nothing
 			}
+			
+			@Override
+			public double getProgress() {
+				return 0;
+			}
 		};
 	}
 
@@ -151,6 +156,11 @@ public class TestUtil {
 			@Override
 			protected void doResumeRollback() throws InvalidProcessStateException {
 				// do nothing
+			}
+			
+			@Override
+			public double getProgress() {
+				return 0;
 			}
 		};
 	}
@@ -190,6 +200,11 @@ public class TestUtil {
 			protected void doResumeRollback() throws InvalidProcessStateException {
 				// do nothing
 			}
+			
+			@Override
+			public double getProgress() {
+				return 0;
+			}
 		};
 	}
 
@@ -226,6 +241,11 @@ public class TestUtil {
 			@Override
 			protected void doResumeRollback() throws InvalidProcessStateException {
 				// do nothing
+			}
+			
+			@Override
+			public double getProgress() {
+				return 0;
 			}
 		};
 	}
