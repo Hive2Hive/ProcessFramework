@@ -76,7 +76,7 @@ public final class SyncProcess extends ProcessComposite<Void> {
 		if (last != null) {
 			rollbackIndex = components.indexOf(last);
 		} else {
-			executionIndex = components.size() - 1;
+			rollbackIndex = components.size() - 1;
 		}
 		
 		while (rollbackIndex >= 0 && !isPaused) {
