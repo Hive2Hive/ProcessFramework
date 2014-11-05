@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessComponent;
+import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.composites.SyncProcess;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;

@@ -17,7 +17,7 @@ public class ProcessComponentListenerTest extends BaseTest {
 
 	@BeforeClass
 	public static void initTest() throws Exception {
-		testClass = ProcessStateTest.class;
+		testClass = ProcessComponentListenerTest.class;
 		beforeClass();
 	}
 
