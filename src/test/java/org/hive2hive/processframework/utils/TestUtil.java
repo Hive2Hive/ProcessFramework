@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import org.hive2hive.processframework.FailureReason;
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
@@ -130,8 +129,7 @@ public class TestUtil {
 			@Override
 			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 				setRequiresRollback(true);
-				throw new ProcessExecutionException(sampleFailureReason(this,
-						"Failing execution for testing purposes."));
+				throw new ProcessExecutionException(this, "Failing execution for testing purposes.");
 			}
 
 			@Override
@@ -212,8 +210,7 @@ public class TestUtil {
 
 			@Override
 			protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
-				throw new ProcessRollbackException(sampleFailureReason(this,
-						"Failing rollback for testing purposes."));
+				throw new ProcessRollbackException(this, "Failing rollback for testing purposes.");
 			}
 
 			@Override
@@ -231,16 +228,6 @@ public class TestUtil {
 				// do nothing
 			}
 		};
-	}
-
-	/**
-	 * Creates a {@link FailureReason} for testing purposes.
-	 * 
-	 * @return A {@link FailureReason} for testing purposes.
-	 */
-	public static FailureReason sampleFailureReason(IProcessComponent<?> source, String hint) {
-
-		return new FailureReason(source, hint);
 	}
 
 	/**

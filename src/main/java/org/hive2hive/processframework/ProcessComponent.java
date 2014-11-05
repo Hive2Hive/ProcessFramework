@@ -57,7 +57,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 */
 	public final T execute() throws InvalidProcessStateException, ProcessExecutionException {
 		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
-			throw new InvalidProcessStateException(state);
+			throw new InvalidProcessStateException(this, state);
 		}
 		logger.debug("Executing '{}'.", this);
 		setState(ProcessState.EXECUTING);
@@ -89,7 +89,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	public final T rollback() throws InvalidProcessStateException, ProcessRollbackException {
 		if (state != ProcessState.EXECUTION_FAILED && state != ProcessState.EXECUTION_SUCCEEDED
 				&& state != ProcessState.PAUSED) {
-			throw new InvalidProcessStateException(state);
+			throw new InvalidProcessStateException(this, state);
 		}
 		// only rollback if component was marked
 		if (!requiresRollback) {
@@ -117,7 +117,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	@Override
 	public final void pause() throws InvalidProcessStateException {
 		if (state != ProcessState.EXECUTING && state != ProcessState.ROLLBACKING) {
-			throw new InvalidProcessStateException(state);
+			throw new InvalidProcessStateException(this, state);
 		}
 		logger.debug("Pausing '{}'.", this);
 		setState(ProcessState.PAUSED);
@@ -129,7 +129,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	@Override
 	public final void resume() throws InvalidProcessStateException {
 		if (state != ProcessState.PAUSED) {
-			throw new InvalidProcessStateException(state);
+			throw new InvalidProcessStateException(this, state);
 		}
 		logger.debug("Resuming '{}'.", this);
 

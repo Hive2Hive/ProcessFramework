@@ -1,27 +1,49 @@
 package org.hive2hive.processframework.exceptions;
 
-import org.hive2hive.processframework.FailureReason;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
  * Exception that occurs due to a failure during an {@link IProcessComponent}s rollback.
- * Contains an instance of {@link FailureReason} for detailed failure information.
  * 
  * @author Christian Lüthold
  * 
  */
 public class ProcessRollbackException extends ProcessException {
 
-	private static final long serialVersionUID = 4136893949400894677L;
+	private static final long serialVersionUID = -4458285820809151989L;
 
 	/**
-	 * Creates a {@code ProcessRollbackException} with the provided {@link FailureReason}.
+	 * Creates a {@code ProcessRollbackException} with the provided source and cause.
 	 * 
-	 * @param reason The {@link FailureReason} that shall be associated with this
-	 *            {@code ProcessRollbackException}.
+	 * @param source The source {@link IProcessComponent} where this {@code ProcessRollbackException} has
+	 *            been thrown.
+	 * @param cause The cause of this {@code ProcessRollbackException}.
 	 */
-	public ProcessRollbackException(FailureReason reason) {
-		super(reason);
+	public ProcessRollbackException(IProcessComponent<?> source, Throwable cause) {
+		this(source, cause, cause.getMessage());
+	}
+
+	/**
+	 * Creates a {@code ProcessRollbackException} with the provided source and message.
+	 * 
+	 * @param source The source {@link IProcessComponent} where this {@code ProcessRollbackException} has
+	 *            been thrown.
+	 * @param message The detail message of this {@code ProcessRollbackException}.
+	 */
+	public ProcessRollbackException(IProcessComponent<?> source, String message) {
+		this(source, null, message);
+	}
+
+	/**
+	 * Creates a {@code ProcessRollbackException} with the provided source and message.
+	 * 
+	 * @param source The source {@link IProcessComponent} where this {@code ProcessRollbackException} has
+	 *            been thrown.
+	 * @param cause The cause of this {@code ProcessRollbackException}.
+	 * @param message The detail message of this {@code ProcessRollbackException}.
+	 */
+	public ProcessRollbackException(IProcessComponent<?> source, Throwable cause, String message) {
+		super(source, cause, message);
 	}
 
 }

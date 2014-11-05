@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.hive2hive.processframework.FailureReason;
 import org.hive2hive.processframework.Process;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.decorators.AsyncComponent;
@@ -140,7 +139,7 @@ public class PreorderProcess extends Process<Void> {
 				throw (ProcessExecutionException) ex.getCause();
 			}
 		} catch (Exception ex) {
-			throw new ProcessExecutionException(new FailureReason(this, ex));
+			throw new ProcessExecutionException(this, ex);
 		}
 	}
 
@@ -154,7 +153,7 @@ public class PreorderProcess extends Process<Void> {
 				throw (ProcessRollbackException) ex.getCause();
 			}
 		} catch (Exception ex) {
-			throw new ProcessRollbackException(new FailureReason(this, ex));
+			throw new ProcessRollbackException(this, ex);
 		}
 	}
 }

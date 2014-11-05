@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 
-import org.hive2hive.processframework.FailureReason;
 import org.hive2hive.processframework.ProcessDecorator;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
@@ -55,7 +54,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 		try {
 			executionHandle = executor.submit(this);
 		} catch (RejectedExecutionException ex) {
-			throw new ProcessExecutionException(new FailureReason(this, ex));
+			throw new ProcessExecutionException(this, ex);
 		}
 
 		// immediate return, since execution is async
@@ -71,7 +70,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 		try {
 			rollbackHandle = executor.submit(this);
 		} catch (RejectedExecutionException ex) {
-			throw new ProcessRollbackException(new FailureReason(this, ex));
+			throw new ProcessRollbackException(this, ex);
 		}
 
 		// immediate return, since rollback is async
