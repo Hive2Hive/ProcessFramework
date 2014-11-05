@@ -30,7 +30,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 
 	private final ExecutorService executor;
 
-	private Future<T> executionHandle;
+	private volatile Future<T> executionHandle;
 	private Future<T> rollbackHandle;
 
 	private volatile boolean isExecuting = false;
@@ -42,6 +42,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
 
+		component = decoratedComponent;
 		executor = Executors.newSingleThreadExecutor();
 	}
 
@@ -57,6 +58,16 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			throw new ProcessExecutionException(this, ex);
 		}
 
+		// TODO remove
+		try {
+			executionHandle.get();
+		} catch (InterruptedException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ExecutionException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
 		// immediate return, since execution is async
 		return executionHandle;
 	}
@@ -84,12 +95,14 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 
 			// execution
 			nameThread(true);
+			T result;
 			try {
-				return component.execute();
+				result = component.execute();
 
 			} catch (InvalidProcessStateException | ProcessExecutionException ex) {
 				throw ex;
 			}
+			return result;
 		} else if (isRollbacking && !isExecuting) {
 
 			// rollback
