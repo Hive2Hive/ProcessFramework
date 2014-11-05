@@ -1,4 +1,5 @@
 # Hive2Hive - Process Framework
+[![Build Status](https://travis-ci.org/Hive2Hive/ProcessFramework.svg?branch=master)](https://travis-ci.org/Hive2Hive/ProcessFramework)
 
 This is a Java library for asynchronous and synchronous process composition. Its licensed under the MIT License and any contribution is welcome.
 
