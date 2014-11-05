@@ -43,7 +43,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	public ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
-		this.name = String.format("[Process Component ID: %s]", id);
+		this.name = String.format("Process Component ID: %s", id);
 		this.state = ProcessState.READY;
 		this.listeners = new ArrayList<IProcessComponentListener>();
 	}
@@ -287,7 +287,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	@Override
 	public String toString() {
-		return this.name;
+		return getName();
 	}
 
 	@Override

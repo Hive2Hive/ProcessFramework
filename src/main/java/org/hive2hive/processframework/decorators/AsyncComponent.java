@@ -129,7 +129,12 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			throw new Exception("Invalid state.");
 		}
 	}
-
+	
+	@Override
+	public String toString() {
+		return String.format("Async[%s]", getName());
+	}
+	
 	private void nameThread(boolean isExecution) {
 		try {
 			Thread.currentThread().checkAccess();
