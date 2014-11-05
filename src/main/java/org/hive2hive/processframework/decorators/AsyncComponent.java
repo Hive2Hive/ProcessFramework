@@ -37,7 +37,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 	private volatile boolean isRollbacking = false;
 
 	// store a reference to the IProcessComponent<T>, such that we know its type argument T
-	private IProcessComponent<T> decoratedComponent;
+	private IProcessComponent<T> component;
 
 	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
@@ -85,7 +85,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			// execution
 			nameThread(true);
 			try {
-				return decoratedComponent.execute();
+				return component.execute();
 
 			} catch (InvalidProcessStateException | ProcessExecutionException ex) {
 				throw ex;
@@ -97,7 +97,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			// mind: async component might be in any state
 			// 1st try
 			try {
-				return decoratedComponent.rollback();
+				return component.rollback();
 			} catch (InvalidProcessStateException ex) {
 				// ProcessComponent.rollback() was allowed, thus AsyncComponent is EXECUTION_SUCCESSED/FAILED
 				// or PAUSED
@@ -118,7 +118,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 
 				// 2nd try
 				try {
-					return decoratedComponent.rollback();
+					return component.rollback();
 				} catch (ProcessRollbackException ex2) {
 					throw ex;
 				}
@@ -132,7 +132,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 	
 	@Override
 	public String toString() {
-		return String.format("Async[%s]", getName());
+		return String.format("Async[%s]", decoratedComponent.toString());
 	}
 	
 	private void nameThread(boolean isExecution) {
