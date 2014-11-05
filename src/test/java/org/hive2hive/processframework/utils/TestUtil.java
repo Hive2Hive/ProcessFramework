@@ -26,9 +26,9 @@ public class TestUtil {
 	public static SyncProcess executionSuccessSyncProcess() {
 
 		SyncProcess pp = new SyncProcess();
-		pp.add(executionSuccessComponent());
-		pp.add(executionSuccessComponent());
-		pp.add(executionSuccessComponent());
+		pp.add(executionSuccessComponent(true));
+		pp.add(executionSuccessComponent(true));
+		pp.add(executionSuccessComponent(true));
 
 		return pp;
 	}
@@ -41,9 +41,9 @@ public class TestUtil {
 	public static SyncProcess executionFailSyncProcess() {
 
 		SyncProcess pp = new SyncProcess();
-		pp.add(executionSuccessComponent());
-		pp.add(executionSuccessComponent());
-		pp.add(executionFailComponent());
+		pp.add(executionSuccessComponent(true));
+		pp.add(executionSuccessComponent(true));
+		pp.add(executionFailComponent(true));
 
 		return pp;
 	}
@@ -84,13 +84,13 @@ public class TestUtil {
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static ProcessComponent<Void> executionSuccessComponent() {
+	public static ProcessComponent<Void> executionSuccessComponent(final boolean requiresRollback) {
 
 		return new ProcessComponent<Void>() {
 
 			@Override
 			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-				setRequiresRollback(true);
+				setRequiresRollback(requiresRollback);
 				return null;
 			}
 
@@ -112,13 +112,13 @@ public class TestUtil {
 	 * 
 	 * @return An anonymous {@link ProcessComponent} for testing purposes.
 	 */
-	public static ProcessComponent<Void> executionFailComponent() {
+	public static ProcessComponent<Void> executionFailComponent(final boolean requiresRollback) {
 
 		return new ProcessComponent<Void>() {
 
 			@Override
 			protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
-				setRequiresRollback(true);
+				setRequiresRollback(requiresRollback);
 				throw new ProcessExecutionException(this, "Failing execution for testing purposes.");
 			}
 
