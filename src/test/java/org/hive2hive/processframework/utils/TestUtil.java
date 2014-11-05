@@ -8,24 +8,24 @@ import java.util.Random;
 import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
+import org.hive2hive.processframework.composites.SyncProcess;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
-import org.hive2hive.processframework.processes.PreorderProcess;
 
 public class TestUtil {
 
 	private static Random r = new Random();
 
 	/**
-	 * Creates a {@link PreorderProcess} that succeeds execution for testing purposes.
+	 * Creates a {@link SyncProcess} that succeeds execution for testing purposes.
 	 * 
-	 * @return A {@link PreorderProcess} that succeeds execution for testing purposes.
+	 * @return A {@link SyncProcess} that succeeds execution for testing purposes.
 	 */
-	public static PreorderProcess executionSuccessPreorderProcess() {
+	public static SyncProcess executionSuccessPreorderProcess() {
 
-		PreorderProcess pp = new PreorderProcess();
+		SyncProcess pp = new SyncProcess();
 		pp.add(executionSuccessComponent());
 		pp.add(executionSuccessComponent());
 		pp.add(executionSuccessComponent());
@@ -34,13 +34,13 @@ public class TestUtil {
 	}
 
 	/**
-	 * Creates a {@link PreorderProcess} that fails execution for testing purposes.
+	 * Creates a {@link SyncProcess} that fails execution for testing purposes.
 	 * 
-	 * @return A {@link PreorderProcess} that fails execution for testing purposes.
+	 * @return A {@link SyncProcess} that fails execution for testing purposes.
 	 */
-	public static PreorderProcess executionFailPreorderProcess() {
+	public static SyncProcess executionFailPreorderProcess() {
 
-		PreorderProcess pp = new PreorderProcess();
+		SyncProcess pp = new SyncProcess();
 		pp.add(executionSuccessComponent());
 		pp.add(executionSuccessComponent());
 		pp.add(executionFailComponent());
@@ -49,13 +49,13 @@ public class TestUtil {
 	}
 
 	/**
-	 * Creates a {@link PreorderProcess} that succeeds rollback for testing purposes.
+	 * Creates a {@link SyncProcess} that succeeds rollback for testing purposes.
 	 * 
-	 * @return A {@link PreorderProcess} that succeeds rollback for testing purposes.
+	 * @return A {@link SyncProcess} that succeeds rollback for testing purposes.
 	 */
-	public static PreorderProcess rollbackSuccessPreorderProcess() {
+	public static SyncProcess rollbackSuccessPreorderProcess() {
 
-		PreorderProcess pp = new PreorderProcess();
+		SyncProcess pp = new SyncProcess();
 		pp.add(rollbackSuccessComponent());
 		pp.add(rollbackSuccessComponent());
 		pp.add(rollbackSuccessComponent());
@@ -64,13 +64,13 @@ public class TestUtil {
 	}
 
 	/**
-	 * Creates a {@link PreorderProcess} that fails rollback for testing purposes.
+	 * Creates a {@link SyncProcess} that fails rollback for testing purposes.
 	 * 
-	 * @return A {@link PreorderProcess} that fails rollback for testing purposes.
+	 * @return A {@link SyncProcess} that fails rollback for testing purposes.
 	 */
-	public static PreorderProcess rollbackFailPreorderProcess() {
+	public static SyncProcess rollbackFailPreorderProcess() {
 
-		PreorderProcess pp = new PreorderProcess();
+		SyncProcess pp = new SyncProcess();
 		// inverse
 		pp.add(rollbackFailComponent());
 		pp.add(rollbackSuccessComponent());
@@ -239,7 +239,7 @@ public class TestUtil {
 	 */
 	public static ProcessComposite<Void> randomProcess(int maxDepth, int maxBranchingFactor) {
 
-		ProcessComposite<Void> p = new PreorderProcess();
+		ProcessComposite<Void> p = new SyncProcess();
 
 		if (maxDepth > 0) {
 			int d = r.nextInt(maxDepth + 1);

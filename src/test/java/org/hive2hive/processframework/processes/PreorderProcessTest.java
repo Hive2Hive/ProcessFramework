@@ -10,6 +10,7 @@ import org.hive2hive.processframework.BaseTest;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.ProcessStateTest;
+import org.hive2hive.processframework.composites.SyncProcess;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
@@ -36,14 +37,14 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testInstantiation() {
 
-		PreorderProcess pp = new PreorderProcess();
+		SyncProcess pp = new SyncProcess();
 		assertTrue(pp.getState() == ProcessState.READY);
 	}
 
 	@Test
 	public void testExecutionSuccess() {
 
-		PreorderProcess proc = TestUtil.executionSuccessPreorderProcess();
+		SyncProcess proc = TestUtil.executionSuccessPreorderProcess();
 
 		try {
 			proc.execute();
@@ -59,7 +60,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testExecutionFail() {
 
-		PreorderProcess proc = TestUtil.executionFailPreorderProcess();
+		SyncProcess proc = TestUtil.executionFailPreorderProcess();
 
 		try {
 			proc.execute();
@@ -76,7 +77,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testRollbackSuccess() throws InvalidProcessStateException, ProcessExecutionException {
 
-		PreorderProcess proc = TestUtil.rollbackSuccessPreorderProcess();
+		SyncProcess proc = TestUtil.rollbackSuccessPreorderProcess();
 		proc.execute();
 
 		try {
@@ -91,7 +92,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testRollbackFail() throws InvalidProcessStateException, ProcessExecutionException {
 
-		PreorderProcess proc = TestUtil.rollbackFailPreorderProcess();
+		SyncProcess proc = TestUtil.rollbackFailPreorderProcess();
 		proc.execute();
 
 		try {
@@ -124,7 +125,7 @@ public class PreorderProcessTest extends BaseTest {
 		order.add(nameChild4);
 		order.add(nameChild5);
 
-		PreorderProcess p = new PreorderProcess();
+		SyncProcess p = new SyncProcess();
 		ProcessComponent<?> c1 = TestUtil.executionSuccessComponent();
 		ProcessComponent<?> c2 = TestUtil.executionSuccessComponent();
 		ProcessComponent<?> c3 = TestUtil.executionSuccessComponent();
@@ -209,7 +210,7 @@ public class PreorderProcessTest extends BaseTest {
 		order.add(nameChild2);
 		order.add(nameChild1);
 
-		PreorderProcess p = new PreorderProcess();
+		SyncProcess p = new SyncProcess();
 		ProcessComponent<?> c1 = TestUtil.executionSuccessComponent();
 		ProcessComponent<?> c2 = TestUtil.executionSuccessComponent();
 		ProcessComponent<?> c3 = TestUtil.executionSuccessComponent();

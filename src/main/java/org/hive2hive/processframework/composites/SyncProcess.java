@@ -1,4 +1,4 @@
-package org.hive2hive.processframework.processes;
+package org.hive2hive.processframework.composites;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +15,13 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
- * A {@link ProcessComposite} that traverses its components in preorder (i.e., left-to-right).
+ * A {@link ProcessComposite} that awaits asynchronous components before completion.
+ * Traverses its components in preorder (i.e., left-to-right).
  * 
  * @author Christian Lüthold
  *
  */
-public class PreorderProcess extends ProcessComposite<Void> {
+public final class SyncProcess extends ProcessComposite<Void> {
 
 	private List<IProcessComponent<?>> components = new ArrayList<IProcessComponent<?>>();
 
@@ -114,7 +115,7 @@ public class PreorderProcess extends ProcessComposite<Void> {
 		for (Future<?> async : asyncs) {
 			if (!async.isDone())
 				continue;
-			
+
 			awaitAsyncExecution(async);
 		}
 	}
