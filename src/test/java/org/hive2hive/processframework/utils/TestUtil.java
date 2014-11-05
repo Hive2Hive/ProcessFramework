@@ -101,21 +101,6 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doPause() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeExecution() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeRollback() throws InvalidProcessStateException {
-				// do nothing
-			}
-			
-			@Override
 			public double getProgress() {
 				return 0;
 			}
@@ -143,21 +128,6 @@ public class TestUtil {
 				return null;
 			}
 
-			@Override
-			protected void doPause() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeExecution() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeRollback() throws InvalidProcessStateException {
-				// do nothing
-			}
-			
 			@Override
 			public double getProgress() {
 				return 0;
@@ -187,21 +157,6 @@ public class TestUtil {
 			}
 
 			@Override
-			protected void doPause() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeExecution() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeRollback() throws InvalidProcessStateException {
-				// do nothing
-			}
-			
-			@Override
 			public double getProgress() {
 				return 0;
 			}
@@ -228,21 +183,6 @@ public class TestUtil {
 				throw new ProcessRollbackException(this, "Failing rollback for testing purposes.");
 			}
 
-			@Override
-			protected void doPause() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeExecution() throws InvalidProcessStateException {
-				// do nothing
-			}
-
-			@Override
-			protected void doResumeRollback() throws InvalidProcessStateException {
-				// do nothing
-			}
-			
 			@Override
 			public double getProgress() {
 				return 0;

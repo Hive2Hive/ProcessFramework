@@ -22,9 +22,9 @@ public interface IProcessComponent<T> {
 	 * result of type {@code T}.
 	 * 
 	 * @return The computed result of type {@code T}.
-	 * @throws InvalidProcessStateException InvalidProcessStateException If this process component is in an
-	 *             invalid state for this operation.
-	 * @throws ProcessExecutionException If a failure occured during a process component's execution.
+	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
+	 *             operation.
+	 * @throws ProcessExecutionException If a failure occured during a {@code IProcessComponent}'s execution.
 	 */
 	T execute() throws InvalidProcessStateException, ProcessExecutionException;
 
@@ -33,16 +33,16 @@ public interface IProcessComponent<T> {
 	 * result of type {@code T}.
 	 * 
 	 * @return The computed result of type {@code T}.
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
 	 *             operation.
-	 * @throws ProcessRollbackException If a failure occured during a process component's rollback.
+	 * @throws ProcessRollbackException If a failure occured during a {@code IProcessComponent}'s rollback.
 	 */
 	T rollback() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
 	 *             operation.
 	 */
 	void pause() throws InvalidProcessStateException;
@@ -50,10 +50,12 @@ public interface IProcessComponent<T> {
 	/**
 	 * Resumes the execution or rollback of this {@code IProcessComponent}, depending on its current state.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
 	 *             operation.
+	 * @throws ProcessExecutionException If a failure occured during a {@code IProcessComponent}'s execution.
+	 * @throws ProcessRollbackException If a failure occured during a {@code IProcessComponent}'s rollback.
 	 */
-	void resume() throws InvalidProcessStateException;
+	void resume() throws InvalidProcessStateException, ProcessExecutionException, ProcessRollbackException;
 
 	/**
 	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination.
@@ -135,9 +137,11 @@ public interface IProcessComponent<T> {
 	void setParent(ProcessComposite<?> parent);
 
 	/**
-	 * Gets the parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child of.
+	 * Gets the parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child
+	 * of.
 	 * 
-	 * @return The parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child of.
+	 * @return The parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a
+	 *         child of.
 	 */
 	ProcessComposite<?> getParent();
 

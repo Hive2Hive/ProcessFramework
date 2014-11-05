@@ -126,6 +126,12 @@ public class ProcessStateTest extends BaseTest {
 		// test valid operations
 		TestUtil.setState(comp, ProcessState.PAUSED);
 		try {
+			comp.execute();
+		} catch (InvalidProcessStateException ex) {
+			fail("This operation should have been allowed.");
+		}
+		TestUtil.setState(comp, ProcessState.PAUSED);
+		try {
 			comp.rollback();
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
@@ -138,13 +144,6 @@ public class ProcessStateTest extends BaseTest {
 		}
 		
 		// test invalid operations
-		TestUtil.setState(comp, ProcessState.PAUSED);
-		try {
-			comp.execute();
-			fail("InvalidProcessStateException should have been thrown.");
-		} catch (InvalidProcessStateException ex) {
-			// should happen
-		}
 		TestUtil.setState(comp, ProcessState.PAUSED);
 		try {
 			comp.pause();

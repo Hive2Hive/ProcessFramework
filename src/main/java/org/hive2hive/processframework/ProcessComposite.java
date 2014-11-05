@@ -2,7 +2,6 @@ package org.hive2hive.processframework;
 
 import java.util.Collection;
 
-import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
@@ -92,20 +91,5 @@ public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 	 * @param component The {@link ProcessComponent} to be removed from this {@code ProcessComposite}.
 	 */
 	protected abstract void doRemove(IProcessComponent<?> component);
-
-	@Override
-	protected void doPause() throws InvalidProcessStateException {
-		// do nothing by default
-	}
-
-	@Override
-	protected void doResumeExecution() throws InvalidProcessStateException {
-		// do nothing by default
-	}
-
-	@Override
-	protected void doResumeRollback() throws InvalidProcessStateException {
-		// do nothing by default
-	}
 
 }

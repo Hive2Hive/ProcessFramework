@@ -39,18 +39,4 @@ public abstract class ProcessStep<T> extends ProcessComponent<T> {
 		return null;
 	}
 
-	@Override
-	protected void doPause() throws InvalidProcessStateException {
-		// do nothing by default
-	}
-
-	@Override
-	protected void doResumeExecution() throws InvalidProcessStateException {
-		// do nothing by default
-	}
-
-	@Override
-	protected void doResumeRollback() throws InvalidProcessStateException {
-		// do nothing by default
-	}
 }

@@ -28,7 +28,10 @@ import org.slf4j.LoggerFactory;
 public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(ProcessComponent.class);
-	
+
+	// pausing only possible from another thread
+	protected volatile boolean isPaused;
+
 	private String name;
 	private final String id;
 	private ProcessState state;
@@ -46,7 +49,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	/**
-	 * Starts the execution of this {@code ProcessComponent}.
+	 * Starts or resumes the execution of this {@code ProcessComponent}.
 	 * Upon successful execution, returns the result of type {@code T} and all attached
 	 * {@link IProcessComponentListener}s notify the success. Otherwise, a {@link ProcessExecutionException}
 	 * is thrown and all attached {@link IProcessComponentListener}s notify the failure.
@@ -54,7 +57,8 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * @return The computed result of type {@code T}.
 	 */
 	public final T execute() throws InvalidProcessStateException, ProcessExecutionException {
-		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED) {
+		if (state != ProcessState.READY && state != ProcessState.ROLLBACK_SUCCEEDED
+				&& state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(this, state);
 		}
 		logger.debug("Executing '{}'.", this);
@@ -76,10 +80,10 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	/**
-	 * Starts the rollback of this {@code ProcessComponent}.
+	 * Starts or resumes the rollback of this {@code ProcessComponent}.
 	 * Upon successful rollback, returns the result of type {@code T} and all attached
-	 * {@link IProcessComponentListener}s notify the success. Otherwise, a {@link ProcessRollbackException}
-	 * is thrown and all attached {@link IProcessComponentListener}s notify the failure.
+	 * {@link IProcessComponentListener}s notify the success. Otherwise, a {@link ProcessRollbackException} is
+	 * thrown and all attached {@link IProcessComponentListener}s notify the failure.
 	 * 
 	 * @return The computed result of type {@code T}.
 	 */
@@ -118,28 +122,25 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 			throw new InvalidProcessStateException(this, state);
 		}
 		logger.debug("Pausing '{}'.", this);
+
+		isPaused = true;
 		setState(ProcessState.PAUSED);
 		notifyListeners(ProcessState.PAUSED);
-
-		doPause();
 	}
 
 	@Override
-	public final void resume() throws InvalidProcessStateException {
+	public final void resume() throws InvalidProcessStateException, ProcessExecutionException,
+			ProcessRollbackException {
 		if (state != ProcessState.PAUSED) {
 			throw new InvalidProcessStateException(this, state);
 		}
 		logger.debug("Resuming '{}'.", this);
 
-		// TODO don't distinguish between executing and rollbacking state, each component should be able to
-		// decide itself (decorators must implement both methods but cannot decide, they can just forward
-		// resume())
+		isPaused = false;
 		if (!isRollbacking) {
-			setState(ProcessState.EXECUTING);
-			doResumeExecution();
+			execute();
 		} else {
-			setState(ProcessState.ROLLBACKING);
-			doResumeRollback();
+			rollback();
 		}
 	}
 
@@ -190,48 +191,28 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	/**
 	 * Template method responsible for the execution.
-	 * If a failure occurs during this process component's execution, a {@link ProcessExecutionException} is
+	 * If a failure occurs during this {@code ProcessComponent}'s execution, a
+	 * {@link ProcessExecutionException} is
 	 * thrown.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 * @throws InvalidProcessStateException If this {@code ProcessComponent} is in an invalid state for this
 	 *             operation.
-	 * @throws ProcessExecutionException If a failure occured during this process component's execution.
+	 * @throws ProcessExecutionException If a failure occured during this {@code ProcessComponent}'s
+	 *             execution.
 	 */
 	protected abstract T doExecute() throws InvalidProcessStateException, ProcessExecutionException;
 
 	/**
 	 * Template method responsible for the rollback.
-	 * If a failure occurs during this process component's rollback, a {@link ProcessRollbackException} is
+	 * If a failure occurs during this {@code ProcessComponent}'s rollback, a {@link ProcessRollbackException}
+	 * is
 	 * thrown.
 	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
+	 * @throws InvalidProcessStateException If this {@code ProcessComponent} is in an invalid state for this
 	 *             operation.
-	 * @throws ProcessRollbackException If a failure occured during this process component's rollback.
+	 * @throws ProcessRollbackException If a failure occured during this {@code ProcessComponent}'s rollback.
 	 */
 	protected abstract T doRollback() throws InvalidProcessStateException, ProcessRollbackException;
-
-	/**
-	 * Template method responsible for the execution or rollback pausing.
-	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
-	 *             operation.
-	 */
-	protected abstract void doPause() throws InvalidProcessStateException;
-
-	/**
-	 * Template method responsible for the execution resuming.
-	 * 
-	 * @throws InvalidProcessStateException If this component is in an invalid state for this operation.
-	 */
-	protected abstract void doResumeExecution() throws InvalidProcessStateException;
-
-	/**
-	 * Template method responsible for the rollback resuming.
-	 * 
-	 * @throws InvalidProcessStateException If this process component is in an invalid state for this
-	 *             operation.
-	 */
-	protected abstract void doResumeRollback() throws InvalidProcessStateException;
 
 	@Override
 	public void setParent(ProcessComposite<?> parent) {

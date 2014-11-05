@@ -130,24 +130,6 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 		}
 	}
 
-	@Override
-	protected void doPause() throws InvalidProcessStateException {
-		// mind: async component might be in any state!
-		decoratedComponent.pause();
-	}
-
-	@Override
-	protected void doResumeExecution() throws InvalidProcessStateException {
-		// mind: async component might be in any state!
-		decoratedComponent.resume();
-	}
-
-	@Override
-	protected void doResumeRollback() throws InvalidProcessStateException {
-		// mind: async component might be in any state!
-		decoratedComponent.resume();
-	}
-
 	private void nameThread(boolean isExecution) {
 		try {
 			Thread.currentThread().checkAccess();

@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.hive2hive.processframework.ProcessComposite;
-import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
@@ -28,16 +27,27 @@ public final class SyncProcess extends ProcessComposite<Void> {
 	private List<Future<?>> asyncExecutions = new ArrayList<Future<?>>();
 	private List<Future<?>> asyncRollbacks = new ArrayList<Future<?>>();
 
+	private IProcessComponent<?> next = null;
+	private IProcessComponent<?> last = null;
+	private int executionIndex;
+	private int rollbackIndex;
+	
 	@Override
 	protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 
 		// don't use iterator, as component list might be modified during execution
-		int executionIndex = 0;
-		while (executionIndex < components.size() && getState() == ProcessState.EXECUTING) {
+		// also, execution must be able to resume at correct position after pause
+		if (next != null) {
+			executionIndex = components.indexOf(next);
+		} else {
+			executionIndex = 0;
+		}
+		
+		while (executionIndex < components.size() && !isPaused) {
 
 			checkForAsyncExecutionFailure(asyncExecutions);
 
-			IProcessComponent<?> next = components.get(executionIndex);
+			next = components.get(executionIndex);
 			if (next instanceof AsyncComponent<?>) {
 				Future<?> async = ((AsyncComponent<?>) next).execute();
 				asyncExecutions.add(async);
@@ -46,12 +56,14 @@ public final class SyncProcess extends ProcessComposite<Void> {
 			}
 			executionIndex++;
 		}
-
-		// await async execution components
-		for (Future<?> async : asyncExecutions) {
-			awaitAsyncExecution(async);
+		
+		if (!isPaused) {
+			// await async execution components
+			for (Future<?> async : asyncExecutions) {
+				awaitAsyncExecution(async);
+			}
+			asyncExecutions.clear();
 		}
-		asyncExecutions.clear();
 
 		return null;
 	}
@@ -60,13 +72,18 @@ public final class SyncProcess extends ProcessComposite<Void> {
 	protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
 		// don't use iterator, as component list might be modified during rollback
-		int rollbackIndex = components.size() - 1;
-
-		while (rollbackIndex >= 0 && getState() == ProcessState.ROLLBACKING) {
+		// also, rollback must be able to resume at correct position after pause
+		if (last != null) {
+			rollbackIndex = components.indexOf(last);
+		} else {
+			executionIndex = components.size() - 1;
+		}
+		
+		while (rollbackIndex >= 0 && !isPaused) {
 
 			checkForAsyncRollbackFailure(asyncRollbacks);
 
-			IProcessComponent<?> last = components.get(rollbackIndex);
+			last = components.get(rollbackIndex);
 			if (last instanceof AsyncComponent<?>) {
 				Future<?> async = ((AsyncComponent<?>) last).rollback();
 				asyncRollbacks.add(async);
@@ -76,11 +93,13 @@ public final class SyncProcess extends ProcessComposite<Void> {
 			rollbackIndex--;
 		}
 
-		// await async rollback components
-		for (Future<?> async : asyncRollbacks) {
-			awaitAsyncRollback(async);
+		if (!isPaused) {
+			// await async rollback components
+			for (Future<?> async : asyncRollbacks) {
+				awaitAsyncRollback(async);
+			}
+			asyncRollbacks.clear();
 		}
-		asyncRollbacks.clear();
 
 		return null;
 	}
