@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import org.hive2hive.processframework.Process;
+import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessComponent;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
@@ -231,15 +231,15 @@ public class TestUtil {
 	}
 
 	/**
-	 * Creates a random {@link Process} composite with the provided parameters for testing purposes.
+	 * Creates a random {@link ProcessComposite} composite with the provided parameters for testing purposes.
 	 * 
 	 * @param maxDepth The maximal depth of the composite.
 	 * @param maxBranchingFactor The maximal branching factor per level.
-	 * @return A random {@link Process} for testing purposes.
+	 * @return A random {@link ProcessComposite} for testing purposes.
 	 */
-	public static Process<Void> randomProcess(int maxDepth, int maxBranchingFactor) {
+	public static ProcessComposite<Void> randomProcess(int maxDepth, int maxBranchingFactor) {
 
-		Process<Void> p = new PreorderProcess();
+		ProcessComposite<Void> p = new PreorderProcess();
 
 		if (maxDepth > 0) {
 			int d = r.nextInt(maxDepth + 1);

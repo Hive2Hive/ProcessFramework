@@ -34,7 +34,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	private ProcessState state;
 	private double progress;
 	private final List<IProcessComponentListener> listeners;
-	private Process<?> parent;
+	private ProcessComposite<?> parent;
 
 	private boolean isRollbacking;
 	private boolean requiresRollback;
@@ -236,7 +236,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	protected abstract void doResumeRollback() throws InvalidProcessStateException;
 
 	@Override
-	public void setParent(Process<?> parent) {
+	public void setParent(ProcessComposite<?> parent) {
 		this.parent = parent;
 	}
 
@@ -302,7 +302,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	@Override
-	public Process<?> getParent() {
+	public ProcessComposite<?> getParent() {
 		return this.parent;
 	}
 

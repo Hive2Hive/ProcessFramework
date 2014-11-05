@@ -2,7 +2,7 @@ package org.hive2hive.processframework.interfaces;
 
 import java.util.List;
 
-import org.hive2hive.processframework.Process;
+import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
@@ -132,14 +132,14 @@ public interface IProcessComponent<T> {
 	 * 
 	 * @param parent The parent for this {@code IProcessComponent}.
 	 */
-	void setParent(Process<?> parent);
+	void setParent(ProcessComposite<?> parent);
 
 	/**
-	 * Gets the parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
+	 * Gets the parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child of.
 	 * 
-	 * @return The parent {@link Process} composite of which this {@code IProcessComponent} is a child of.
+	 * @return The parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child of.
 	 */
-	Process<?> getParent();
+	ProcessComposite<?> getParent();
 
 	/**
 	 * Indicates whether this {@code IProcessComponent} requires a rollback.

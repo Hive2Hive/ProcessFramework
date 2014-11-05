@@ -54,7 +54,7 @@ public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
-	public Process<?> getParent() {
+	public ProcessComposite<?> getParent() {
 		return decoratedComponent.getParent();
 	}
 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.hive2hive.processframework.Process;
+import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessState;
 import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
@@ -15,12 +15,12 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
- * A {@link Process} that traverses its components in preorder (i.e., left-to-right).
+ * A {@link ProcessComposite} that traverses its components in preorder (i.e., left-to-right).
  * 
  * @author Christian Lüthold
  *
  */
-public class PreorderProcess extends Process<Void> {
+public class PreorderProcess extends ProcessComposite<Void> {
 
 	private List<IProcessComponent<?>> components = new ArrayList<IProcessComponent<?>>();
 
