@@ -23,7 +23,7 @@ public class TestUtil {
 	 * 
 	 * @return A {@link SyncProcess} that succeeds execution for testing purposes.
 	 */
-	public static SyncProcess executionSuccessPreorderProcess() {
+	public static SyncProcess executionSuccessSyncProcess() {
 
 		SyncProcess pp = new SyncProcess();
 		pp.add(executionSuccessComponent());
@@ -38,7 +38,7 @@ public class TestUtil {
 	 * 
 	 * @return A {@link SyncProcess} that fails execution for testing purposes.
 	 */
-	public static SyncProcess executionFailPreorderProcess() {
+	public static SyncProcess executionFailSyncProcess() {
 
 		SyncProcess pp = new SyncProcess();
 		pp.add(executionSuccessComponent());
@@ -53,7 +53,7 @@ public class TestUtil {
 	 * 
 	 * @return A {@link SyncProcess} that succeeds rollback for testing purposes.
 	 */
-	public static SyncProcess rollbackSuccessPreorderProcess() {
+	public static SyncProcess rollbackSuccessSyncProcess() {
 
 		SyncProcess pp = new SyncProcess();
 		pp.add(rollbackSuccessComponent());
@@ -68,7 +68,7 @@ public class TestUtil {
 	 * 
 	 * @return A {@link SyncProcess} that fails rollback for testing purposes.
 	 */
-	public static SyncProcess rollbackFailPreorderProcess() {
+	public static SyncProcess rollbackFailSyncProcess() {
 
 		SyncProcess pp = new SyncProcess();
 		// inverse

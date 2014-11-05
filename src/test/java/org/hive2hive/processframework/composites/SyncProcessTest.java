@@ -1,4 +1,4 @@
-package org.hive2hive.processframework.processes;
+package org.hive2hive.processframework.composites;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +21,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class PreorderProcessTest extends BaseTest {
+public class SyncProcessTest extends BaseTest {
 
 	@BeforeClass
 	public static void initTest() throws Exception {
@@ -44,7 +44,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testExecutionSuccess() {
 
-		SyncProcess proc = TestUtil.executionSuccessPreorderProcess();
+		SyncProcess proc = TestUtil.executionSuccessSyncProcess();
 
 		try {
 			proc.execute();
@@ -60,7 +60,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testExecutionFail() {
 
-		SyncProcess proc = TestUtil.executionFailPreorderProcess();
+		SyncProcess proc = TestUtil.executionFailSyncProcess();
 
 		try {
 			proc.execute();
@@ -77,7 +77,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testRollbackSuccess() throws InvalidProcessStateException, ProcessExecutionException {
 
-		SyncProcess proc = TestUtil.rollbackSuccessPreorderProcess();
+		SyncProcess proc = TestUtil.rollbackSuccessSyncProcess();
 		proc.execute();
 
 		try {
@@ -92,7 +92,7 @@ public class PreorderProcessTest extends BaseTest {
 	@Test
 	public void testRollbackFail() throws InvalidProcessStateException, ProcessExecutionException {
 
-		SyncProcess proc = TestUtil.rollbackFailPreorderProcess();
+		SyncProcess proc = TestUtil.rollbackFailSyncProcess();
 		proc.execute();
 
 		try {
