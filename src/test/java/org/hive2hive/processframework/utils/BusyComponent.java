@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class BusyComponent extends ProcessDecorator<Void> {
 
 	private static final Logger logger = LoggerFactory.getLogger(BusyComponent.class);
-	private static final int SIMULATED_WORK_DURATION_MS = 2000;
+	public static final int SIMULATED_WORK_DURATION_MS = 2000;
 	
 	public BusyComponent(IProcessComponent<?> decoratedComponent) {
 		super(decoratedComponent);
@@ -27,7 +27,9 @@ public class BusyComponent extends ProcessDecorator<Void> {
 	protected Void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 		decoratedComponent.execute();
 		
-		simulateWork();
+		// simulate work
+		logger.debug(String.format("Simulating execution work for %s ms.", SIMULATED_WORK_DURATION_MS));
+		TestUtil.waitFor(SIMULATED_WORK_DURATION_MS);
 		return null;
 	}
 	
@@ -35,17 +37,10 @@ public class BusyComponent extends ProcessDecorator<Void> {
 	protected Void doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 		decoratedComponent.rollback();
 		
-		simulateWork();
+		// simulate work
+		logger.debug(String.format("Simulating rollback work for %s ms.", SIMULATED_WORK_DURATION_MS));
+		TestUtil.waitFor(SIMULATED_WORK_DURATION_MS);
 		return null;
-	}
-	
-	private static void simulateWork() {
-		try {
-			logger.debug(String.format("Simulating %s ms of work.", SIMULATED_WORK_DURATION_MS));
-			Thread.sleep(SIMULATED_WORK_DURATION_MS);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Override

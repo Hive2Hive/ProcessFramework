@@ -226,4 +226,12 @@ public class TestUtil {
 			fail("Reflection failed.");
 		}
 	}
+	
+	public static void waitFor(int ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
