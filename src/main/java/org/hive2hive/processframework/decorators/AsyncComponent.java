@@ -58,16 +58,6 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			throw new ProcessExecutionException(this, ex);
 		}
 
-		// TODO remove
-		try {
-			executionHandle.get();
-		} catch (InterruptedException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		} catch (ExecutionException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
 		// immediate return, since execution is async
 		return executionHandle;
 	}
@@ -95,14 +85,10 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 
 			// execution
 			nameThread(true);
-			T result;
-			try {
-				result = component.execute();
+			
+			// throw all kinds of exceptions
+			return component.execute();
 
-			} catch (InvalidProcessStateException | ProcessExecutionException ex) {
-				throw ex;
-			}
-			return result;
 		} else if (isRollbacking && !isExecuting) {
 
 			// rollback
