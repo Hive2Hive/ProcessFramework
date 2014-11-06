@@ -1,13 +1,24 @@
 # Hive2Hive - Process Framework
 [![Build Status](https://travis-ci.org/Hive2Hive/ProcessFramework.svg?branch=master)](https://travis-ci.org/Hive2Hive/ProcessFramework)
 
-This is a Java library for asynchronous and synchronous process composition. Its licensed under the MIT License and any contribution is welcome.
+The Hive2Hive Process Framework is a lightweight and extensible framework for asynchronous and synchronous process composition. Initially started and used as a sub-module of [Hive2Hive](https://github.com/Hive2Hive/Hive2Hive), an open-source Java library for secure, distributed, P2P-based file synchronization and sharing, this framework now is a standalone module that might be helpful for your projects, too. It's licensed under the MIT License and any contribution is welcome.
 
-Initially, this project was started and used as a sub-module of [Hive2Hive](https://github.com/Hive2Hive/Hive2Hive), an open-source Java library for secure, distributed, P2P-based file synchronization and sharing.
-But due to its simplicity and generic form, we received a lot of positive feedback from people that also thought about using it. So we decided to provide it as a separate module such that it might be helpful for your projects, too.
-
-For more information about this process framework, please refer to our homepage: [Hive2Hive - Process Framework](http://hive2hive.com/process-framework/).
-
+## Features
+- simple, straightforward API
+- **supports**:
+ - *rollback*
+ - *result computation*
+ - *pause/resume*
+ - *asynchronous execution/rollback*
+- **easily extendable** using [GoF Design Patterns](http://en.wikipedia.org/wiki/Design_Patterns):
+  - all components have the same API
+  - build up your own process tree by nesting components
+  - Processes can be built by using a [Composite](http://en.wikipedia.org/wiki/Composite_pattern):
+    - use default containers or define your own
+    - define your own process steps
+  - Processes can be extended by adding behaviour/state by using a [Decorator](http://en.wikipedia.org/wiki/Decorator_pattern):
+    - use default decorators or define your own
+  
 ## API Demonstration
 
 Coming soon!
