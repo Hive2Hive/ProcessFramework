@@ -10,13 +10,13 @@ This is a lightweight and extensible framework for asynchronous and synchronous 
  - *result computation*
  - *pause/resume*
  - *asynchronous execution/rollback*
-- **easily extendable** using [GoF Design Patterns](http://en.wikipedia.org/wiki/Design_Patterns):
+- **easily extendable** due to the use of [GoF Design Patterns](http://en.wikipedia.org/wiki/Design_Patterns):
   - all components have the same API
-  - build up your own process tree by nesting components
-  - Processes can be built by using a [Composite](http://en.wikipedia.org/wiki/Composite_pattern):
+  - processes can be built by using a [Composite](http://en.wikipedia.org/wiki/Composite_pattern):
     - use default containers or define your own
     - define your own process steps
-  - Processes can be extended by adding behaviour/state by using a [Decorator](http://en.wikipedia.org/wiki/Decorator_pattern):
+    - process trees can be built by **nesting components** (containers, steps)
+  - processes can be extended by **adding behaviour/state** by using a [Decorator](http://en.wikipedia.org/wiki/Decorator_pattern):
     - use default decorators or define your own
   
 ## API Demonstration
