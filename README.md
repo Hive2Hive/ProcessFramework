@@ -1,7 +1,7 @@
 # Hive2Hive - Process Framework
 [![Build Status](https://travis-ci.org/Hive2Hive/ProcessFramework.svg?branch=master)](https://travis-ci.org/Hive2Hive/ProcessFramework)
 
-The Hive2Hive Process Framework is a lightweight and extensible framework for asynchronous and synchronous process composition. Initially started and used as a sub-module of [Hive2Hive](https://github.com/Hive2Hive/Hive2Hive), an open-source Java library for secure, distributed, P2P-based file synchronization and sharing, this framework now is a standalone module that might be helpful for your projects, too. It's licensed under the MIT License and any contribution is welcome.
+This is a lightweight and extensible framework for asynchronous and synchronous process composition. Initially started and used as a sub-module of [Hive2Hive](https://github.com/Hive2Hive/Hive2Hive), an open-source Java library for secure, distributed, P2P-based file synchronization and sharing, this framework now is a standalone module that might be helpful for your projects, too. It's licensed under the [MIT License](http://opensource.org/licenses/MIT) and any contribution is welcome.
 
 ## Features
 - simple, straightforward API
