@@ -22,7 +22,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  * The {@link IProcessComponent} wrapped/decorated by this {@code AsyncComponent} should be <i>independent</i>
  * of any other components in the process composite because it runs asynchronously.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  * @param <T> The type of the result computed by the wrapped/decorated {@code IProcessComponent}.
  */

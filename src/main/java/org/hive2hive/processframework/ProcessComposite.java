@@ -8,7 +8,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  * Abstract base class for all composite {@link ProcessComponent}s.
  * These composites contain other {@link ProcessComponent}s.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  * @param <T> The type of the result computed by this {@code ProcessComposite}.
  */

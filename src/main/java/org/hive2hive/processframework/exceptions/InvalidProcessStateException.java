@@ -8,7 +8,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  * specific operation.</br>
  * <b>Example:</b> An {@link IProcessComponent} cannot be paused if its execution has not yet been started.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  */
 public class InvalidProcessStateException extends ProcessException {

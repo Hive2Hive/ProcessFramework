@@ -12,7 +12,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponentListener;
  * This abstract base class just delegates all calls to the wrapped/decorated {@link IProcessComponent}
  * implementation.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  * 
  * @param <T> The type of the result computed by the wrapped/decorated {@code IProcessComponent}.
  */

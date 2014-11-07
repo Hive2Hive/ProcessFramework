@@ -6,7 +6,7 @@ import org.hive2hive.processframework.interfaces.IProcessEventArgs;
 /**
  * Default process event arguments.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  */
 public class ProcessEventArgs implements IProcessEventArgs {

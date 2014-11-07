@@ -11,7 +11,7 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 /**
  * Basic interface for all process components. Defines all common functionalities.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  * @param <T> The type of the result computed by this {@code IProcessComponent}.
  */

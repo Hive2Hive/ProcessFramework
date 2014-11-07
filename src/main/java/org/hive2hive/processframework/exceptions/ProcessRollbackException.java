@@ -5,7 +5,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 /**
  * Exception that occurs due to a failure during an {@link IProcessComponent}s rollback.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  * 
  */
 public class ProcessRollbackException extends ProcessException {

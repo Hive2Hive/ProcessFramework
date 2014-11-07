@@ -5,7 +5,7 @@ import org.hive2hive.processframework.ProcessComponent;
 /**
  * Basic {@link ProcessComponent} listener interface.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  * 
  */
 public interface IProcessComponentListener {

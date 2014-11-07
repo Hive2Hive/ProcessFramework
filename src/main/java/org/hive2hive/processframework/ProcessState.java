@@ -3,7 +3,7 @@ package org.hive2hive.processframework;
 /**
  * Represents the internal state of an {@link IProcessComponent}.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  * 
  */
 public enum ProcessState {

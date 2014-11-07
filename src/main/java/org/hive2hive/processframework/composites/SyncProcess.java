@@ -17,7 +17,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  * A {@link ProcessComposite} that awaits asynchronous components before completion.
  * Traverses its components in preorder (i.e., left-to-right).
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  */
 public final class SyncProcess extends ProcessComposite<Void> {

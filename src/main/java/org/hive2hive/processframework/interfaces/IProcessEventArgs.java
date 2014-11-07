@@ -4,7 +4,7 @@ package org.hive2hive.processframework.interfaces;
 /**
  * Basic interface for process event arguments.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  * 
  */
 public interface IProcessEventArgs {

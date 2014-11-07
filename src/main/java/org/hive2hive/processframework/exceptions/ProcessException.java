@@ -6,7 +6,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  * Abstract base class for all exceptions in the process framework.
  * Holds a reference to the source {@link IProcessComponent} that threw this {@code ProcessException}.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  */
 public abstract class ProcessException extends Exception {

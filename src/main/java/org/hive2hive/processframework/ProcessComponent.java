@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * Abstract base class for all process components. Keeps track of a process components' most essential
  * properties and functionalities.
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  * @param <T> The type of the result computed by this {@code ProcessComponent}.
  */
