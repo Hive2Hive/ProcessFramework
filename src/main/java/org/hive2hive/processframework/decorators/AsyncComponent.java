@@ -28,38 +28,34 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> The type of the result computed by the wrapped/decorated {@code IProcessComponent}.
  */
-public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Callable<T> {
+public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AsyncComponent.class);
-	
-	private final ExecutorService executor;
-
-	private volatile Future<T> executionHandle;
-	private Future<T> rollbackHandle;
-
-	private volatile boolean isExecuting = false;
-	private volatile boolean isRollbacking = false;
 
 	// store a reference to the IProcessComponent<T>, such that we know its type argument T
-	private IProcessComponent<T> component;
+	private volatile IProcessComponent<T> component;
 
+	private volatile Future<T> executionHandle;
+	private volatile Future<T> rollbackHandle;
+
+	private final ExecutorService executor;
+	private ExecutionRunner executionRunner;
+	private RollbackRunner rollbackRunner;
+	
 	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
 
 		component = decoratedComponent;
-		
-		// 2 threads: execution, rollback
-		executor = Executors.newFixedThreadPool(2);
+
+		executor = Executors.newFixedThreadPool(1);
 	}
 
 	@Override
 	protected Future<T> doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 
-		isExecuting = true;
-		isRollbacking = !isExecuting;
-
+		executionRunner = new ExecutionRunner();
 		try {
-			executionHandle = executor.submit(this);
+			executionHandle = executor.submit(executionRunner);
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessExecutionException(this, ex);
 		}
@@ -71,11 +67,9 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 	@Override
 	protected Future<T> doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
-		isRollbacking = true;
-		isExecuting = !isRollbacking;
-
+		rollbackRunner = new RollbackRunner();
 		try {
-			rollbackHandle = executor.submit(this);
+			rollbackHandle = executor.submit(rollbackRunner);
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessRollbackException(this, ex);
 		}
@@ -85,25 +79,43 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 	}
 
 	@Override
-	public T call() throws Exception {
+	public String toString() {
+		return String.format("Async[%s]", decoratedComponent.toString());
+	}
 
-		if (isExecuting && !isRollbacking) {
+	private void nameThread(boolean isExecution) {
+		try {
+			Thread.currentThread().checkAccess();
+			Thread.currentThread().setName(String.format("async %s", isExecution ? "execution" : "rollback"));
+		} catch (SecurityException ex) {
+		}
+	}
 
-			// execution
+	private class ExecutionRunner implements Callable<T> {
+
+		@Override
+		public T call() throws Exception {
+
 			nameThread(true);
-			
+
 			// throw all kinds of exceptions
 			return component.execute();
+		}
+	}
 
-		} else if (isRollbacking && !isExecuting) {
+	private class RollbackRunner implements Callable<T> {
 
-			// rollback
+		@Override
+		public T call() throws Exception {
+
 			nameThread(false);
+			
 			// mind: async component might be in any state
 			// 1st try
 			try {
 				return component.rollback();
 			} catch (InvalidProcessStateException ex) {
+				// happens only with >1 threads in the pool:
 				// ProcessComponent.rollback() was allowed, thus AsyncComponent is EXECUTION_SUCCESSED/FAILED
 				// or PAUSED
 				// -> wrapped component is either EXECUTING, EXECUTION_SUCCESSED/FAILED or PAUSED
@@ -131,21 +143,6 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 			} catch (ProcessRollbackException ex) {
 				throw ex;
 			}
-		} else {
-			throw new Exception("Invalid state.");
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("Async[%s]", decoratedComponent.toString());
-	}
-	
-	private void nameThread(boolean isExecution) {
-		try {
-			Thread.currentThread().checkAccess();
-			Thread.currentThread().setName(String.format("async %s", isExecution ? "execution" : "rollback"));
-		} catch (SecurityException ex) {
 		}
 	}
 }
