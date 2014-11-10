@@ -12,6 +12,8 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link ProcessDecorator} that executes the wrapped/decorated {@link IProcessComponent} on a separate
@@ -28,6 +30,8 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  */
 public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Callable<T> {
 
+	private static final Logger logger = LoggerFactory.getLogger(AsyncComponent.class);
+	
 	private final ExecutorService executor;
 
 	private volatile Future<T> executionHandle;
@@ -43,7 +47,9 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 		super(decoratedComponent);
 
 		component = decoratedComponent;
-		executor = Executors.newSingleThreadExecutor();
+		
+		// 2 threads: execution, rollback
+		executor = Executors.newFixedThreadPool(2);
 	}
 
 	@Override
@@ -106,6 +112,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 
 				// await execution termination
 				try {
+					logger.debug("Awaiting execution termination before rollback.");
 					executionHandle.get();
 				} catch (ExecutionException ex2) {
 					if (ex2.getCause() instanceof ProcessExecutionException) {
@@ -119,7 +126,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> implements Ca
 				try {
 					return component.rollback();
 				} catch (ProcessRollbackException ex2) {
-					throw ex;
+					throw ex2;
 				}
 			} catch (ProcessRollbackException ex) {
 				throw ex;

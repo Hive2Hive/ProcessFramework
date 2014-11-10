@@ -170,7 +170,7 @@ public class AsyncComponentTest extends BaseTest {
 			assertTrue(ac.getState() == decoratedComponent.getState());
 		}
 	}
-	
+
 	@Test
 	public void testRollbackSuccess2() throws InvalidProcessStateException, ProcessExecutionException,
 			InterruptedException, ExecutionException {
@@ -205,38 +205,37 @@ public class AsyncComponentTest extends BaseTest {
 		assertTrue(ac.getState() == decoratedComponent.getState());
 	}
 
-	@Test(expected = ProcessRollbackException.class)
+	@Test
 	public void testRollbackFail2() throws InvalidProcessStateException, ProcessExecutionException,
 			InterruptedException, ExecutionException, ProcessRollbackException {
 
-		// test executing component (execution ongoing)
-		IProcessComponent<Void> decoratedComponent = TestUtil.rollbackFailComponent();
-		IProcessComponent<Void> busyComponent = new BusyComponent(decoratedComponent);
-		AsyncComponent<Void> ac = new AsyncComponent<Void>(busyComponent);
+		for (int i = 0; i < 100; i++) {
+			logger.debug(String.format("Run %s/100.", i + 1));
 
-		ac.execute(); // don't wait for completion
+			// test executing component (execution ongoing)
+			IProcessComponent<Void> decoratedComponent = TestUtil.rollbackFailComponent();
+			IProcessComponent<Void> busyComponent = new BusyComponent(decoratedComponent);
+			AsyncComponent<Void> ac = new AsyncComponent<Void>(busyComponent);
 
-		Future<?> future = null;
-		try {
-			future = ac.rollback();
-		} catch (InvalidProcessStateException | ProcessRollbackException ex) {
-			fail(ex.getMessage());
-		}
+			ac.execute(); // don't wait for completion
 
-		try {
-			future.get();
-		} catch (InterruptedException ex) {
-			fail(ex.getMessage());
-		} catch (ExecutionException ex) {
-			if (ex.getCause() instanceof ProcessRollbackException) {
-				// expected, throw
-				throw (ProcessRollbackException) ex.getCause();
-			} else {
-				throw ex;
+			Future<?> future = null;
+			try {
+				future = ac.rollback();
+			} catch (InvalidProcessStateException | ProcessRollbackException ex) {
+				fail(ex.getMessage());
 			}
-		} finally {
-			assertTrue(ac.getState() == ProcessState.ROLLBACK_FAILED);
-			assertTrue(ac.getState() == decoratedComponent.getState());
+
+			try {
+				future.get();
+			} catch (InterruptedException ex) {
+				fail(ex.getMessage());
+			} catch (ExecutionException ex) {
+				assertTrue(ex.getCause() instanceof ProcessRollbackException);
+			} finally {
+				assertTrue(ac.getState() == ProcessState.ROLLBACK_FAILED);
+				assertTrue(ac.getState() == decoratedComponent.getState());
+			}
 		}
 	}
 }
