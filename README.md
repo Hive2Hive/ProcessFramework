@@ -121,12 +121,18 @@ asyncComposite.resume();
 
 ## Architecture
 ### Class Diagram
-![Architecture UML](http://hive2hive.com/wp-content/uploads/2014/11/Process-Framework-Extracted.png)
+![Class Diagram](http://hive2hive.com/wp-content/uploads/2014/11/Process-Framework-Extracted.png)
+The most essential elements are the following:
 - `IProcessComponent<T>`: Basic interface for all process components. Defines all common functionality. `T` is the type of the result computed by this `IProcessComponent`.
 - `ProcessComponent<T>`: Abstract base class for all process components. Keeps track of a process components' most essential properties and functionalities.
 - `ProcessStep<T>`: Abstract base class for all normal `IProcessComponent`s (leaf). These normal components represent a specific operation and do not contain other `IProcessComponent`s.
 - `ProcessComposite<T>`: Abstract base class for all composite `IProcessComponent`s. These composites contain other `IProcessComponent`s.
 - `ProcessDecorator<T>`: Abstract base class for all decorators that decorate `IProcessComponent`s. These decorators provide additional behavior or state to existing implementations of `IProcessComponent`s.
+
+### Process States
+The graphic depicts the state transitions that are valid for all `IProcessComponent`s. In case some component tries to enter an invalid state, an `InvalidProcessStateException` will be thrown.
+
+![Process States](http://hive2hive.com/wp-content/uploads/2014/11/Process-States-v2.png)
 
 ## Installation
 There are three easy ways to get and include the Hive2Hive Process Framework into your project.
