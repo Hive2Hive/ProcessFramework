@@ -9,7 +9,7 @@ import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 
 /**
- * Basic interface for all process components. Defines all common functionalities.
+ * Basic interface for all process components. Defines all common functionality.
  * 
  * @author Christian Lüthold
  *
