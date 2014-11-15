@@ -3,6 +3,16 @@
 
 This is a lightweight and extensible framework for asynchronous and synchronous process composition. Initially started and used as a sub-module of [Hive2Hive](https://github.com/Hive2Hive/Hive2Hive), an open-source Java library for secure, distributed, P2P-based file synchronization and sharing, this framework now is a standalone module that might be helpful for your projects, too. It's licensed under the [MIT License](http://opensource.org/licenses/MIT) and any contribution is welcome.
 
+### Table of Contents
+
+**[Features](#features)**
+**[API Demonstration](#api-demonstration)**
+**[Architecture](#architecture)**
+**[Installation](#installation)**
+**[Documentation](#documentation)**
+**[Contribution](#contribution)**
+**[Contact](#contact)**
+
 ## Features
 - simple, straightforward API
 - **supports**:
@@ -160,11 +170,11 @@ If you want to [contribute to the project](#contribution), please refer to optio
 
 ## Documentation
 
-For more exact details and documentation about this process library, please visit http://hive2hive.com/process-framework/.
-
+- This `README.md` file should contain the most essential documentation necessary to start with the project.
+- The source code itself is thoroughly documented using JavaDoc.
+- In case you still have unanswered questions, don't hesitate to [contact us](#contact)!
+- 
 For more details and documentation about the Hive2Hive project, please visit http://www.hive2hive.com/.
-
-The source code itself is thoroughly documented using JavaDoc.
 
 ## Contribution
 
