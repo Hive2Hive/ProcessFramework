@@ -5,8 +5,8 @@ import java.util.Collection;
 import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
- * Abstract base class for all composite {@link ProcessComponent}s.
- * These composites contain other {@link ProcessComponent}s.
+ * Abstract base class for all composite {@link IProcessComponent}s.
+ * These composites contain other {@link IProcessComponent}s.
  * 
  * @author Christian Lüthold
  *
