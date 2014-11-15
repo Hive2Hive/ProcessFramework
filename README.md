@@ -171,6 +171,7 @@ If you want to [contribute to the project](#contribution), please refer to optio
 ## Documentation
 
 - This `README.md` file should contain the most essential documentation necessary to start with the project.
+- There is an additional documentation on our website: [Hive2Hive - Process Framework](http://hive2hive.com/process-framework-2/).
 - The source code itself is thoroughly documented using JavaDoc.
 - In case you still have unanswered questions, don't hesitate to [contact us](#contact)!
 
