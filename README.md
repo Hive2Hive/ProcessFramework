@@ -5,12 +5,12 @@ This is a lightweight and extensible framework for asynchronous and synchronous 
 
 ### Table of Contents
 
-**[Features](#features)**
-**[API Demonstration](#api-demonstration)**
-**[Architecture](#architecture)**
-**[Installation](#installation)**
-**[Documentation](#documentation)**
-**[Contribution](#contribution)**
+**[Features](#features)**  
+**[API Demonstration](#api-demonstration)**  
+**[Architecture](#architecture)**  
+**[Installation](#installation)**  
+**[Documentation](#documentation)**  
+**[Contribution](#contribution)**  
 **[Contact](#contact)**
 
 ## Features
@@ -173,13 +173,15 @@ If you want to [contribute to the project](#contribution), please refer to optio
 - This `README.md` file should contain the most essential documentation necessary to start with the project.
 - The source code itself is thoroughly documented using JavaDoc.
 - In case you still have unanswered questions, don't hesitate to [contact us](#contact)!
-- 
+
 For more details and documentation about the Hive2Hive project, please visit http://www.hive2hive.com/.
 
 ## Contribution
 
 The library is intended to be improved and extended so that we all profit from its capabilities.
-For more information, please refer to our main project [Contribute to Hive2Hive](https://github.com/Hive2Hive/Hive2Hive#contribution).
+For more information, please refer to our main project.
+
+[Contribute to Hive2Hive](https://github.com/Hive2Hive/Hive2Hive#contribution).
 
 ## Contact
 
