@@ -1,6 +1,12 @@
+# Eclipse IDE #
+.classpath
+.project
+.settings
 /bin
 /target
-.settings/org.sonar.ide.eclipse.core.prefs
+
+# IntelliJ IDEA #
+.idea
 
 # Mac #
 .DS_Store
