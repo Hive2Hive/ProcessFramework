@@ -29,9 +29,18 @@ public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 	 */
 	public ProcessDecorator(IProcessComponent<?> decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
-		
+
 		// decorators should always require rollback
 		setRequiresRollback(true);
+	}
+
+	/**
+	 * Gets the {@link IProcessComponent} decorated by this {@code ProcessDecorator}.
+	 * 
+	 * @return The {@link IProcessComponent} decorated by this {@code ProcessDecorator}.
+	 */
+	public IProcessComponent<?> getDecoratedComponent() {
+		return decoratedComponent;
 	}
 
 	/**
