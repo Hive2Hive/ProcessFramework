@@ -86,6 +86,8 @@ IProcessComponent<Future<Integer>> asyncStep2 = new AsyncComponent<Integer>(step
 
 Future<Integer> futureResult = asyncStep2.execute();
 ```
+Note: Dealing with asynchronous components might be a bit tricky. Make sure to take a look at our [Wiki Example](https://github.com/Hive2Hive/ProcessFramework/wiki/Correct-usage-of-AsyncComponent) to be sure to use it correctly.
+
 **Process Composition**
 
 Classes inheriting from `ProcessComposition<T>` allow to nest `IProcessComponent`s and to build process trees. The below example shows the usage of the default `SyncProcess`.
