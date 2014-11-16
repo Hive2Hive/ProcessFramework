@@ -19,10 +19,43 @@ import org.slf4j.LoggerFactory;
  * A {@link ProcessDecorator} that executes the wrapped/decorated {@link IProcessComponent} on a separate
  * thread and thus immediately returns the control.
  * Both, execution and rollback run on a separate thread and return a {@link Future} object as the result of
- * the asynchronous computation. Possible exceptions can be retrieved through this {@link Future} object.</br>
+ * the asynchronous computation. Possible exceptions can be retrieved through this {@link Future} object (see example).</br>
  * <b>Note:</b>
  * The {@link IProcessComponent} wrapped/decorated by this {@code AsyncComponent} should be <i>independent</i>
- * of any other components in the process composite because it runs asynchronously.
+ * of any other components in the process composite because it runs asynchronously.</br></br>
+ * <b>Example:</b> Asynchronous process execution:
+ * 
+ * <pre>
+ * {@code
+ * AsyncComponent <Integer> asyncComp = new AsyncComponent<>(...);
+ * Future<Integer> futureResult;
+ * int result;
+ * 
+ * try {
+ *     futureResult = asyncComp.execute();
+ *     	
+ * } catch (InvalidProcessStateException ex) {
+ *     System.err.println("Invalid state for execution.");
+ * } catch (ProcessExecutionException ex) {
+ *     System.err.println("AsyncComponent has encountered an error during execution.");
+ * }
+ * 	
+ * // get the result
+ * try {
+ *     result = futureResult.get();
+ *     	
+ * } catch (InterruptedException | CancellationException ex) {
+ *     System.err.println("Something went wrong with the thread.");
+ * } catch (ExecutionException ex) {
+ *     // the thread thew an exception
+ *     if (ex.getCause() instanceof ProcessExecutionException) {
+ *         System.err.println("Some async process component threw an exception during execution.");
+ *     }
+ * }
+ * </pre>
+ * 
+ * <b>Example:</b> Asynchronous process rollback works similar, but throws a possible
+ * {@link ProcessRollbackException}.
  * 
  * @author Christian Lüthold
  *
@@ -41,13 +74,14 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 	private final ExecutorService executor;
 	private ExecutionRunner executionRunner;
 	private RollbackRunner rollbackRunner;
-	
+
 	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
 
 		component = decoratedComponent;
 
 		executor = Executors.newFixedThreadPool(1);
+
 	}
 
 	@Override
@@ -109,7 +143,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 		public T call() throws Exception {
 
 			nameThread(false);
-			
+
 			// mind: async component might be in any state
 			// 1st try
 			try {
