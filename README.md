@@ -173,9 +173,9 @@ If you want to [contribute to the project](#contribution), please refer to optio
 ## Documentation
 
 - This `README.md` file should contain the most essential documentation necessary to start with the project.
-- There is an additional documentation on our website: [Hive2Hive - Process Framework](http://hive2hive.com/process-framework-2/).
+- There is an additional documentation on our [Hive2Hive GitHub Wiki](https://github.com/Hive2Hive/Hive2Hive/wiki/Processes).
 - The source code itself is thoroughly documented using JavaDoc.
-- In case you still have unanswered questions, don't hesitate to [contact us](#contact)!
+- In case you still have unanswered questions, don't hesitate to [contact us](https://github.com/Hive2Hive/Hive2Hive/wiki/Contact)!
 
 For more details and documentation about the Hive2Hive project, please visit http://www.hive2hive.com/.
 
@@ -184,7 +184,7 @@ For more details and documentation about the Hive2Hive project, please visit htt
 The library is intended to be improved and extended so that we all profit from its capabilities.
 For more information, please refer to our main project.
 
-[Contribute to Hive2Hive](https://github.com/Hive2Hive/Hive2Hive#contribution).
+[Contribute to Hive2Hive](https://github.com/Hive2Hive/Hive2Hive/wiki/Contribution).
 
 ## Contact
 
