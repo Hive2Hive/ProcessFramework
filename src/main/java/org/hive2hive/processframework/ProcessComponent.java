@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
@@ -40,6 +42,8 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	private boolean isRollbacking;
 	private boolean requiresRollback;
+
+	private AsyncComponent<T> asyncComponent = null;
 
 	public ProcessComponent() {
 		this.id = UUID.randomUUID().toString();
@@ -79,6 +83,10 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		return result;
 	}
 
+	public final Future<T> executeAsync() throws InvalidProcessStateException, ProcessExecutionException {
+		return getAsyncComponent().execute();
+	}
+
 	/**
 	 * Starts or resumes the rollback of this {@code ProcessComponent}.
 	 * Upon successful rollback, returns the result of type {@code T} and all attached
@@ -114,6 +122,10 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 			throw ex;
 		}
 		return result;
+	}
+
+	public final Future<T> rollbackAsync() throws InvalidProcessStateException, ProcessRollbackException {
+		return getAsyncComponent().rollback();
 	}
 
 	@Override
@@ -187,6 +199,20 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	private boolean hasFinished() {
 		return state == ProcessState.EXECUTION_SUCCEEDED || state == ProcessState.EXECUTION_FAILED
 				|| state == ProcessState.ROLLBACK_SUCCEEDED || state == ProcessState.ROLLBACK_FAILED;
+	}
+
+	@SuppressWarnings("unchecked")
+	private AsyncComponent<T> getAsyncComponent() {
+		if (asyncComponent == null) {
+
+			// distinguish components that are already wrapped with AsyncComponent
+			if (this instanceof AsyncComponent<?>) {
+				asyncComponent = ((AsyncComponent<T>) this);
+			} else {
+				asyncComponent = new AsyncComponent<T>(this);
+			}
+		}
+		return asyncComponent;
 	}
 
 	/**
