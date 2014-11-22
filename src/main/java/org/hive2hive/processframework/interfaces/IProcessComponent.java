@@ -1,6 +1,7 @@
 package org.hive2hive.processframework.interfaces;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import org.hive2hive.processframework.ProcessComposite;
 import org.hive2hive.processframework.ProcessState;
@@ -28,6 +29,8 @@ public interface IProcessComponent<T> {
 	 */
 	T execute() throws InvalidProcessStateException, ProcessExecutionException;
 
+	Future<T> executeAsync() throws InvalidProcessStateException, ProcessExecutionException;
+	
 	/**
 	 * Starts the rollback of this {@code IProcessComponent}. Upon successful rollback, returns the computed
 	 * result of type {@code T}.
@@ -38,6 +41,8 @@ public interface IProcessComponent<T> {
 	 * @throws ProcessRollbackException If a failure occured during a {@code IProcessComponent}'s rollback.
 	 */
 	T rollback() throws InvalidProcessStateException, ProcessRollbackException;
+
+	Future<T> rollbackAsync() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**
 	 * Pauses the execution or rollback of this {@code IProcessComponent}, depending on its current state.
