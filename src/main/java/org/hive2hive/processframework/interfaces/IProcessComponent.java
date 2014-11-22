@@ -19,8 +19,8 @@ import org.hive2hive.processframework.exceptions.ProcessRollbackException;
 public interface IProcessComponent<T> {
 
 	/**
-	 * Starts the execution of this {@code IProcessComponent}. Upon successful execution, returns the computed
-	 * result of type {@code T}.
+	 * Starts the synchronous execution of this {@code IProcessComponent}. Upon successful execution, returns
+	 * the computed result of type {@code T}.
 	 * 
 	 * @return The computed result of type {@code T}.
 	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
@@ -29,11 +29,20 @@ public interface IProcessComponent<T> {
 	 */
 	T execute() throws InvalidProcessStateException, ProcessExecutionException;
 
-	Future<T> executeAsync() throws InvalidProcessStateException, ProcessExecutionException;
-	
 	/**
-	 * Starts the rollback of this {@code IProcessComponent}. Upon successful rollback, returns the computed
-	 * result of type {@code T}.
+	 * Starts the asynchronous execution of this {@code IProcessComponent}. Returns a {@link Future} object as
+	 * the result of the asynchronous computation of the result.
+	 * 
+	 * @return The {@code Future} object for the computed result of type {@code T}.
+	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
+	 *             operation.
+	 * @throws ProcessExecutionException If a failure occured during a {@code IProcessComponent}'s execution.
+	 */
+	Future<T> executeAsync() throws InvalidProcessStateException, ProcessExecutionException;
+
+	/**
+	 * Starts the synchronous rollback of this {@code IProcessComponent}. Upon successful rollback, returns
+	 * the computed result of type {@code T}.
 	 * 
 	 * @return The computed result of type {@code T}.
 	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
@@ -42,6 +51,15 @@ public interface IProcessComponent<T> {
 	 */
 	T rollback() throws InvalidProcessStateException, ProcessRollbackException;
 
+	/**
+	 * Starts the asynchronous rollback of this {@code IProcessComponent}. Returns a {@link Future} object as
+	 * the result of the asynchronous computation of the result.
+	 * 
+	 * @return The {@code Future} object for the computed result of type {@code T}.
+	 * @throws InvalidProcessStateException If this {@code IProcessComponent} is in an invalid state for this
+	 *             operation.
+	 * @throws ProcessRollbackException If a failure occured during a {@code IProcessComponent}'s rollback.
+	 */
 	Future<T> rollbackAsync() throws InvalidProcessStateException, ProcessRollbackException;
 
 	/**

@@ -84,6 +84,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	public final Future<T> executeAsync() throws InvalidProcessStateException, ProcessExecutionException {
+		// wrap this component with an AsyncComponent decorator
 		return getAsyncComponent().execute();
 	}
 
@@ -125,6 +126,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	}
 
 	public final Future<T> rollbackAsync() throws InvalidProcessStateException, ProcessRollbackException {
+		// wrap this component with an AsyncComponent decorator
 		return getAsyncComponent().rollback();
 	}
 
