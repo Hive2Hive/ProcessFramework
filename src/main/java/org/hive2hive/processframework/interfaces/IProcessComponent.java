@@ -81,22 +81,6 @@ public interface IProcessComponent<T> {
 	void resume() throws InvalidProcessStateException, ProcessExecutionException, ProcessRollbackException;
 
 	/**
-	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination.
-	 * 
-	 * @throws InterruptedException
-	 */
-	void await() throws InterruptedException;
-
-	/**
-	 * Waits for this {@code IProcessComponent} to terminate. Blocks execution until termination or the
-	 * provided timeout is reached.
-	 * 
-	 * @param timeout The maximal waiting time in milliseconds.
-	 * @throws InterruptedException
-	 */
-	void await(long timeout) throws InterruptedException;
-
-	/**
 	 * Attaches an {@link IProcessComponentListener} to this {@code IProcessComponent}.
 	 * 
 	 * @param listener The {@link IProcessComponentListener} to be attached.

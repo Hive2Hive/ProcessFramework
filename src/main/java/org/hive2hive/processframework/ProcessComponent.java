@@ -3,12 +3,7 @@ package org.hive2hive.processframework;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.hive2hive.processframework.decorators.AsyncComponent;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
@@ -156,51 +151,6 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 		} else {
 			rollback();
 		}
-	}
-
-	@Override
-	public void await() throws InterruptedException {
-		await(-1);
-	}
-
-	@Override
-	public void await(long timeout) throws InterruptedException {
-
-		if (hasFinished())
-			return;
-
-		final CountDownLatch latch = new CountDownLatch(1);
-
-		ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
-		ScheduledFuture<?> handle = executor.scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (hasFinished())
-					latch.countDown();
-			}
-		}, 0, 100, TimeUnit.MILLISECONDS);
-
-		// blocking wait for completion or interruption
-		try {
-			if (timeout < 0) {
-				latch.await();
-			} else {
-				boolean success = latch.await(timeout, TimeUnit.MILLISECONDS);
-				if (!success) {
-					throw new InterruptedException("Waiting for process timed out.");
-				}
-			}
-		} catch (InterruptedException e) {
-			// logger.error("Interrupted while waiting for process.", e);
-			throw e;
-		} finally {
-			handle.cancel(true);
-		}
-	}
-
-	private boolean hasFinished() {
-		return state == ProcessState.EXECUTION_SUCCEEDED || state == ProcessState.EXECUTION_FAILED
-				|| state == ProcessState.ROLLBACK_SUCCEEDED || state == ProcessState.ROLLBACK_FAILED;
 	}
 
 	@SuppressWarnings("unchecked")

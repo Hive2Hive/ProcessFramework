@@ -48,24 +48,6 @@ public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
 	 */
 	@Override
-	public void await() throws InterruptedException {
-		decoratedComponent.await();
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
-	 */
-	@Override
-	public void await(long timeout) throws InterruptedException {
-		decoratedComponent.await(timeout);
-	}
-
-	/**
-	 * Default decorator implementation:
-	 * Just delegates the call to the wrapped/decorated {@link IProcessComponent} implementation.
-	 */
-	@Override
 	public ProcessComposite<?> getParent() {
 		return decoratedComponent.getParent();
 	}
