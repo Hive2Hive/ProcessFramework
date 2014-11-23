@@ -115,6 +115,16 @@ public final class SyncProcess extends ProcessComposite<Void> {
 	}
 
 	@Override
+	protected boolean doInsertAfter(IProcessComponent<?> component, IProcessComponent<?> predecessor) {
+		int index = components.indexOf(predecessor);
+		if (index == -1) {
+			return false;
+		}
+		add(index + 1, component);
+		return true;
+	}
+	
+	@Override
 	protected void doRemove(IProcessComponent<?> component) {
 		components.remove(component);
 	}

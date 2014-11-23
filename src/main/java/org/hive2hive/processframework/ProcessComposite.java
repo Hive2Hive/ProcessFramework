@@ -20,9 +20,9 @@ public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 	}
 
 	/**
-	 * Adds a {@link ProcessComponent} to this {@code ProcessComposite}.
+	 * Adds an {@link IProcessComponent} to this {@code ProcessComposite}.
 	 * 
-	 * @param component The {@link ProcessComponent} to be added to this {@code ProcessComposite}.
+	 * @param component The {@link IProcessComponent} to be added to this {@code ProcessComposite}.
 	 */
 	public final void add(IProcessComponent<?> component) {
 		component.setParent(this);
@@ -30,10 +30,10 @@ public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 	};
 
 	/**
-	 * Adds a {@link ProcessComponent} to this {@code ProcessComposite} at the provided index.
+	 * Adds an {@link IProcessComponent} to this {@code ProcessComposite} at the provided index.
 	 * 
-	 * @param index The index where to add the {@link ProcessComponent}.
-	 * @param component The {@link ProcessComponent} to be added to this {@code ProcessComposite}.
+	 * @param index The index where to add the {@link IProcessComponent}.
+	 * @param component The {@link IProcessComponent} to be added to this {@code ProcessComposite}.
 	 */
 	public final void add(int index, IProcessComponent<?> component) {
 		component.setParent(this);
@@ -41,9 +41,22 @@ public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 	}
 
 	/**
-	 * Removes a {@link ProcessComponent} from this {@code ProcessComposite}.
+	 * Inserts an {@link IProcessComponent} directly after another, predecessing {@link IProcessComponent}.
 	 * 
-	 * @param component The {@link ProcessComponent} to be removed from this {@code ProcessComposite}.
+	 * @param component The {@link IProcessComponent} to be inserted.
+	 * @param predecessor The predecessing {@link IProcessComponent}.
+	 * 
+	 * @return True, if <b>predecessor</b> could be found and <b>component</b> could be inserted.
+	 */
+	public final boolean insertAfter(IProcessComponent<?> component, IProcessComponent<?> predecessor) {
+		component.setParent(this);
+		return doInsertAfter(component, predecessor);
+	}
+
+	/**
+	 * Removes an {@link IProcessComponent} from this {@code ProcessComposite}.
+	 * 
+	 * @param component The {@link IProcessComponent} to be removed from this {@code ProcessComposite}.
 	 */
 	public final void remove(IProcessComponent<?> component) {
 		component.setParent(null);
@@ -51,44 +64,55 @@ public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 	}
 
 	/**
-	 * Gets all {@link ProcessComponent}s that are contained in this {@code ProcessComposite}.
+	 * Gets all {@link IProcessComponent}s that are contained in this {@code ProcessComposite}.
 	 * 
-	 * @return All {@link ProcessComponent}s that are contained in this {@code ProcessComposite}.
+	 * @return All {@link IProcessComponent}s that are contained in this {@code ProcessComposite}.
 	 */
 	public abstract Collection<IProcessComponent<?>> getComponents();
 
 	/**
-	 * Gets the {@link ProcessComponent} that is contained at the provided index in this
+	 * Gets the {@link IProcessComponent} that is contained at the provided index in this
 	 * {@code ProcessComposite}.
 	 * 
-	 * @return The {@link ProcessComponent} that is contained at the provided index in this
+	 * @return The {@link IProcessComponent} that is contained at the provided index in this
 	 *         {@code ProcessComposite}.
 	 */
 	public abstract IProcessComponent<?> getComponent(int index);
 
 	/**
-	 * Template method responsible for the adding of a {@link ProcessComponent} to this
+	 * Template method responsible for the adding of an {@link IProcessComponent} to this
 	 * {@code ProcessComposite}.
 	 * 
-	 * @param component The {@link ProcessComponent} to be added to this {@code ProcessComposite}.
+	 * @param component The {@link IProcessComponent} to be added to this {@code ProcessComposite}.
 	 */
 	protected abstract void doAdd(IProcessComponent<?> component);
 
 	/**
-	 * Template method responsible for the adding of a {@link ProcessComponent} to this
+	 * Template method responsible for the adding of an {@link IProcessComponent} to this
 	 * {@code ProcessComposite} at the provided index.
 	 * 
-	 * @param index The index where to add the {@link ProcessComponent}.
-	 * @param component The {@link ProcessComponent} to be added to this {@code ProcessComposite} a the
+	 * @param index The index where to add the {@link IProcessComponent}.
+	 * @param component The {@link IProcessComponent} to be added to this {@code ProcessComposite} a the
 	 *            provided index.
 	 */
 	protected abstract void doAdd(int index, IProcessComponent<?> component);
 
 	/**
-	 * Template method responsible for the removing of a {@link ProcessComponent} from this
+	 * Template method responsible for the insertion of an {@link IProcessComponent} directly after another,
+	 * predecessing {@link IProcessComponent}.
+	 * 
+	 * @param component The {@link IProcessComponent} to be inserted.
+	 * @param predecessor The predecessing {@link IProcessComponent}.
+	 * 
+	 * @return True, if <b>predecessor</b> could be found and <b>component</b> could be inserted.
+	 */
+	protected abstract boolean doInsertAfter(IProcessComponent<?> component, IProcessComponent<?> predecessor);
+
+	/**
+	 * Template method responsible for the removing of a {@link IProcessComponent} from this
 	 * {@code ProcessComposite}.
 	 * 
-	 * @param component The {@link ProcessComponent} to be removed from this {@code ProcessComposite}.
+	 * @param component The {@link IProcessComponent} to be removed from this {@code ProcessComposite}.
 	 */
 	protected abstract void doRemove(IProcessComponent<?> component);
 

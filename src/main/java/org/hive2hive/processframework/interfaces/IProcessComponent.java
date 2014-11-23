@@ -109,6 +109,22 @@ public interface IProcessComponent<T> {
 	String getName();
 
 	/**
+	 * Sets the parent for this {@code IProcessComponent}.
+	 * 
+	 * @param parent The parent for this {@code IProcessComponent}.
+	 */
+	void setParent(ProcessComposite<?> parent);
+
+	/**
+	 * Gets the parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child
+	 * of.
+	 * 
+	 * @return The parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a
+	 *         child of.
+	 */
+	ProcessComposite<?> getParent();
+
+	/**
 	 * Gets the ID of this {@code IProcessComponent}.
 	 * 
 	 * @return The ID of this {@code IProcessComponent}.
@@ -135,22 +151,6 @@ public interface IProcessComponent<T> {
 	 * @return All {@link IProcessComponentListener}s that are attached to this {@code IProcessComponent}.
 	 */
 	List<IProcessComponentListener> getListeners();
-
-	/**
-	 * Sets the name for this {@code IProcessComponent}.
-	 * 
-	 * @param parent The parent for this {@code IProcessComponent}.
-	 */
-	void setParent(ProcessComposite<?> parent);
-
-	/**
-	 * Gets the parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a child
-	 * of.
-	 * 
-	 * @return The parent {@link ProcessComposite} composite of which this {@code IProcessComponent} is a
-	 *         child of.
-	 */
-	ProcessComposite<?> getParent();
 
 	/**
 	 * Indicates whether this {@code IProcessComponent} requires a rollback.

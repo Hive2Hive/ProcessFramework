@@ -192,13 +192,13 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 */
 	protected abstract T doRollback() throws InvalidProcessStateException, ProcessRollbackException;
 
+	protected void setRequiresRollback(boolean requiresRollback) {
+		this.requiresRollback = requiresRollback;
+	}
+
 	@Override
 	public void setParent(ProcessComposite<?> parent) {
 		this.parent = parent;
-	}
-
-	protected void setRequiresRollback(boolean requiresRollback) {
-		this.requiresRollback = requiresRollback;
 	}
 
 	@Override
