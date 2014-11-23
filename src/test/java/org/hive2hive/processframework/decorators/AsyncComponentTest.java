@@ -209,8 +209,8 @@ public class AsyncComponentTest extends BaseTest {
 	public void testRollbackFail2() throws InvalidProcessStateException, ProcessExecutionException,
 			InterruptedException, ExecutionException, ProcessRollbackException {
 
-		for (int i = 0; i < 100; i++) {
-			logger.debug(String.format("Run %s/100.", i + 1));
+		for (int i = 0; i < 25; i++) {
+			logger.debug(String.format("Run %s/25.", i + 1));
 
 			// test executing component (execution ongoing)
 			IProcessComponent<Void> decoratedComponent = TestUtil.rollbackFailComponent();
