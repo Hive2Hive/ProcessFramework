@@ -3,6 +3,16 @@
 
 This is a lightweight and extensible framework for asynchronous and synchronous process composition. Initially started and used as a sub-module of [Hive2Hive](https://github.com/Hive2Hive/Hive2Hive), an open-source Java library for secure, distributed, P2P-based file synchronization and sharing, this framework now is a standalone module that might be helpful for your projects, too. It's licensed under the [MIT License](http://opensource.org/licenses/MIT) and any contribution is welcome.
 
+### Table of Contents
+
+**[Features](#features)**  
+**[API Demonstration](#api-demonstration)**  
+**[Architecture](#architecture)**  
+**[Installation](#installation)**  
+**[Documentation](#documentation)**  
+**[Contribution](#contribution)**  
+**[Contact](#contact)**
+
 ## Features
 - simple, straightforward API
 - **supports**:
@@ -76,6 +86,8 @@ IProcessComponent<Future<Integer>> asyncStep2 = new AsyncComponent<Integer>(step
 
 Future<Integer> futureResult = asyncStep2.execute();
 ```
+Note: Dealing with asynchronous components might be a bit tricky. Make sure to take a look at our [Wiki Example](https://github.com/Hive2Hive/ProcessFramework/wiki/Correct-usage-of-AsyncComponent) to be sure to use it correctly.
+
 **Process Composition**
 
 Classes inheriting from `ProcessComposition<T>` allow to nest `IProcessComponent`s and to build process trees. The below example shows the usage of the default `SyncProcess`.
@@ -119,6 +131,21 @@ asyncComposite.pause();
 asyncComposite.resume();
 ```
 
+## Architecture
+### Class Diagram
+![Class Diagram](http://hive2hive.com/wp-content/uploads/2014/11/Process-Framework-Extracted.png)
+The most essential elements are the following:
+- `IProcessComponent<T>`: Basic interface for all process components. Defines all common functionality. `T` is the type of the result computed by this `IProcessComponent`.
+- `ProcessComponent<T>`: Abstract base class for all process components. Keeps track of a process components' most essential properties and functionalities.
+- `ProcessStep<T>`: Abstract base class for all normal `IProcessComponent`s (leaf). These normal components represent a specific operation and do not contain other `IProcessComponent`s.
+- `ProcessComposite<T>`: Abstract base class for all composite `IProcessComponent`s. These composites contain other `IProcessComponent`s.
+- `ProcessDecorator<T>`: Abstract base class for all decorators that decorate `IProcessComponent`s. These decorators provide additional behavior or state to existing implementations of `IProcessComponent`s.
+
+### Process States
+The graphic depicts the state transitions that are valid for all `IProcessComponent`s. In case some component tries to enter an invalid state, an `InvalidProcessStateException` will be thrown.
+
+![Process States](http://hive2hive.com/wp-content/uploads/2014/11/Process-States-v2.png)
+
 ## Installation
 There are three easy ways to get and include the Hive2Hive Process Framework into your project.
 
@@ -145,16 +172,19 @@ If you want to [contribute to the project](#contribution), please refer to optio
 
 ## Documentation
 
-For more exact details and documentation about this process library, please visit http://hive2hive.com/process-framework/.
+- This `README.md` file should contain the most essential documentation necessary to start with the project.
+- There is an additional documentation on our [Hive2Hive GitHub Wiki](https://github.com/Hive2Hive/Hive2Hive/wiki/Processes).
+- The source code itself is thoroughly documented using JavaDoc.
+- In case you still have unanswered questions, don't hesitate to [contact us](https://github.com/Hive2Hive/Hive2Hive/wiki/Contact)!
 
 For more details and documentation about the Hive2Hive project, please visit http://www.hive2hive.com/.
-
-The source code itself is thoroughly documented using JavaDoc.
 
 ## Contribution
 
 The library is intended to be improved and extended so that we all profit from its capabilities.
-For more information, please refer to our main project [Contribute to Hive2Hive](https://github.com/Hive2Hive/Hive2Hive#contribution).
+For more information, please refer to our main project.
+
+[Contribute to Hive2Hive](https://github.com/Hive2Hive/Hive2Hive/wiki/Contribution).
 
 ## Contact
 
