@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
  * A {@link ProcessDecorator} that executes the wrapped/decorated {@link IProcessComponent} on a separate
  * thread and thus immediately returns the control.
  * Both, execution and rollback run on a separate thread and return a {@link Future} object as the result of
- * the asynchronous computation. Possible exceptions can be retrieved through this {@link Future} object (see example).</br>
+ * the asynchronous computation. Possible exceptions can be retrieved through this {@link Future} object (see
+ * example).</br>
  * <b>Note:</b>
  * The {@link IProcessComponent} wrapped/decorated by this {@code AsyncComponent} should be <i>independent</i>
  * of any other components in the process composite because it runs asynchronously.</br></br>
@@ -69,29 +70,24 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 	private volatile IProcessComponent<T> component;
 
 	private volatile Future<T> executionHandle;
-	private volatile Future<T> rollbackHandle;
-
-	private final ExecutorService executor;
-	private ExecutionRunner executionRunner;
-	private RollbackRunner rollbackRunner;
 
 	public AsyncComponent(IProcessComponent<T> decoratedComponent) {
 		super(decoratedComponent);
-
 		component = decoratedComponent;
-
-		executor = Executors.newFixedThreadPool(1);
-
 	}
 
 	@Override
 	protected Future<T> doExecute() throws InvalidProcessStateException, ProcessExecutionException {
 
-		executionRunner = new ExecutionRunner();
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		ExecutionRunner executionRunner = new ExecutionRunner();
 		try {
 			executionHandle = executor.submit(executionRunner);
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessExecutionException(this, ex);
+		} finally {
+			// already shutdown the executor, does not disturb the already running thread
+			executor.shutdown();
 		}
 
 		// immediate return, since execution is async
@@ -101,15 +97,17 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 	@Override
 	protected Future<T> doRollback() throws InvalidProcessStateException, ProcessRollbackException {
 
-		rollbackRunner = new RollbackRunner();
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		RollbackRunner rollbackRunner = new RollbackRunner();
 		try {
-			rollbackHandle = executor.submit(rollbackRunner);
+			// immediate return, since rollback is async
+			return executor.submit(rollbackRunner);
 		} catch (RejectedExecutionException ex) {
 			throw new ProcessRollbackException(this, ex);
+		} finally {
+			// already shutdown the executor, does not disturb the already running thread
+			executor.shutdown();
 		}
-
-		// immediate return, since rollback is async
-		return rollbackHandle;
 	}
 
 	@Override
@@ -122,6 +120,7 @@ public class AsyncComponent<T> extends ProcessDecorator<Future<T>> {
 			Thread.currentThread().checkAccess();
 			Thread.currentThread().setName(String.format("async %s", isExecution ? "execution" : "rollback"));
 		} catch (SecurityException ex) {
+			// occurs if the current thread does not have access
 		}
 	}
 
