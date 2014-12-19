@@ -18,7 +18,7 @@ import org.junit.Test;
  * from a specific starting state, we need to set this state by using reflection (see
  * {@link TestUtil#setState(IProcessComponent, ProcessState)}).
  * 
- * @author Christian Lüthold
+ * @author Christian LÃ¼thold
  *
  */
 public class ProcessStateTest extends BaseTest {
@@ -48,7 +48,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.READY);
 		try {
@@ -89,7 +89,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.EXECUTING);
 		try {
@@ -142,7 +142,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.PAUSED);
 		try {
@@ -169,7 +169,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.ROLLBACKING);
 		try {
@@ -193,10 +193,10 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 	}
-	
+
 	@Test
 	public void testExecutionSucceededState() throws ProcessExecutionException, ProcessRollbackException {
-		
+
 		IProcessComponent<?> comp = TestUtil.executionSuccessComponent(true);
 
 		// use reflection to set internal process state
@@ -210,7 +210,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.EXECUTION_SUCCEEDED);
 		try {
@@ -234,10 +234,10 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 	}
-	
+
 	@Test
 	public void testExecutionFailedState() throws ProcessExecutionException, ProcessRollbackException {
-		
+
 		IProcessComponent<?> comp = TestUtil.executionSuccessComponent(true);
 
 		// use reflection to set internal process state
@@ -251,7 +251,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.EXECUTION_FAILED);
 		try {
@@ -275,10 +275,10 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 	}
-	
+
 	@Test
 	public void testRollbackSucceededState() throws ProcessExecutionException, ProcessRollbackException {
-		
+
 		IProcessComponent<?> comp = TestUtil.executionSuccessComponent(true);
 
 		// use reflection to set internal process state
@@ -292,7 +292,7 @@ public class ProcessStateTest extends BaseTest {
 		} catch (InvalidProcessStateException ex) {
 			fail("This operation should have been allowed.");
 		}
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.ROLLBACK_SUCCEEDED);
 		try {
@@ -316,10 +316,10 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 	}
-	
+
 	@Test
 	public void testRollbackFailedState() throws ProcessExecutionException, ProcessRollbackException {
-		
+
 		IProcessComponent<?> comp = TestUtil.executionSuccessComponent(true);
 
 		// use reflection to set internal process state
@@ -327,7 +327,7 @@ public class ProcessStateTest extends BaseTest {
 		assertTrue(comp.getState() == ProcessState.ROLLBACK_FAILED);
 
 		// test valid operations
-		
+
 		// test invalid operations
 		TestUtil.setState(comp, ProcessState.ROLLBACK_FAILED);
 		try {
@@ -358,6 +358,5 @@ public class ProcessStateTest extends BaseTest {
 			// should happen
 		}
 	}
-	
-	
+
 }
