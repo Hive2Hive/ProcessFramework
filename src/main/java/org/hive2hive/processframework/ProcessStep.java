@@ -2,6 +2,7 @@ package org.hive2hive.processframework;
 
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessRollbackException;
+import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
  * Abstract base class for all normal {@link IProcessComponent}s (leaf).

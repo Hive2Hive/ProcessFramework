@@ -27,14 +27,12 @@ import org.slf4j.LoggerFactory;
  * <b>Example:</b> Asynchronous process execution:
  * 
  * <pre>
- * {@code
  * AsyncComponent <Integer> asyncComp = new AsyncComponent<>(...);
  * Future<Integer> futureResult;
  * int result;
  * 
  * try {
  *     futureResult = asyncComp.execute();
- *     	
  * } catch (InvalidProcessStateException ex) {
  *     System.err.println("Invalid state for execution.");
  * } catch (ProcessExecutionException ex) {
@@ -44,7 +42,6 @@ import org.slf4j.LoggerFactory;
  * // get the result
  * try {
  *     result = futureResult.get();
- *     	
  * } catch (InterruptedException | CancellationException ex) {
  *     System.err.println("Something went wrong with the thread.");
  * } catch (ExecutionException ex) {
