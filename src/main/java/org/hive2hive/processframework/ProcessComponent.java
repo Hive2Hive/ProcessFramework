@@ -75,7 +75,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 			notifyListeners(ProcessState.EXECUTION_FAILED);
 
 			// log exception, wrap it to PEE, throw
-			String msg = "An unexpected exception has been catched during execution.";
+			String msg = "An exception has been catched during execution. See cause for more information.";
 			logger.error(msg, ex);
 			if (ex instanceof ProcessExecutionException) {
 				throw ex;
@@ -125,7 +125,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 			notifyListeners(ProcessState.ROLLBACK_FAILED);
 
 			// log exception, wrap it to PRE, throw
-			String msg = "An unexpected exception has been catched during rollback.";
+			String msg = "An exception has been catched during rollback. See cause for more information.";
 			logger.error(msg, ex);
 			if (ex instanceof ProcessRollbackException) {
 				throw ex;
