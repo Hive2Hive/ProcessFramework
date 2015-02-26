@@ -162,7 +162,7 @@ If you want to [contribute to the project](#contribution), please refer to optio
   <dependency>
     <groupId>org.hive2hive</groupId>
     <artifactId>org.hive2hive.processframework</artifactId>
-    <version>1.X.X</version>
+    <version>1.X</version>
   </dependency>
 ```
 - **Option 2: Add JAR-file directly**  
