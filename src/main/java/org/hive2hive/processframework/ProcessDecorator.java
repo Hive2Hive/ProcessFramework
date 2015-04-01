@@ -27,7 +27,7 @@ public abstract class ProcessDecorator<T> extends ProcessComponent<T> {
 	 * @param decoratedComponent The {@link IProcessComponent} implementation to be wrapped/decorated by this
 	 *            {@code ProcessDecorator}.
 	 */
-	public ProcessDecorator(IProcessComponent<?> decoratedComponent) {
+	protected ProcessDecorator(IProcessComponent<?> decoratedComponent) {
 		this.decoratedComponent = decoratedComponent;
 
 		// decorators should always require rollback

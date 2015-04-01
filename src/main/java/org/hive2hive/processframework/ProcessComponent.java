@@ -43,7 +43,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	/**
 	 * Creates a new {@code ProcessComponent} instance with a random ID.
 	 */
-	public ProcessComponent() {
+	protected ProcessComponent() {
 		this(null);
 	}
 
@@ -52,7 +52,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * 
 	 * @param name The name of this {@code ProcessComponent}.
 	 */
-	public ProcessComponent(String name) {
+	protected ProcessComponent(String name) {
 		this(UUID.randomUUID().toString(), name);
 	}
 
@@ -62,7 +62,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * @param id The ID of this {@code ProcessComponent}.
 	 * @param name The name of this {@code ProcessComponent}.
 	 */
-	public ProcessComponent(String id, String name) {
+	protected ProcessComponent(String id, String name) {
 		this.id = id;
 		this.name = name != null ? name : String.format("Process Component ID: %s", id);
 		this.state = ProcessState.READY;

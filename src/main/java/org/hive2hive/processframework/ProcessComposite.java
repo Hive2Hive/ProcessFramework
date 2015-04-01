@@ -14,7 +14,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
  */
 public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 
-	public ProcessComposite() {
+	protected ProcessComposite() {
 		// composites should always require rollback
 		setRequiresRollback(true);
 	}
