@@ -40,9 +40,31 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 
 	private AsyncComponent<T> asyncComponent = null;
 
+	/**
+	 * Creates a new {@code ProcessComponent} instance with a random ID.
+	 */
 	public ProcessComponent() {
-		this.id = UUID.randomUUID().toString();
-		this.name = String.format("Process Component ID: %s", id);
+		this(null);
+	}
+
+	/**
+	 * Creates a new {@code ProcessComponent} instance with a random ID and gives it the provided name.
+	 * 
+	 * @param name The name of this {@code ProcessComponent}.
+	 */
+	public ProcessComponent(String name) {
+		this(UUID.randomUUID().toString(), name);
+	}
+
+	/**
+	 * Creates a new {@code ProcessComponent} instance with the provided ID and name.
+	 * 
+	 * @param id The ID of this {@code ProcessComponent}.
+	 * @param name The name of this {@code ProcessComponent}.
+	 */
+	public ProcessComponent(String id, String name) {
+		this.id = id;
+		this.name = name != null ? name : String.format("Process Component ID: %s", id);
 		this.state = ProcessState.READY;
 		this.listeners = new ArrayList<IProcessComponentListener>();
 	}
