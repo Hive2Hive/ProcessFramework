@@ -211,6 +211,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * {@link ProcessExecutionException} is
 	 * thrown.
 	 * 
+	 * @return the result
 	 * @throws InvalidProcessStateException If this {@code ProcessComponent} is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessExecutionException If a failure occured during this {@code ProcessComponent}'s
@@ -224,6 +225,7 @@ public abstract class ProcessComponent<T> implements IProcessComponent<T> {
 	 * is
 	 * thrown.
 	 * 
+	 * @return the result
 	 * @throws InvalidProcessStateException If this {@code ProcessComponent} is in an invalid state for this
 	 *             operation.
 	 * @throws ProcessRollbackException If a failure occured during this {@code ProcessComponent}'s rollback.

@@ -20,15 +20,15 @@ import org.slf4j.LoggerFactory;
  * thread and thus immediately returns the control.
  * Both, execution and rollback run on a separate thread and return a {@link Future} object as the result of
  * the asynchronous computation. Possible exceptions can be retrieved through this {@link Future} object (see
- * example).</br>
+ * example).<br>
  * <b>Note:</b>
  * The {@link IProcessComponent} wrapped/decorated by this {@code AsyncComponent} should be <i>independent</i>
- * of any other components in the process composite because it runs asynchronously.</br></br>
+ * of any other components in the process composite because it runs asynchronously.<br><br>
  * <b>Example:</b> Asynchronous process execution:
  * 
  * <pre>
- * AsyncComponent <Integer> asyncComp = new AsyncComponent<>(...);
- * Future<Integer> futureResult;
+ * AsyncComponent &lt;Integer&gt; asyncComp = new AsyncComponent&lt;&gt;(...);
+ * Future&lt;Integer&gt; futureResult;
  * int result;
  * 
  * try {

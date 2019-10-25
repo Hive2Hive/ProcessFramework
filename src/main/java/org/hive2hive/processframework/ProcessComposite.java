@@ -74,6 +74,7 @@ public abstract class ProcessComposite<T> extends ProcessComponent<T> {
 	 * Gets the {@link IProcessComponent} that is contained at the provided index in this
 	 * {@code ProcessComposite}.
 	 * 
+	 * @param index the index of the component to look for
 	 * @return The {@link IProcessComponent} that is contained at the provided index in this
 	 *         {@code ProcessComposite}.
 	 */

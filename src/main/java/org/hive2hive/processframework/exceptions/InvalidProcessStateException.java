@@ -5,7 +5,7 @@ import org.hive2hive.processframework.interfaces.IProcessComponent;
 
 /**
  * Exception that occurs if an {@link IProcessComponent} has an invalid {@link ProcessState} to execute a
- * specific operation.</br>
+ * specific operation.<br>
  * <b>Example:</b> An {@link IProcessComponent} cannot be paused if its execution has not yet been started.
  * 
  * @author Christian Lüthold
