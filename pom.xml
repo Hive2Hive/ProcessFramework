@@ -4,7 +4,7 @@
 
 	<groupId>org.hive2hive</groupId>
 	<artifactId>org.hive2hive.processframework</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 
 	<name>Hive2Hive Process Framework</name>
@@ -17,6 +17,27 @@
 			<url>http://opensource.org/licenses/MIT</url>
 		</license>
 	</licenses>
+
+	<scm>
+		<connection>scm:git@github.com:Hive2Hive/ProcessFramework.git</connection>
+		<developerConnection>scm:git@github.com:Hive2Hive/ProcessFramework.git</developerConnection>
+		<url>https://github.com/Hive2Hive/ProcessFramework</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Nico Rutishauser</name>
+			<url>https://github.com/nicoruti</url>
+		</developer>
+		<developer>
+			<name>Christian Lüthold</name>
+			<url>https://github.com/Cynthion</url>
+		</developer>
+		<developer>
+			<name>Sebastian Golaszewski</name>
+			<url>https://github.com/ippes</url>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,6 +73,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<!-- Use JRE 1.7 (instead of Maven default 1.5) -->
 	<build>
@@ -94,7 +126,22 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- Deploy / Release to OSSRH repository -->
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
